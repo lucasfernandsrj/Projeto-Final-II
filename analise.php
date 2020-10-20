@@ -245,7 +245,7 @@ session_start();
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Data Início</label>
+                                        <label for="recipient-name" class="col-form-label">Data de Início</label>
                                         <input type="date" class="form-control" name="analise_datainicio" required>
                                     </div>
                                 </div>
@@ -311,7 +311,7 @@ session_start();
                             </div>
                             <div class="col-lg-6">
                                 <div>
-                                    <label class="col-form-label font-weight-bold">Data Início</label>
+                                    <label class="col-form-label font-weight-bold">Data de Início</label>
                                     <p><output type="date" id="detalhe_analisedatainicio"></output></p>
                                 </div>
                             </div>
@@ -408,7 +408,7 @@ session_start();
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Data Início*</label>
+                                        <label for="recipient-name" class="col-form-label">Data de Início*</label>
                                         <input type="text" class="form-control" id="editar_analisedatainicio" name="editar_analisedatainicio" required>
                                     </div>
                                 </div>

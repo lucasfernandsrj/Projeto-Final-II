@@ -46,6 +46,9 @@ session_start();
                                     <div class="col-auto mr-auto mb-2">
                                         <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#ModalCadastrarModulo">
                                             <i class="fas fa-list"></i>&nbsp;Cadastrar Módulo
+                                        </button>&nbsp;
+                                        <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#ModalCadastrarModulo2">
+                                            <i class="fas fa-list"></i>&nbsp;Cadastrar Módulo
                                         </button>
                                     </div>
                                     <div class="col-auto mb-2">
@@ -62,7 +65,7 @@ session_start();
                                                 <th>Nome</th>
                                                 <th>Descrição</th>
                                                 <th>Ambiente</th>
-                                                <th>Nome do Sistema</th>
+                                                <th>Sistema</th>
                                                 <th class="text-center">Detalhe</th>
                                                 <th class="text-center">Editar</th>
                                                 <!--<th class="text-center">Excluir</th>-->
@@ -73,7 +76,7 @@ session_start();
                                                 <th>Nome</th>
                                                 <th>Descrição</th>
                                                 <th>Ambiente</th>
-                                                <th>Nome do Sistema</th>
+                                                <th>Sistema</th>
                                                 <th class="text-center">Detalhe</th>
                                                 <th class="text-center">Editar</th>
                                                 <!--<th class="text-center">Excluir</th>-->
@@ -101,11 +104,11 @@ session_start();
                                                     <td><?= $row['ambiente']; ?></td>
                                                     <td><?= $row['sistema_nome']; ?></td>
                                                     <td class="text-center">
-                                                        <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#ModalDetalheModulo"
+                                                        <button type="button" onClick="Detalhe(this)" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#ModalDetalheModulo"
                                                                 data-modnome="<?= $row['nome']; ?>"
                                                                 data-moddescricao="<?= $row['descricao']; ?>"
                                                                 data-modambiente="<?= $row['ambiente']; ?>"
-                                                                
+                                                                data-modfkidmodulo="<?= $row['fk_idmodulo']; ?>"
                                                                 >
                                                             <i class="fas fa-fingerprint"></i>&nbsp;Detalhe
                                                         </button>
@@ -177,8 +180,12 @@ session_start();
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Ambiente</label>
-                                        <input type="text" class="form-control" name="mod_ambiente" required>
+                                        <label for="recipient-name" class="col-form-label">Ambiente Organizacional</label>
+                                        <select class="form-control" name="mod_ambiente" required>
+                                            <option value="">Selecione</option>
+                                            <option value="Administrativo">Administrativo</option>
+                                            <option value="Configuração">Configuração</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -196,6 +203,69 @@ session_start();
                                             foreach ($result_sistema as $row_sistema) {
                                                 ?>
                                                 <option value="<?= $row_sistema['idsistema']; ?>"><?= $row_sistema['nome']; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <small class="help-block">*Campo(s) obrigatório(s).</small>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary" name="btnCadastrar">Confirmar Dados</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fim Modal Cadastrar -->
+
+        <!-- Modal Cadastrar -->
+        <div class="modal fade" id="ModalCadastrarModulo2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cadastrar Módulo - Submódulo</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="action/cadastrarModulo2.php">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h5><i class="fa fa-list"></i> Informações do Submódulo</h5>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Nome</label>
+                                        <input type="text" class="form-control" name="mod_nome" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Descrição</label>
+                                        <input type="text" class="form-control" name="mod_descricao" required>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12">
+                                    <hr>
+                                    <h5><i class="fa fa-list"></i> Informações do Módulo*</h5>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Nome do Módulo</label>
+                                        <select class="form-control" name="mod_fk_idmodulo" required>
+                                            <option value="">Selecione</option>
+                                            <?php
+                                            $query_modulo2 = "SELECT idmodulo, nome FROM tbmodulo";
+                                            $result_modulo2 = mysqli_query($conn, $query_modulo2);
+                                            foreach ($result_modulo2 as $row_modulo2) {
+                                                ?>
+                                                <option value="<?= $row_modulo2['idmodulo']; ?>"><?= $row_modulo2['nome']; ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -242,9 +312,9 @@ session_start();
                                     <p><output type="text" id="detalhe_mod_descricao"></output></p>
                                 </div>
                             </div>
-                            <div class="col-lg-12">
+                            <div class="col-lg-12" id="mostra_modambiente">
                                 <div>
-                                    <label class="col-form-label font-weight-bold">Ambiente</label>
+                                    <label class="col-form-label font-weight-bold">Ambiente Organizacional</label>
                                     <p><output type="text" id="detalhe_mod_ambiente"></output></p>
                                 </div>
                             </div>
@@ -284,13 +354,17 @@ session_start();
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">Descrição*</label>
-                                        <input type="text" class="form-control" id="editar_mod_descricao" name="editar_mod_descricao" required>
+                                        <textarea class="form-control" id="editar_mod_descricao" name="editar_mod_descricao" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label for="message-text" class="col-form-label">Ambiente*</label>
-                                        <input type="text" class="form-control" id="editar_mod_ambiente" name="editar_mod_ambiente" required>
+                                        <label for="message-text" class="col-form-label">Ambiente Organizacional*</label>
+                                        <select class="form-control" id="editar_mod_ambiente" name="editar_mod_ambiente" required>
+                                            <option value="">Selecione</option>
+                                            <option value="Administrativo">Administrativo</option>
+                                            <option value="Configuração">Configuração</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -316,6 +390,7 @@ session_start();
                 var detalhe_mod_nome = button.data('modnome'); // Extract info from data-* attributes
                 var detalhe_mod_descricao = button.data('moddescricao');
                 var detalhe_mod_ambiente = button.data('modambiente');
+                var detalhe_mod_fk_idmodulo = button.data('modfkidmodulo');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
@@ -323,6 +398,13 @@ session_start();
                 modal.find('#detalhe_mod_nome').val(detalhe_mod_nome);
                 modal.find('#detalhe_mod_descricao').val(detalhe_mod_descricao);
                 modal.find('#detalhe_mod_ambiente').val(detalhe_mod_ambiente);
+                modal.find('#detalhe_mod_fk_idmodulo').val(detalhe_mod_fk_idmodulo);
+                
+                if (detalhe_mod_ambiente === "") {
+                    $('#mostra_modambiente').hide();
+                }else{
+                    $('#mostra_modambiente').show();
+                }
             });
         </script>
         <!-- Fim Modal Detalhe-->
@@ -354,6 +436,7 @@ session_start();
 
             });
         </script>
+        <!-- Fim Reseta Modal Cadastrar ao Fechar-->
         <script>
             $(document).ready(function () {
                 $('#DataTable').DataTable({
@@ -363,7 +446,6 @@ session_start();
                 });
             });
         </script>
-        <!-- Fim Reseta Modal Cadastrar ao Fechar-->
     </body>
 
 </html>

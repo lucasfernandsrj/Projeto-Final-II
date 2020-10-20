@@ -28,7 +28,7 @@ if (isset($btnCadastrar)) {
         } else {
             if (strtotime($analise_datainicio) > strtotime($analise_datafim)) {
                 $_SESSION['msg'] = "<div class='alert alert-warning alert-dismissible fade show' role='alert'>
-                    <strong>Erro!</strong> A Data Fim não pode ser inferior a Data Início.
+                    <strong>Erro!</strong> A Data Fim não pode ser inferior a Data de Início.
                     <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                         <span aria-hidden='true'>&times;</span>
                     </button>

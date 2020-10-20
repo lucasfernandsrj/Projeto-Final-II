@@ -93,10 +93,10 @@ session_start();
                                                     <td><?= $row['dataFim']; ?></td>
                                                     <td class="text-center">
                                                         <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#ModalDetalheSistema"
-                                                                data-sisnome="<?= $row['nome']; ?>"
-                                                                data-sisdescricao="<?= $row['descricao']; ?>"
-                                                                data-sisdatainicio="<?= $row['dataInicio']; ?>"
-                                                                data-sisdatafim="<?= $row['dataFim']; ?>"
+                                                                data-sistemanome="<?= $row['nome']; ?>"
+                                                                data-sistemadescricao="<?= $row['descricao']; ?>"
+                                                                data-sistemadatainicio="<?= $row['dataInicio']; ?>"
+                                                                data-sistemadatafim="<?= $row['dataFim']; ?>"
                                                                 >
                                                             <i class="fas fa-fingerprint"></i>&nbsp;Detalhe
                                                         </button>
@@ -104,10 +104,10 @@ session_start();
                                                     <td class="text-center">
                                                         <button type="button" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#ModalEditarSistema"
                                                                 data-sisidsistema="<?= $row['idsistema']; ?>"
-                                                                data-sisnome="<?= $row['nome']; ?>"
-                                                                data-sisdescricao="<?= $row['descricao']; ?>"
-                                                                data-sisdatainicio="<?= $row['dataInicio']; ?>"
-                                                                data-sisdatafim="<?= $row['dataFim']; ?>"
+                                                                data-sistemanome="<?= $row['nome']; ?>"
+                                                                data-sistemadescricao="<?= $row['descricao']; ?>"
+                                                                data-sistemadatainicio="<?= $row['dataInicio']; ?>"
+                                                                data-sistemadatafim="<?= $row['dataFim']; ?>"
                                                                 >
                                                             <i class="fas fa-edit"></i>&nbsp;Editar
                                                         </button>
@@ -155,50 +155,54 @@ session_start();
                                 <div class="col-lg-12">
                                     <h5><i class="fa fa-list"></i> Informações do Sistema</h5>
                                 </div>
-                                <div class="col-lg-12">
+                                <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Nome</label>
-                                        <input type="text" class="form-control" name="sis_nome" required>
+                                        <input type="text" class="form-control" name="sistema_nome" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">Descrição</label>
-                                        <input type="text" class="form-control" name="sis_descricao" required>
+                                        <textarea class="form-control" name="sistema_descricao" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">Data Inicial</label>
-                                        <input type="date" class="form-control" name="sis_dt_inicio" required>
+                                        <input type="date" class="form-control" name="sistema_dt_inicio" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">Data Final</label>
-                                        <input type="date" class="form-control" name="sis_dt_final" >
+                                        <input type="date" class="form-control" name="sistema_dt_final" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <hr>
                                     <h5><i class="fa fa-list"></i> Informações do Módulo*</h5>
                                 </div>
-                                <div class="col-lg-12">
+                                <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Nome</label>
-                                        <input type="text" class="form-control" name="mod_nome" required>
+                                        <input type="text" class="form-control" name="modulo_nome" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Descrição</label>
-                                        <input type="text" class="form-control" name="mod_descricao" required>
+                                        <textarea class="form-control" name="modulo_descricao" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Ambiente Organizacional</label>
-                                        <input type="text" class="form-control" name="mod_ambiente" required>
+                                        <select class="form-control" name="modulo_ambiente" required>
+                                            <option value="">Selecione</option>
+                                            <option value="Administrativo">Administrativo</option>
+                                            <option value="Configuração">Configuração</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -231,16 +235,16 @@ session_start();
                             <div class="col-lg-12">
                                 <h5><i class="fa fa-list"></i> Informações do Sistema</h5>
                             </div>
-                            <div class="col-lg-12">
+                            <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Nome</label>
-                                    <p><output type="text" id="detalhe_sis_nome"></output></p>
+                                    <p><output type="text" id="detalhe_sistema_nome"></output></p>
                                 </div>
                             </div>
                             <div class="col-lg-12">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Descrição</label>
-                                    <p><output type="text" id="detalhe_sis_descricao"></output></p>
+                                    <p><output type="text" id="detalhe_sistema_descricao"></output></p>
                                 </div>
                             </div>
                             <div class="col-lg-12">
@@ -250,13 +254,13 @@ session_start();
                             <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Data Inicial</label>
-                                    <p><output type="date" id="detalhe_sis_dataInicio"></output></p>
+                                    <p><output type="date" id="detalhe_sistema_dataInicio"></output></p>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Data Final</label>
-                                    <p><output type="date" id="detalhe_sis_dataFim"></output></p>
+                                    <p><output type="date" id="detalhe_sistema_dataFim"></output></p>
                                 </div>
                             </div>
                         </div>
@@ -285,29 +289,29 @@ session_start();
                                 <div class="col-lg-12">
                                     <h5><i class="fa fa-list"></i> Informações do Sistema</h5>
                                 </div>
-                                <input type="hidden" class="form-control" id="editar_sis_idsistema" name="editar_sis_idsistema" required>
-                                <div class="col-lg-12">
+                                <input type="hidden" class="form-control" id="editar_sistema_idsistema" name="editar_sistema_idsistema" required>
+                                <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Nome*</label>
-                                        <input type="text" class="form-control" id="editar_sis_nome" name="editar_sis_nome" required>
+                                        <input type="text" class="form-control" id="editar_sistema_nome" name="editar_sistema_nome" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">Descrição*</label>
-                                        <input type="text" class="form-control" id="editar_sis_descricao" name="editar_sis_descricao" required>
+                                        <textarea class="form-control" id="editar_sistema_descricao" name="editar_sistema_descricao" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">Data Inicial*</label>
-                                        <input type="date" class="form-control" id="editar_sis_dataInicio" name="editar_sis_dataInicio" required>
+                                        <input type="date" class="form-control" id="editar_sistema_dataInicio" name="editar_sistema_dataInicio" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">Data Final</label>
-                                        <input type="date" class="form-control" id="editar_sis_dataFim" name="editar_sis_dataFim" >
+                                        <input type="date" class="form-control" id="editar_sistema_dataFim" name="editar_sistema_dataFim" >
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -330,18 +334,18 @@ session_start();
         <script>
             $('#ModalDetalheSistema').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal
-                var detalhe_sis_nome = button.data('sisnome'); // Extract info from data-* attributes
-                var detalhe_sis_descricao = button.data('sisdescricao');
-                var detalhe_sis_dataInicio = button.data('sisdatainicio');
-                var detalhe_sis_dataFim = button.data('sisdatafim');
+                var detalhe_sistema_nome = button.data('sistemanome'); // Extract info from data-* attributes
+                var detalhe_sistema_descricao = button.data('sistemadescricao');
+                var detalhe_sistema_dataInicio = button.data('sistemadatainicio');
+                var detalhe_sistema_dataFim = button.data('sistemadatafim');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
-                modal.find('.modal-title').text('Detalhe do Sistema: ' + detalhe_sis_nome);
-                modal.find('#detalhe_sis_nome').val(detalhe_sis_nome);
-                modal.find('#detalhe_sis_descricao').val(detalhe_sis_descricao);
-                modal.find('#detalhe_sis_dataInicio').val(detalhe_sis_dataInicio);
-                modal.find('#detalhe_sis_dataFim').val(detalhe_sis_dataFim);
+                modal.find('.modal-title').text('Detalhe do Sistema: ' + detalhe_sistema_nome);
+                modal.find('#detalhe_sistema_nome').val(detalhe_sistema_nome);
+                modal.find('#detalhe_sistema_descricao').val(detalhe_sistema_descricao);
+                modal.find('#detalhe_sistema_dataInicio').val(detalhe_sistema_dataInicio);
+                modal.find('#detalhe_sistema_dataFim').val(detalhe_sistema_dataFim);
             });
         </script>
         <!-- Fim Modal Detalhe-->
@@ -350,20 +354,20 @@ session_start();
         <script>
             $('#ModalEditarSistema').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal
-                var editar_sis_idsistema = button.data('sisidsistema'); // Extract info from data-* attributes
-                var editar_sis_nome = button.data('sisnome'); // Extract info from data-* attributes
-                var editar_sis_descricao = button.data('sisdescricao');
-                var editar_sis_dataInicio = button.data('sisdatainicio');
-                var editar_sis_dataFim = button.data('sisdatafim');
+                var editar_sistema_idsistema = button.data('sistemaidsistema'); // Extract info from data-* attributes
+                var editar_sistema_nome = button.data('sistemanome'); // Extract info from data-* attributes
+                var editar_sistema_descricao = button.data('sistemadescricao');
+                var editar_sistema_dataInicio = button.data('sistemadatainicio');
+                var editar_sistema_dataFim = button.data('sistemadatafim');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
-                modal.find('.modal-title').text('Editar Sistema: ' + editar_sis_nome);
-                modal.find('#editar_sis_idsistema').val(editar_sis_idsistema);
-                modal.find('#editar_sis_nome').val(editar_sis_nome);
-                modal.find('#editar_sis_descricao').val(editar_sis_descricao);
-                modal.find('#editar_sis_dataInicio').val(editar_sis_dataInicio);
-                modal.find('#editar_sis_dataFim').val(editar_sis_dataFim);
+                modal.find('.modal-title').text('Editar Sistema: ' + editar_sistema_nome);
+                modal.find('#editar_sistema_idsistema').val(editar_sistema_idsistema);
+                modal.find('#editar_sistema_nome').val(editar_sistema_nome);
+                modal.find('#editar_sistema_descricao').val(editar_sistema_descricao);
+                modal.find('#editar_sistema_dataInicio').val(editar_sistema_dataInicio);
+                modal.find('#editar_sistema_dataFim').val(editar_sistema_dataFim);
             });
         </script>
         <!-- Fim Modal Editar-->

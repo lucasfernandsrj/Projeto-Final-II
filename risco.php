@@ -169,7 +169,7 @@ session_start();
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">Descrição</label>
-                                        <input type="text" class="form-control" name="risdescricao" required>
+                                        <textarea class="form-control" name="risdescricao" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -287,7 +287,7 @@ session_start();
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">Descrição*</label>
-                                        <input type="text" class="form-control" id="editar_risdescricao" name="editar_risdescricao" required>
+                                        <textarea class="form-control" id="editar_risdescricao" name="editar_risdescricao" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -370,7 +370,8 @@ session_start();
                 $('#catidcategoria1').change(function () {
                     if ($(this).val()) {
                         $.getJSON('action/selecionarCategoria.php?search=', {
-                            idcategoria: $(this).val(), ajax: 'true'},
+                            idcategoria: $(this).val(),
+                            ajax: 'true'},
                                 function (j) {
                                     var options = '<option value="">Selecione</option>';
                                     for (var i = 0; i < j.length; i++) {
