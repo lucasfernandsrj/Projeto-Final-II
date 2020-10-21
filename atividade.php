@@ -165,7 +165,7 @@ session_start();
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">Descrição</label>
-                                        <textarea class="form-control" name="atividade_descricao" required></textarea>
+                                        <textarea class="form-control" rows="1" name="atividade_descricao" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -274,7 +274,7 @@ session_start();
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Descrição*</label>
-                                        <textarea class="form-control" id="editar_atividadedescricao" name="editar_atividadedescricao" required></textarea>
+                                        <textarea class="form-control" rows="1" id="editar_atividadedescricao" name="editar_atividadedescricao" required></textarea>
                                         
                                     </div>
                                 </div>

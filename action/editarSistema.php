@@ -6,37 +6,44 @@ require_once("../lib/Database/Connection.php");
 
 $btnEditar = filter_input(INPUT_POST, 'btnEditar', FILTER_SANITIZE_STRING);
 if (isset($btnEditar)) {
-    $sis_idsistema = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_sis_idsistema', FILTER_SANITIZE_STRING));
-    $sis_nome = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_sis_nome', FILTER_SANITIZE_STRING)); //obrigatorio
-    $sis_descricao = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_sis_descricao', FILTER_SANITIZE_STRING)); //obrigatorio
-    $sis_dt_inicio = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_sis_dataInicio', FILTER_SANITIZE_STRING)); //obrigatorio
-    $sis_dt_final = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_sis_dataFim', FILTER_SANITIZE_STRING));
-
-
+    $sistemaidsistema = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_sistemaidsistema', FILTER_SANITIZE_STRING));
+    $sistemanome = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_sistemanome', FILTER_SANITIZE_STRING)); //obrigatorio
+    $sistemadescricao = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_sistemadescricao', FILTER_SANITIZE_STRING)); //obrigatorio
+    $sistemadatainicio = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_sistemadatainicio', FILTER_SANITIZE_STRING)); //obrigatorio
+    $sistemadatafim = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_sistemadatafim', FILTER_SANITIZE_STRING));
+    if(strtotime($sistemadatainicio) > strtotime($sistemadatafim)){
+        $_SESSION['msg'] = "<div class='alert alert-warning alert-dismissible fade show' role='alert'>
+                    <strong>Erro 003!</strong> A Data Final não pode ser anterior a Data Inicial. Tente novamente mais tarde.
+                    <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </div>";
+            header('Location: ../sistema.php');
+    }else{
     try {
-        if(!empty($sis_dt_final)){
+        if(!empty($sistemadatafim)){
             $db->update(
                 'tbsistema',
                 [
-                    'nome' => $sis_nome,
-                    'descricao' => $sis_descricao,
-                    'dataInicio' => $sis_dt_inicio,
-                    'dataFim' => $sis_dt_final
+                    'nome' => $sistemanome,
+                    'descricao' => $sistemadescricao,
+                    'datainicio' => $sistemadatainicio,
+                    'datafim' => $sistemadatafim
                 ],
                 [
-                    'idsistema' => $sis_idsistema
+                    'idsistema' => $sistemaidsistema
                 ]
             );
         }else{
           $db->update(
                 'tbsistema',
                 [
-                    'nome' => $sis_nome,
-                    'descricao' => $sis_descricao,
-                    'dataInicio' => $sis_dt_inicio
+                    'nome' => $sistemanome,
+                    'descricao' => $sistemadescricao,
+                    'datainicio' => $sistemadatainicio
                 ],
                 [
-                    'idsistema' => $sis_idsistema
+                    'idsistema' => $sistemaidsistema
                 ]
             );  
         }
@@ -66,6 +73,7 @@ if (isset($btnEditar)) {
                         </button>
                     </div>";
         header('Location: ../sistema.php');
+    }
     }
 } else {
     $_SESSION['msg'] = "<div class='alert alert-danger alert-dismissible fade show' role='alert'>

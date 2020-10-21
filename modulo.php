@@ -48,7 +48,7 @@ session_start();
                                             <i class="fas fa-list"></i>&nbsp;Cadastrar Módulo
                                         </button>&nbsp;
                                         <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#ModalCadastrarModulo2">
-                                            <i class="fas fa-list"></i>&nbsp;Cadastrar Módulo
+                                            <i class="fas fa-list"></i>&nbsp;Vincular Módulo
                                         </button>
                                     </div>
                                     <div class="col-auto mb-2">
@@ -62,10 +62,12 @@ session_start();
                                     <table class="table table-bordered table-hover" id="DataTable" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
+                                                <th>Nível</th>
                                                 <th>Nome</th>
                                                 <th>Descrição</th>
                                                 <th>Ambiente</th>
                                                 <th>Sistema</th>
+                                                <th>Módulo</th>
                                                 <th class="text-center">Detalhe</th>
                                                 <th class="text-center">Editar</th>
                                                 <!--<th class="text-center">Excluir</th>-->
@@ -73,10 +75,12 @@ session_start();
                                         </thead>
                                         <tfoot>
                                             <tr class="m-0 font-weight-bold text-dark">
+                                                <th>Nível</th>
                                                 <th>Nome</th>
                                                 <th>Descrição</th>
                                                 <th>Ambiente</th>
                                                 <th>Sistema</th>
+                                                <th>Módulo</th>
                                                 <th class="text-center">Detalhe</th>
                                                 <th class="text-center">Editar</th>
                                                 <!--<th class="text-center">Excluir</th>-->
@@ -99,26 +103,41 @@ session_start();
                                             foreach ($result as $row) {
                                                 ?>
                                                 <tr>
+                                                    <td><?= $row['nivel']; ?></td>
                                                     <td><?= $row['nome']; ?></td>
                                                     <td><?= $row['descricao']; ?></td>
                                                     <td><?= $row['ambiente']; ?></td>
                                                     <td><?= $row['sistema_nome']; ?></td>
+                                                    <?php
+                                                    if ($row['fk_idmodulo'] != "") {
+                                                        $fk_idmodulo = $row['fk_idmodulo'];
+                                                        $query_fk_idmodulo = "SELECT nome FROM tbmodulo WHERE idmodulo = $fk_idmodulo";
+                                                        $result_fk_idmodulo = mysqli_query($conn, $query_fk_idmodulo);
+                                                        foreach ($result_fk_idmodulo as $row_fk_idmodulo) {
+                                                            ?>
+                                                            <td><?= $row_fk_idmodulo['nome']; ?></td><?php
+                                                        }
+                                                    } else {
+                                                        ?><td></td><?php
+                                                    }
+                                                    ?>
                                                     <td class="text-center">
                                                         <button type="button" onClick="Detalhe(this)" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#ModalDetalheModulo"
-                                                                data-modnome="<?= $row['nome']; ?>"
-                                                                data-moddescricao="<?= $row['descricao']; ?>"
-                                                                data-modambiente="<?= $row['ambiente']; ?>"
-                                                                data-modfkidmodulo="<?= $row['fk_idmodulo']; ?>"
+                                                                data-modulonome="<?= $row['nome']; ?>"
+                                                                data-modulodescricao="<?= $row['descricao']; ?>"
+                                                                data-moduloambiente="<?= $row['ambiente']; ?>"
+                                                                data-modulofkidmodulo="<?= $row['fk_idmodulo']; ?>"
+                                                                data-modulonivel="<?= $row['nivel']; ?>"
                                                                 >
                                                             <i class="fas fa-fingerprint"></i>&nbsp;Detalhe
                                                         </button>
                                                     </td>
                                                     <td class="text-center">
                                                         <button type="button" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#ModalEditarModulo"
-                                                                data-modidmodulo="<?= $row['idmodulo']; ?>"
-                                                                data-modnome="<?= $row['nome']; ?>"
-                                                                data-moddescricao="<?= $row['descricao']; ?>"
-                                                                data-modambiente="<?= $row['ambiente']; ?>"
+                                                                data-moduloidmodulo="<?= $row['idmodulo']; ?>"
+                                                                data-modulonome="<?= $row['nome']; ?>"
+                                                                data-modulodescricao="<?= $row['descricao']; ?>"
+                                                                data-moduloambiente="<?= $row['ambiente']; ?>"
                                                                 >
                                                             <i class="fas fa-edit"></i>&nbsp;Editar
                                                         </button>
@@ -150,12 +169,12 @@ session_start();
         </div>
         <!-- End of Page Wrapper -->
 
-        <!-- Modal Cadastrar -->
+        <!-- Modal Cadastrar1 -->
         <div class="modal fade" id="ModalCadastrarModulo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Cadastrar Módulo</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Cadastrar Módulo de Nível 1</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -169,23 +188,30 @@ session_start();
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Nome</label>
-                                        <input type="text" class="form-control" name="mod_nome" required>
+                                        <input type="text" class="form-control" name="modulonome" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Descrição</label>
-                                        <input type="text" class="form-control" name="mod_descricao" required>
+                                        <textarea class="form-control" rows="1" name="modulodescricao" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Ambiente Organizacional</label>
-                                        <select class="form-control" name="mod_ambiente" required>
+                                        <select class="form-control" name="moduloambiente" required>
                                             <option value="">Selecione</option>
                                             <option value="Administrativo">Administrativo</option>
                                             <option value="Configuração">Configuração</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Nível</label>
+                                        <input type="text" class="form-control" id="modulonivel" value="1" disabled>
+                                        <input type="hidden" class="form-control" id="modulonivel" name="modulonivel" value="1" disabled>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -195,7 +221,7 @@ session_start();
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Nome do Sistema</label>
-                                        <select class="form-control" name="mod_idsistema" required>
+                                        <select class="form-control" name="moduloidsistema" required>
                                             <option value="">Selecione</option>
                                             <?php
                                             $query_sistema = "SELECT idsistema, nome FROM tbsistema";
@@ -222,50 +248,49 @@ session_start();
         </div>
         <!-- Fim Modal Cadastrar -->
 
-        <!-- Modal Cadastrar -->
+        <!-- Modal Vincular -->
         <div class="modal fade" id="ModalCadastrarModulo2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Cadastrar Módulo - Submódulo</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Vincular Módulo - Submódulo</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form method="post" action="action/cadastrarModulo2.php">
+                        <form method="post" action="action/vincularModulo.php">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <h5><i class="fa fa-list"></i> Informações do Submódulo</h5>
+                                    <h5><i class="fa fa-list"></i> Informações do Módulo</h5>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Nome</label>
-                                        <input type="text" class="form-control" name="mod_nome" required>
+                                        <label for="recipient-name" class="col-form-label">Nome do Módulo</label>
+                                        <input type="text" class="form-control" name="modulonome" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Descrição</label>
-                                        <input type="text" class="form-control" name="mod_descricao" required>
+                                        <textarea class="form-control" rows="1" name="modulodescricao" required></textarea>
                                     </div>
                                 </div>
-
                                 <div class="col-lg-12">
                                     <hr>
                                     <h5><i class="fa fa-list"></i> Informações do Módulo*</h5>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Nome do Módulo</label>
-                                        <select class="form-control" name="mod_fk_idmodulo" required>
+                                        <label for="recipient-name" class="col-form-label">Nome do Módulo*²</label>
+                                        <select class="form-control" name="modulofk_idmodulo" required>
                                             <option value="">Selecione</option>
                                             <?php
-                                            $query_modulo2 = "SELECT idmodulo, nome FROM tbmodulo";
+                                            $query_modulo2 = "SELECT idmodulo,nivel, nome FROM tbmodulo WHERE nivel < 3 ORDER BY nivel ASC";
                                             $result_modulo2 = mysqli_query($conn, $query_modulo2);
                                             foreach ($result_modulo2 as $row_modulo2) {
                                                 ?>
-                                                <option value="<?= $row_modulo2['idmodulo']; ?>"><?= $row_modulo2['nome']; ?></option>
+                                                <option value="<?= $row_modulo2['idmodulo']; ?>">Nível: <?= $row_modulo2['nivel']; ?> - <?= $row_modulo2['nome']; ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -273,6 +298,10 @@ session_start();
                                 <div class="col-lg-12">
                                     <small class="help-block">*Campo(s) obrigatório(s).</small>
                                 </div>
+                                <div class="col-lg-12">
+                                    <small class="help-block">*²O campo exibe uma lista de módulos até o nível 2.</small>
+                                </div>
+
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
@@ -283,7 +312,7 @@ session_start();
                 </div>
             </div>
         </div>
-        <!-- Fim Modal Cadastrar -->
+        <!-- Fim Modal Vincular -->
 
         <!-- Modal Detalhe -->
         <div class="modal fade" id="ModalDetalheModulo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -300,22 +329,28 @@ session_start();
                             <div class="col-lg-12">
                                 <h5><i class="fa fa-list"></i> Informações do Módulo</h5>
                             </div>
-                            <div class="col-lg-12">
+                            <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Nome</label>
-                                    <p><output type="text" id="detalhe_mod_nome"></output></p>
+                                    <p><output type="text" id="detalhe_modulonome"></output></p>
                                 </div>
                             </div>
-                            <div class="col-lg-12">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Descrição</label>
-                                    <p><output type="text" id="detalhe_mod_descricao"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-12" id="mostra_modambiente">
+                            <div class="col-lg-6" id="mostra_modambiente">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Ambiente Organizacional</label>
-                                    <p><output type="text" id="detalhe_mod_ambiente"></output></p>
+                                    <p><output type="text" id="detalhe_moduloambiente"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Descrição</label>
+                                    <p><output type="text" id="detalhe_modulodescricao"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Nível</label>
+                                    <p><output type="text" id="detalhe_modulonivel"></output></p>
                                 </div>
                             </div>
                         </div>
@@ -344,23 +379,23 @@ session_start();
                                 <div class="col-lg-12">
                                     <h5><i class="fa fa-list"></i> Informações do Módulo</h5>
                                 </div>
-                                <input type="hidden" class="form-control" id="editar_mod_idmodulo" name="editar_mod_idmodulo" required>
+                                <input type="hidden" class="form-control" id="editar_moduloidmodulo" name="editar_moduloidmodulo" required>
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Nome*</label>
-                                        <input type="text" class="form-control" id="editar_mod_nome" name="editar_mod_nome" required>
+                                        <input type="text" class="form-control" id="editar_modulonome" name="editar_modulonome" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">Descrição*</label>
-                                        <textarea class="form-control" id="editar_mod_descricao" name="editar_mod_descricao" required></textarea>
+                                        <textarea class="form-control" id="editar_modulodescricao" name="editar_modulodescricao" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">Ambiente Organizacional*</label>
-                                        <select class="form-control" id="editar_mod_ambiente" name="editar_mod_ambiente" required>
+                                        <select class="form-control" id="editar_moduloambiente" name="editar_moduloambiente" required>
                                             <option value="">Selecione</option>
                                             <option value="Administrativo">Administrativo</option>
                                             <option value="Configuração">Configuração</option>
@@ -387,22 +422,24 @@ session_start();
         <script>
             $('#ModalDetalheModulo').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal
-                var detalhe_mod_nome = button.data('modnome'); // Extract info from data-* attributes
-                var detalhe_mod_descricao = button.data('moddescricao');
-                var detalhe_mod_ambiente = button.data('modambiente');
-                var detalhe_mod_fk_idmodulo = button.data('modfkidmodulo');
+                var detalhe_modulonome = button.data('modulonome'); // Extract info from data-* attributes
+                var detalhe_modulodescricao = button.data('modulodescricao');
+                var detalhe_moduloambiente = button.data('moduloambiente');
+                var detalhe_modulofk_idmodulo = button.data('modulofkidmodulo');
+                var detalhe_modulonivel = button.data('modulonivel');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
-                modal.find('.modal-title').text('Detalhe do Módulo: ' + detalhe_mod_nome);
-                modal.find('#detalhe_mod_nome').val(detalhe_mod_nome);
-                modal.find('#detalhe_mod_descricao').val(detalhe_mod_descricao);
-                modal.find('#detalhe_mod_ambiente').val(detalhe_mod_ambiente);
-                modal.find('#detalhe_mod_fk_idmodulo').val(detalhe_mod_fk_idmodulo);
+                modal.find('.modal-title').text('Detalhe do Módulo: ' + detalhe_modulonome);
+                modal.find('#detalhe_modulonome').val(detalhe_modulonome);
+                modal.find('#detalhe_modulodescricao').val(detalhe_modulodescricao);
+                modal.find('#detalhe_moduloambiente').val(detalhe_moduloambiente);
+                modal.find('#detalhe_modulofk_idmodulo').val(detalhe_modulofk_idmodulo);
+                modal.find('#detalhe_modulonivel').val(detalhe_modulonivel);
                 
-                if (detalhe_mod_ambiente === "") {
+                if (detalhe_moduloambiente === "") {
                     $('#mostra_modambiente').hide();
-                }else{
+                } else {
                     $('#mostra_modambiente').show();
                 }
             });
@@ -413,18 +450,18 @@ session_start();
         <script>
             $('#ModalEditarModulo').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal
-                var editar_mod_idmodulo = button.data('modidmodulo'); // Extract info from data-* attributes
-                var editar_mod_nome = button.data('modnome'); // Extract info from data-* attributes
-                var editar_mod_descricao = button.data('moddescricao'); // Extract info from data-* attributes
-                var editar_mod_ambiente = button.data('modambiente');
+                var editar_moduloidmodulo = button.data('moduloidmodulo'); // Extract info from data-* attributes
+                var editar_modulonome = button.data('modulonome'); // Extract info from data-* attributes
+                var editar_modulodescricao = button.data('modulodescricao'); // Extract info from data-* attributes
+                var editar_moduloambiente = button.data('moduloambiente');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
-                modal.find('.modal-title').text('Editar Módulo: ' + editar_mod_nome);
-                modal.find('#editar_mod_idmodulo').val(editar_mod_idmodulo);
-                modal.find('#editar_mod_nome').val(editar_mod_nome);
-                modal.find('#editar_mod_descricao').val(editar_mod_descricao);
-                modal.find('#editar_mod_ambiente').val(editar_mod_ambiente);
+                modal.find('.modal-title').text('Editar Módulo: ' + editar_modulonome);
+                modal.find('#editar_moduloidmodulo').val(editar_moduloidmodulo);
+                modal.find('#editar_modulonome').val(editar_modulonome);
+                modal.find('#editar_modulodescricao').val(editar_modulodescricao);
+                modal.find('#editar_moduloambiente').val(editar_moduloambiente);
             });
         </script>
         <!-- Fim Modal Editar-->
@@ -433,10 +470,20 @@ session_start();
         <script>
             $('#ModalCadastrarModulo').on('hidden.bs.modal', function () {
                 $(this).find("input,textarea,select").val('').end();
-
+                $('#modulonivel').val(1);
             });
         </script>
         <!-- Fim Reseta Modal Cadastrar ao Fechar-->
+
+        <!-- Reseta Modal Cadastrar ao Fechar-->
+        <script>
+            $('#ModalCadastrarModulo2').on('hidden.bs.modal', function () {
+                $(this).find("input,textarea,select").val('').end();
+            });
+        </script>
+        <!-- Fim Reseta Modal Cadastrar ao Fechar-->
+
+        <!-- Datatable -->
         <script>
             $(document).ready(function () {
                 $('#DataTable').DataTable({
@@ -446,6 +493,7 @@ session_start();
                 });
             });
         </script>
+        <!-- Fim Datatable -->
     </body>
 
 </html>

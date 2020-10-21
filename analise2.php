@@ -33,7 +33,7 @@ session_start();
                         ?>
 
                         <!-- Page Heading -->
-                        <h1 class="h3 mb-2 text-gray-800">Análise</h1>
+                        <h1 class="h3 mb-2 text-gray-800">Análise do Analista</h1>
                         <p class="mb-4">A atual página mostra a relação de análises cadastradas. 
                             Permite ao Analista adicionar novas características à análise ou realizar alterações.
                         </p>

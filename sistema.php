@@ -103,7 +103,7 @@ session_start();
                                                     </td>
                                                     <td class="text-center">
                                                         <button type="button" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#ModalEditarSistema"
-                                                                data-sisidsistema="<?= $row['idsistema']; ?>"
+                                                                data-sistemaidsistema="<?= $row['idsistema']; ?>"
                                                                 data-sistemanome="<?= $row['nome']; ?>"
                                                                 data-sistemadescricao="<?= $row['descricao']; ?>"
                                                                 data-sistemadatainicio="<?= $row['dataInicio']; ?>"
@@ -289,29 +289,29 @@ session_start();
                                 <div class="col-lg-12">
                                     <h5><i class="fa fa-list"></i> Informações do Sistema</h5>
                                 </div>
-                                <input type="hidden" class="form-control" id="editar_sistema_idsistema" name="editar_sistema_idsistema" required>
+                                <input type="hidden" class="form-control" id="editar_sistemaidsistema" name="editar_sistemaidsistema" required>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Nome*</label>
-                                        <input type="text" class="form-control" id="editar_sistema_nome" name="editar_sistema_nome" required>
+                                        <input type="text" class="form-control" id="editar_sistemanome" name="editar_sistemanome" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">Descrição*</label>
-                                        <textarea class="form-control" id="editar_sistema_descricao" name="editar_sistema_descricao" required></textarea>
+                                        <textarea class="form-control" id="editar_sistemadescricao" name="editar_sistemadescricao" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">Data Inicial*</label>
-                                        <input type="date" class="form-control" id="editar_sistema_dataInicio" name="editar_sistema_dataInicio" required>
+                                        <input type="date" class="form-control" id="editar_sistemadatainicio" name="editar_sistemadatainicio" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">Data Final</label>
-                                        <input type="date" class="form-control" id="editar_sistema_dataFim" name="editar_sistema_dataFim" >
+                                        <input type="date" class="form-control" id="editar_sistemadatafim" name="editar_sistemadatafim" >
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -354,20 +354,20 @@ session_start();
         <script>
             $('#ModalEditarSistema').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal
-                var editar_sistema_idsistema = button.data('sistemaidsistema'); // Extract info from data-* attributes
-                var editar_sistema_nome = button.data('sistemanome'); // Extract info from data-* attributes
-                var editar_sistema_descricao = button.data('sistemadescricao');
-                var editar_sistema_dataInicio = button.data('sistemadatainicio');
-                var editar_sistema_dataFim = button.data('sistemadatafim');
+                var editar_sistemaidsistema = button.data('sistemaidsistema'); // Extract info from data-* attributes
+                var editar_sistemanome = button.data('sistemanome'); // Extract info from data-* attributes
+                var editar_sistemadescricao = button.data('sistemadescricao');
+                var editar_sistemadatainicio = button.data('sistemadatainicio');
+                var editar_sistemadatafim = button.data('sistemadatafim');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
-                modal.find('.modal-title').text('Editar Sistema: ' + editar_sistema_nome);
-                modal.find('#editar_sistema_idsistema').val(editar_sistema_idsistema);
-                modal.find('#editar_sistema_nome').val(editar_sistema_nome);
-                modal.find('#editar_sistema_descricao').val(editar_sistema_descricao);
-                modal.find('#editar_sistema_dataInicio').val(editar_sistema_dataInicio);
-                modal.find('#editar_sistema_dataFim').val(editar_sistema_dataFim);
+                modal.find('.modal-title').text('Editar Sistema: ' + editar_sistemanome);
+                modal.find('#editar_sistemaidsistema').val(editar_sistemaidsistema);
+                modal.find('#editar_sistemanome').val(editar_sistemanome);
+                modal.find('#editar_sistemadescricao').val(editar_sistemadescricao);
+                modal.find('#editar_sistemadatainicio').val(editar_sistemadatainicio);
+                modal.find('#editar_sistemadatafim').val(editar_sistemadatafim);
             });
         </script>
         <!-- Fim Modal Editar-->

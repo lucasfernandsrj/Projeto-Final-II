@@ -5,13 +5,13 @@ require_once("../lib/Database/Connection.php");
 
 $btnCadastrar = filter_input(INPUT_POST, 'btnCadastrar', FILTER_SANITIZE_STRING);
 if (isset($btnCadastrar)) {
-    $mod_nome = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'mod_nome', FILTER_SANITIZE_STRING)); //obrigatorio
-    $mod_descricao = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'mod_descricao', FILTER_SANITIZE_STRING)); //obrigatorio
-    $mod_ambiente = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'mod_ambiente', FILTER_SANITIZE_STRING)); //obrigatorio
+    $modulonome = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'modulonome', FILTER_SANITIZE_STRING)); //obrigatorio
+    $modulodescricao = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'modulodescricao', FILTER_SANITIZE_STRING)); //obrigatorio
+    $moduloambiente = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'moduloambiente', FILTER_SANITIZE_STRING)); //obrigatorio
     
-    $mod_idsistema = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'mod_idsistema', FILTER_SANITIZE_STRING)); //obrigatorio
+    $moduloidsistema = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'moduloidsistema', FILTER_SANITIZE_STRING)); //obrigatorio
 
-    $query = "SELECT * FROM tbmodulo where nome = '$mod_nome' LIMIT 1";
+    $query = "SELECT * FROM tbmodulo where nome = '$modulonome' LIMIT 1";
     $resultado = mysqli_query($conn, $query);
     $row = mysqli_affected_rows($conn);
     
@@ -27,10 +27,11 @@ if (isset($btnCadastrar)) {
         try {
             $db->insert(
                 'tbmodulo', [
-                    'nome' => $mod_nome,
-                    'descricao' => $mod_descricao,
-                    'ambiente' => $mod_ambiente,
-                    'idsistema' => $mod_idsistema
+                    'nome' => $modulonome,
+                    'descricao' => $modulodescricao,
+                    'ambiente' => $moduloambiente,
+                    'idsistema' => $moduloidsistema,
+                    'nivel' => 1
                         ]
                 );
             if ($db->affected()) {

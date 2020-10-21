@@ -6,22 +6,22 @@ require_once("../lib/Database/Connection.php");
 
 $btnEditar = filter_input(INPUT_POST, 'btnEditar', FILTER_SANITIZE_STRING);
 if (isset($btnEditar)) {
-    $mod_idmodulo = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_mod_idmodulo', FILTER_SANITIZE_STRING));
-    $mod_nome = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_mod_nome', FILTER_SANITIZE_STRING)); //obrigatorio
-    $mod_descricao = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_mod_descricao', FILTER_SANITIZE_STRING)); //obrigatorio
-    $mod_ambiente = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_mod_ambiente', FILTER_SANITIZE_STRING)); //obrigatorio
+    $moduloidmodulo = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_moduloidmodulo', FILTER_SANITIZE_STRING));
+    $modulonome = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_modulonome', FILTER_SANITIZE_STRING)); //obrigatorio
+    $modulodescricao = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_modulodescricao', FILTER_SANITIZE_STRING)); //obrigatorio
+    $moduloambiente = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_moduloambiente', FILTER_SANITIZE_STRING)); //obrigatorio
 
 
     try {
         $db->update(
                 'tbmodulo',
                 [
-                    'nome' => $mod_nome,
-                    'descricao' => $mod_descricao,
-                    'ambiente' => $mod_ambiente
+                    'nome' => $modulonome,
+                    'descricao' => $modulodescricao,
+                    'ambiente' => $moduloambiente
                 ],
                 [
-                    'idmodulo' => $mod_idmodulo
+                    'idmodulo' => $moduloidmodulo
                 ]
             );
 
