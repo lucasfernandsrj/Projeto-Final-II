@@ -20,7 +20,10 @@ session_start();
                 <!-- Main Content -->
                 <div id="content">
                     <!-- Topbar -->
-                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">Cadastros
+                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                        <a href="analise2.php"><button type="button" class="btn btn-outline-primary btn-lg mx-2">Análise do Analista</button></a>
+                        <a href="atividade.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Atividade Mitigadora</button></a>
+                        <a href="resposta.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Resposta ao Risco</button></a>
                     </nav>
                     <!-- End of Topbar -->
                     <!-- Begin Page Content -->
@@ -55,12 +58,17 @@ session_start();
                                     <table class="table table-bordered table-hover" id="DataTable" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
-                                                <th>ID Análise</th>
+                                                <th class="text-center" colspan="7">Informações</th>
+                                                <th class="text-center" colspan="2">Ferramentas</th>
+                                            </tr>
+                                            <tr>
+
                                                 <th>Analista</th>
                                                 <th>Risco</th>
                                                 <th>Probabilide</th>
                                                 <th>Impacto</th>
                                                 <th>Medida do Risco</th>
+                                                <th>Status</th>
                                                 <th>Data Fim</th>
 
                                                 <th class="text-center">Detalhe</th>
@@ -70,12 +78,13 @@ session_start();
                                         </thead>
                                         <tfoot>
                                             <tr class="m-0 font-weight-bold text-dark">
-                                                <th>ID Análise</th>
+
                                                 <th>Analista</th>
                                                 <th>Risco</th>
                                                 <th>Probabilide</th>
                                                 <th>Impacto</th>
                                                 <th>Medida do Risco</th>
+                                                <th>Status</th>
                                                 <th>Data Fim</th>
 
                                                 <th class="text-center">Detalhe</th>
@@ -91,7 +100,8 @@ session_start();
                                                         tbanalise.*,
                                                         tbanalista.nome AS analista_nome,
                                                         tbmodulo.nome AS modulo_nome,
-                                                        tbrisco.nome AS risco_nome
+                                                        tbrisco.nome AS risco_nome,
+                                                        tbrisco.descricao AS risco_descricao
                                                     FROM 
                                                         tbanalise
                                                     LEFT JOIN
@@ -105,29 +115,48 @@ session_start();
                                                     LEFT JOIN
                                                         tbrisco
                                                     ON
-                                                        tbrisco.idrisco = tbanalise.idrisco";
+                                                        tbrisco.idrisco = tbanalise.idrisco
+                                                    WHERE
+                                                        situacao != 'Excluída'";
                                             $result = mysqli_query($conn, $query);
                                             foreach ($result as $row) {
                                                 ?>
                                                 <tr>
-                                                    <td><?= $row['idanalise']; ?></td>
+
                                                     <td><?= $row['analista_nome']; ?></td>
                                                     <td><?= $row['risco_nome']; ?></td>
                                                     <td><?= $row['probabilidade']; ?></td>
                                                     <td><?= $row['impacto']; ?></td>
                                                     <td><?= $row['medidaDoRisco']; ?></td>
+                                                    <?php
+                                                    if ($row['medidaDoRisco'] > 0.24) {
+                                                        ?><td class="text-danger">Risco Alto</td>
+                                                        <?php
+                                                    } elseif ($row['medidaDoRisco'] > 0.08) {
+                                                        ?><td class="text-warning">Risco Médio</td>
+                                                        <?php
+                                                    } else {
+                                                        ?><td class="text-success">Risco Baixo</td>
+                                                        <?php
+                                                    }
+                                                    ?>
+
                                                     <td><?= $row['dataFim']; ?></td>
                                                     <td class="text-center">
                                                         <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#ModalDetalheAnalise"
                                                                 data-analiseanalistanome="<?= $row['analista_nome']; ?>"
                                                                 data-analisemodulonome="<?= $row['modulo_nome']; ?>"
                                                                 data-analiserisconome="<?= $row['risco_nome']; ?>"
+                                                                data-analiseriscodescricao="<?= $row['risco_descricao']; ?>"
                                                                 data-analisesituacao="<?= $row['situacao']; ?>"
                                                                 data-analisedatainicio="<?= $row['dataInicio']; ?>"
                                                                 data-analisedatafim="<?= $row['dataFim']; ?>"
+                                                                data-orcamento="<?= $row['orcamento']; ?>"
 
                                                                 data-analiseprobabilidade="<?= $row['probabilidade']; ?>"
+                                                                data-analiseprobabilidadejustificativa="<?= $row['probabilidadeJustificativa']; ?>"
                                                                 data-analiseimpacto="<?= $row['impacto']; ?>"
+                                                                data-analiseimpactojustificativa="<?= $row['impactoJustificativa']; ?>"
                                                                 data-analisemedidadorisco="<?= $row['medidaDoRisco']; ?>"
                                                                 >
                                                             <i class="fas fa-fingerprint"></i>&nbsp;Detalhe
@@ -144,13 +173,17 @@ session_start();
                                                                 data-analiseanalistanome="<?= $row['analista_nome']; ?>"
                                                                 data-analisemodulonome="<?= $row['modulo_nome']; ?>"
                                                                 data-analiserisconome="<?= $row['risco_nome']; ?>"
+                                                                data-analiseriscodescricao="<?= $row['risco_descricao']; ?>"
 
                                                                 data-analisedatainicio="<?= $row['dataInicio']; ?>"
                                                                 data-analisedatafim="<?= $row['dataFim']; ?>"
                                                                 data-analisesituacao="<?= $row['situacao']; ?>"
+                                                                data-orcamento="<?= $row['orcamento']; ?>"
 
                                                                 data-analiseprobabilidade="<?= $row['probabilidade']; ?>"
+                                                                data-analiseprobabilidadejustificativa="<?= $row['probabilidadeJustificativa']; ?>"
                                                                 data-analiseimpacto="<?= $row['impacto']; ?>"
+                                                                data-analiseimpactojustificativa="<?= $row['impactoJustificativa']; ?>"
                                                                 data-analisemedidadorisco="<?= $row['medidaDoRisco']; ?>"
                                                                 >
                                                             <i class="fas fa-edit"></i>&nbsp;Editar
@@ -201,27 +234,25 @@ session_start();
                             <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Probabilidade</label>
-                                    <select class="form-control" id="detalhe_analiseprobabilidade" disabled>
-                                        <option value="">Selecione</option>
-                                        <option value="0.9">0.90 - Muito Alta</option>
-                                        <option value="0.7">0.70 - Alta</option>
-                                        <option value="0.5">0.50 - Média</option>
-                                        <option value="0.3">0.30 - Baixa</option>
-                                        <option value="0.1">0.10 - Muito Baixa</option>
-                                    </select>
+                                    <p><output type="text" id="detalhe_analiseprobabilidade"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Justificativa da Probabilidade</label>
+                                    <p><output type="text" id="detalhe_analiseprobabilidadejustificativa"></output></p>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Impacto</label>
-                                    <select class="form-control" id="detalhe_analiseimpacto" disabled>
-                                        <option value="">Selecione</option>
-                                        <option value="0.8">0.80 - Muito Alto</option>
-                                        <option value="0.4">0.40 - Alto</option>
-                                        <option value="0.2">0.20 - Médio</option>
-                                        <option value="0.1">0.10 - Baixo</option>
-                                        <option value="0.05">0.05 - Muito Baixo</option>
-                                    </select>
+                                    <p><output type="text" id="detalhe_analiseimpacto"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Justificativa de Impacto</label>
+                                    <p><output type="text" id="detalhe_analiseimpactojustificativa"></output></p>
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -236,7 +267,7 @@ session_start();
                             </div>
                             <div class="col-lg-6">
                                 <div>
-                                    <label class="col-form-label font-weight-bold">Nome do Analista</label>
+                                    <label class="col-form-label font-weight-bold">Nome do Analista Responsável</label>
                                     <p><output type="text" id="detalhe_analiseanalistanome"></output></p>
                                 </div>
                             </div>
@@ -250,6 +281,12 @@ session_start();
                                 <div>
                                     <label class="col-form-label font-weight-bold">Nome do Risco</label>
                                     <p><output type="text" id="detalhe_analiserisconome"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Descrição do Risco</label>
+                                    <p><output type="text" id="detalhe_analiseriscodescricao"></output></p>
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -268,6 +305,12 @@ session_start();
                                 <div>
                                     <label class="col-form-label font-weight-bold">Data Fim</label>
                                     <p><output type="date" id="detalhe_analisedatafim"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Orçamento</label>
+                                    <p><output type="text" id="detalhe_analiseorcamento"></output></p>
                                 </div>
                             </div>
                         </div>
@@ -312,6 +355,12 @@ session_start();
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Justificativa da Probabilidade</label>
+                                        <textarea class="form-control" rows="1" id="editar_analiseprobabilidadejustificativa" name="editar_analiseprobabilidadejustificativa" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Impacto</label>
                                         <select class="form-control" id="editar_analiseimpacto" name="editar_analiseimpacto" required>
                                             <option value="">Selecione</option>
@@ -321,6 +370,12 @@ session_start();
                                             <option value="0.1">0.10 - Baixo</option>
                                             <option value="0.05">0.05 - Muito Baixo</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Justificativa do Impacto</label>
+                                        <textarea class="form-control" rows="1" id="editar_analiseimpactojustificativa" name="editar_analiseimpactojustificativa" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -335,7 +390,7 @@ session_start();
                                 </div>
                                 <div class="col-lg-6">
                                     <div>
-                                        <label class="col-form-label font-weight-bold">Nome do Analista</label>
+                                        <label class="col-form-label font-weight-bold">Nome do Analista Responsável</label>
                                         <p><output type="text" id="editar_analiseanalistanome"></output></p>
                                     </div>
                                 </div>
@@ -349,6 +404,12 @@ session_start();
                                     <div>
                                         <label class="col-form-label font-weight-bold">Nome do Risco</label>
                                         <p><output type="text" id="editar_analiserisconome"></output></p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div>
+                                        <label class="col-form-label font-weight-bold">Descrição do Risco</label>
+                                        <p><output type="text" id="editar_analiseriscodescricao"></output></p>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -367,6 +428,12 @@ session_start();
                                     <div>
                                         <label class="col-form-label font-weight-bold">Data Fim</label>
                                         <p><output type="text" id="editar_analisedatafim"></output></p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div>
+                                        <label class="col-form-label font-weight-bold">Orçamento</label>
+                                        <p><output type="text" id="editar_analiseorcamento"></output></p>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -392,13 +459,17 @@ session_start();
                 var detalhe_analiseanalistanome = button.data('analiseanalistanome'); // Extract info from data-* attributes
                 var detalhe_analisemodulonome = button.data('analisemodulonome');
                 var detalhe_analiserisconome = button.data('analiserisconome');
+                var detalhe_analiseriscodescricao = button.data('analiseriscodescricao');
 
                 var detalhe_analisesituacao = button.data('analisesituacao');
                 var detalhe_analisedatainicio = button.data('analisedatainicio');
                 var detalhe_analisedatafim = button.data('analisedatafim');
+                var detalhe_analiseorcamento = button.data('orcamento');
 
                 var detalhe_analiseprobabilidade = button.data('analiseprobabilidade');
+                var detalhe_analiseprobabilidadejustificativa = button.data('analiseprobabilidadejustificativa');
                 var detalhe_analiseimpacto = button.data('analiseimpacto');
+                var detalhe_analiseimpactojustificativa = button.data('analiseimpactojustificativa');
                 var detalhe_analisemedidadorisco = button.data('analisemedidadorisco');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
@@ -407,18 +478,52 @@ session_start();
                 modal.find('#detalhe_analiseanalistanome').val(detalhe_analiseanalistanome);
                 modal.find('#detalhe_analisemodulonome').val(detalhe_analisemodulonome);
                 modal.find('#detalhe_analiserisconome').val(detalhe_analiserisconome);
+                modal.find('#detalhe_analiseriscodescricao').val(detalhe_analiseriscodescricao);
 
                 modal.find('#detalhe_analisesituacao').val(detalhe_analisesituacao);
                 modal.find('#detalhe_analisedatainicio').val(detalhe_analisedatainicio);
                 modal.find('#detalhe_analisedatafim').val(detalhe_analisedatafim);
+                modal.find('#detalhe_analiseorcamento').val(detalhe_analiseorcamento.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}));
 
-                modal.find('#detalhe_analiseprobabilidade').val(detalhe_analiseprobabilidade);
-                modal.find('#detalhe_analiseimpacto').val(detalhe_analiseimpacto);
-               
+                //Probabilidade
+                if (detalhe_analiseprobabilidade === 0.9) {
+                    modal.find('#detalhe_analiseprobabilidade').val(detalhe_analiseprobabilidade + ' - Muito Alta');
+                } else if (detalhe_analiseprobabilidade === 0.7) {
+                    modal.find('#detalhe_analiseprobabilidade').val(detalhe_analiseprobabilidade + ' - Alta');
+                } else if (detalhe_analiseprobabilidade === 0.5) {
+                    modal.find('#detalhe_analiseprobabilidade').val(detalhe_analiseprobabilidade + ' - Média');
+                } else if (detalhe_analiseprobabilidade === 0.3) {
+                    modal.find('#detalhe_analiseprobabilidade').val(detalhe_analiseprobabilidade + ' - Baixa');
+                } else if (detalhe_analiseprobabilidade === 0.1) {
+                    modal.find('#detalhe_analiseprobabilidade').val(detalhe_analiseprobabilidade + ' - Muito Baixa');
+                } else {
+                    modal.find('#detalhe_analiseprobabilidade').val(detalhe_analiseprobabilidade);
+                }
+
+                modal.find('#detalhe_analiseprobabilidadejustificativa').val(detalhe_analiseprobabilidadejustificativa);
+
+                // Impacto
+                if (detalhe_analiseimpacto === 0.8) {
+                    modal.find('#detalhe_analiseimpacto').val(detalhe_analiseimpacto + ' - Muito Alto');
+                } else if (detalhe_analiseimpacto === 0.4) {
+                    modal.find('#detalhe_analiseimpacto').val(detalhe_analiseimpacto + ' - Alto');
+                } else if (detalhe_analiseimpacto === 0.2) {
+                    modal.find('#detalhe_analiseimpacto').val(detalhe_analiseimpacto + ' - Médio');
+                } else if (detalhe_analiseimpacto === 0.1) {
+                    modal.find('#detalhe_analiseimpacto').val(detalhe_analiseimpacto + ' - Baixo');
+                } else if (detalhe_analiseimpacto === 0.05) {
+                    modal.find('#detalhe_analiseimpacto').val(detalhe_analiseimpacto + ' - Muito Baixo');
+                } else {
+                    modal.find('#detalhe_analiseimpacto').val(detalhe_analiseimpacto);
+                }
+
+                modal.find('#detalhe_analiseimpactojustificativa').val(detalhe_analiseimpactojustificativa);
+
+                // Medida do Risco
                 var detalhe_analisemedidadorisco_print;
-                if(detalhe_analisemedidadorisco === ""){
+                if (detalhe_analisemedidadorisco === "") {
                     detalhe_analisemedidadorisco_print = "";
-                }else if (detalhe_analisemedidadorisco > 0.24) {
+                } else if (detalhe_analisemedidadorisco > 0.24) {
                     detalhe_analisemedidadorisco_print = detalhe_analisemedidadorisco + ' - Risco Alto';
                 } else if (detalhe_analisemedidadorisco > 0.08) {
                     detalhe_analisemedidadorisco_print = detalhe_analisemedidadorisco + ' - Risco Médio';
@@ -443,18 +548,22 @@ session_start();
                 var editar_analiseanalistanome = button.data('analiseanalistanome');
                 var editar_analisemodulonome = button.data('analisemodulonome');
                 var editar_analiserisconome = button.data('analiserisconome');
+                var editar_analiseriscodescricao = button.data('analiseriscodescricao');
 
                 var editar_analisesituacao = button.data('analisesituacao');
                 var editar_analisedatainicio = button.data('analisedatainicio');
                 var editar_analisedatafim = button.data('analisedatafim');
+                var editar_analiseorcamento = button.data('orcamento');
 
                 var editar_analiseprobabilidade = button.data('analiseprobabilidade');
+                var editar_analiseprobabilidadejustificativa = button.data('analiseprobabilidadejustificativa');
                 var editar_analiseimpacto = button.data('analiseimpacto');
+                var editar_analiseimpactojustificativa = button.data('analiseimpactojustificativa');
                 var editar_analisemedidadorisco = button.data('analisemedidadorisco');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
-                modal.find('.modal-title').text('Editar Análise: ' + editar_analiseidanalista);
+                modal.find('.modal-title').text('Editar Análise - Responsável: ' + editar_analiseanalistanome);
                 modal.find('#editar_analiseidanalise').val(editar_analiseidanalise);
 
                 modal.find('#editar_analiseidanalista').val(editar_analiseidanalista);
@@ -464,13 +573,17 @@ session_start();
                 modal.find('#editar_analiseanalistanome').val(editar_analiseanalistanome);
                 modal.find('#editar_analisemodulonome').val(editar_analisemodulonome);
                 modal.find('#editar_analiserisconome').val(editar_analiserisconome);
+                modal.find('#editar_analiseriscodescricao').val(editar_analiseriscodescricao);
 
                 modal.find('#editar_analisesituacao').val(editar_analisesituacao);
                 modal.find('#editar_analisedatainicio').val(editar_analisedatainicio);
                 modal.find('#editar_analisedatafim').val(editar_analisedatafim);
+                modal.find('#editar_analiseorcamento').val(editar_analiseorcamento.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}));
 
                 modal.find('#editar_analiseprobabilidade').val(editar_analiseprobabilidade);
+                modal.find('#editar_analiseprobabilidadejustificativa').val(editar_analiseprobabilidadejustificativa);
                 modal.find('#editar_analiseimpacto').val(editar_analiseimpacto);
+                modal.find('#editar_analiseimpactojustificativa').val(editar_analiseimpactojustificativa);
                 modal.find('#editar_analisemedidadorisco').val(editar_analisemedidadorisco);
             });
         </script>
@@ -517,7 +630,7 @@ session_start();
                             resultadodescricao = 'Risco Baixo';
                             resultadocolor = 'text-success';
                         }
-                        $('#editar_analisemedidadorisco').html('<p><output type="text" class="'+resultadocolor+'" id="editar_analisemedidadorisco">' + resultado.toFixed(2) + ' - ' + resultadodescricao + '</output></p>');
+                        $('#editar_analisemedidadorisco').html('<p><output type="text" class="' + resultadocolor + '" id="editar_analisemedidadorisco">' + resultado.toFixed(2) + ' - ' + resultadodescricao + '</output></p>');
                     } else {
                         $('#editar_analisemedidadorisco').html('<p><output type="text" id="editar_analisemedidadorisco">0</output></p>');
                     }
@@ -539,7 +652,7 @@ session_start();
                             resultadodescricao = 'Risco Baixo';
                             resultadocolor = 'text-success';
                         }
-                        $('#editar_analisemedidadorisco').html('<p><output type="text" class="'+resultadocolor+'" id="editar_analisemedidadorisco">' + resultado.toFixed(2) + ' - ' + resultadodescricao + '</output></p>');
+                        $('#editar_analisemedidadorisco').html('<p><output type="text" class="' + resultadocolor + '" id="editar_analisemedidadorisco">' + resultado.toFixed(2) + ' - ' + resultadodescricao + '</output></p>');
                     } else {
                         $('#editar_analisemedidadorisco').html('<p><output type="text" id="editar_analisemedidadorisco">0</output></p>');
                     }

@@ -11,7 +11,7 @@ if (isset($btnCadastrar)) {
     
     $moduloidsistema = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'moduloidsistema', FILTER_SANITIZE_STRING)); //obrigatorio
 
-    $query = "SELECT * FROM tbmodulo where nome = '$modulonome' LIMIT 1";
+    $query = "SELECT * FROM tbmodulo WHERE nome = '$modulonome' AND idsistema = '$moduloidsistema' AND LIMIT 1";
     $resultado = mysqli_query($conn, $query);
     $row = mysqli_affected_rows($conn);
     

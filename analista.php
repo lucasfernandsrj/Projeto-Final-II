@@ -20,7 +20,12 @@ session_start();
                 <!-- Main Content -->
                 <div id="content">
                     <!-- Topbar -->
-                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">Cadastros
+                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                        <a href="sistema.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Sistema</button></a>
+                        <a href="modulo.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Módulo</button></a>
+                        <a href="risco.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Risco</button></a>
+                        <a href="analise.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Análise do Gerente</button></a>
+                        <a href="analista.php"><button type="button" class="btn btn-outline-primary btn-lg mx-2">Analista</button></a>
                     </nav>
                     <!-- End of Topbar -->
                     <!-- Begin Page Content -->
@@ -58,6 +63,10 @@ session_start();
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover" id="DataTable" width="100%" cellspacing="0">
                                         <thead>
+                                            <tr>
+                                                <th class="text-center" colspan="3">Informações</th>
+                                                <th class="text-center" colspan="2">Ferramentas</th>
+                                            </tr>
                                             <tr>
                                                 <th>Nome</th>
                                                 <th>E-mail</th>
@@ -169,7 +178,7 @@ session_start();
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">CPF</label>
-                                        <input type="text" class="form-control" name="analista_cpf" maxlength="11" required>
+                                        <input type="text" class="form-control" name="analista_cpf" minlength="11" maxlength="11" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -208,13 +217,13 @@ session_start();
                                     <p><output type="text" id="detalhe_analistanome"></output></p>
                                 </div>
                             </div>
-                            <div class="col-lg-12">
+                            <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">E-mail</label>
                                     <p><output type="text" id="detalhe_analistaemail"></output></p>
                                 </div>
                             </div>
-                            <div class="col-lg-12">
+                            <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">CPF</label>
                                     <p><output type="text" id="detalhe_analistacpf"></output></p>
@@ -253,7 +262,7 @@ session_start();
                                         <input type="text" class="form-control" id="editar_analistanome" name="editar_analistanome" required>
                                     </div>
                                 </div>
-                                <div class="col-lg-12">
+                                <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">E-mail*</label>
                                         <input type="email" class="form-control" id="editar_analistaemail" name="editar_analistaemail" required>
@@ -262,7 +271,7 @@ session_start();
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">CPF*</label>
-                                        <input type="text" class="form-control" id="editar_analistacpf" name="editar_analistacpf" maxlength="11" required>
+                                        <p><output type="text" id="editar_analistacpf"></output></p>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -280,7 +289,14 @@ session_start();
         </div>
         <!-- Fim Modal Editar -->
         <?php include_once "templates/frameworks.php"; ?>
-
+        <!-- Redefinir CPF -->
+        <script>
+            function replaceCPF(cpf) {
+                return cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+            }
+        </script>
+        <!-- Fim Redefinir CPF -->
+        
         <!-- Modal Detalhe-->
         <script>
             $('#ModalDetalheAnalista').on('show.bs.modal', function (event) {
@@ -294,7 +310,8 @@ session_start();
                 modal.find('.modal-title').text('Detalhe do Analista: ' + detalhe_analistanome);
                 modal.find('#detalhe_analistanome').val(detalhe_analistanome);
                 modal.find('#detalhe_analistaemail').val(detalhe_analistaemail);
-                modal.find('#detalhe_analistacpf').val(detalhe_analistacpf);
+                var detalhe_analistacpf_mod = replaceCPF(detalhe_analistacpf.toString());
+                modal.find('#detalhe_analistacpf').val(detalhe_analistacpf_mod);
             });
         </script>
         <!-- Fim Modal Detalhe-->
@@ -314,7 +331,8 @@ session_start();
                 modal.find('#editar_analistaidanalista').val(editar_analistaidanalista);
                 modal.find('#editar_analistanome').val(editar_analistanome);
                 modal.find('#editar_analistaemail').val(editar_analistaemail);
-                modal.find('#editar_analistacpf').val(editar_analistacpf);
+                var editar_analistacpf_mod = replaceCPF(editar_analistacpf.toString());
+                modal.find('#editar_analistacpf').val(editar_analistacpf_mod);
             });
         </script>
         <!-- Fim Modal Editar-->

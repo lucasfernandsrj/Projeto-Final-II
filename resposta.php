@@ -20,7 +20,10 @@ session_start();
                 <!-- Main Content -->
                 <div id="content">
                     <!-- Topbar -->
-                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">Cadastros
+                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                        <a href="analise2.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Análise do Analista</button></a>
+                        <a href="atividade.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Atividade Mitigadora</button></a>
+                        <a href="resposta.php"><button type="button" class="btn btn-outline-primary btn-lg mx-2">Resposta ao Risco</button></a>
                     </nav>
                     <!-- End of Topbar -->
                     <!-- Begin Page Content -->
@@ -34,7 +37,9 @@ session_start();
 
                         <!-- Page Heading -->
                         <h1 class="h3 mb-2 text-gray-800">Resposta ao Risco</h1>
-                        <p class="mb-4">A atual página mostra a relação de respostas cadastrados. Permite ao gerente de projetos adicionar novos respostas ou realizar alterações.</p>
+                        <p >A atual página mostra a relação de respostas cadastrados. Permite ao gerente de projetos adicionar novas respostas ou realizar alterações.
+                        Além disso, a opção de adicionar novas atividades mitigadoras.
+                        </p>
 
                         <!-- DataTales Example -->
                         <div class="card shadow mb-4">
@@ -43,9 +48,14 @@ session_start();
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-auto mr-auto mb-2">
+                                    <div class="col-auto mb-2">
                                         <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#ModalCadastrarResposta">
                                             <i class="fas fa-list"></i>&nbsp;Cadastrar Resposta ao Risco
+                                        </button>
+                                    </div>
+                                    <div class="col-auto mr-auto mb-2">
+                                        <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#ModalCadastrarAtividade">
+                                            <i class="fas fa-list"></i>&nbsp;Cadastrar Atividade Mitigadora
                                         </button>
                                     </div>
                                     <div class="col-auto mb-2">
@@ -58,6 +68,10 @@ session_start();
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover" id="DataTable" width="100%" cellspacing="0">
                                         <thead>
+                                            <tr>
+                                                <th class="text-center" colspan="4">Informações</th>
+                                                <th class="text-center" colspan="2">Ferramentas</th>
+                                            </tr>
                                             <tr>
                                                 <th>Nome</th>
                                                 <th>Descrição</th>
@@ -175,17 +189,39 @@ session_start();
                                 <div class="col-lg-12">
                                     <h5><i class="fa fa-list"></i> Informações da Resposta ao Risco</h5>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Id Análise*</label>
+                                        <label for="recipient-name" class="col-form-label">Análise*</label>
                                         <select class="form-control" name="resposta_idanalise" id="resposta_idanalise" required>
                                             <option value="">Selecione</option>
                                             <?php
-                                            $query_analise = "SELECT idanalise,probabilidade FROM tbanalise";
+                                            $query_analise = "
+                                                    SELECT 
+                                                        tbanalise.*,tbrisco.nome AS nome_risco
+                                                    FROM 
+                                                        tbanalise 
+                                                    LEFT JOIN
+                                                        tbrisco
+                                                    ON
+                                                        tbrisco.idrisco = tbanalise.idrisco
+                                                    WHERE 
+                                                        medidaDoRisco
+                                                    IS NOT NULL";
                                             $result_analise = mysqli_query($conn, $query_analise);
                                             foreach ($result_analise as $row_analise) {
+                                                require_once("templates/function.php");
+                                                $orcamento = dinheiro($row_analise['orcamento']);
+                                                if($row_analise['medidaDoRisco'] > 0.24){
+                                                    $medidadorisco_status = "Risco Alto";
+                                                }elseif ($row_analise['medidaDoRisco'] > 0.08) {
+                                                    $medidadorisco_status = "Risco Médio";
+                                                } else {
+                                                    $medidadorisco_status = "Risco Baixo";
+                                                }
+                                                
                                                 ?>
-                                                <option value="<?= $row_analise['idanalise']; ?>"><?= $row_analise['idanalise']; ?></option>
+                                                
+                                                <option value="<?= $row_analise['idanalise']; ?>">Risco: <?= $row_analise['nome_risco']; ?> - <?= $medidadorisco_status; ?> (<?= $row_analise['medidaDoRisco']; ?>) - Orçamento: <?= $orcamento; ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -240,6 +276,61 @@ session_start();
         </div>
         <!-- Fim Modal Cadastrar -->
 
+        <!-- Modal Cadastrar Atividade -->
+        <div class="modal fade" id="ModalCadastrarAtividade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cadastrar Atividade Mitigadora</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="action/cadastrarAtividade.php">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h5><i class="fa fa-list"></i> Informações da Atividade Mitigadora</h5>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label for="message-text" class="col-form-label">Objetivo</label>
+                                        <input type="text" class="form-control" name="atividade_objetivo" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label for="message-text" class="col-form-label">Descrição</label>
+                                        <textarea class="form-control" rows="1" name="atividade_descricao" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="message-text" class="col-form-label">Data Inicial</label>
+                                        <input type="date" class="form-control" name="atividade_dt_inicio" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="message-text" class="col-form-label">Data Final</label>
+                                        <input type="date" class="form-control" name="atividade_dt_final" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <small class="help-block">*Campo(s) obrigatório(s).</small>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary" name="btnCadastrar">Confirmar Dados</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fim Modal Cadastrar -->
+        
         <!-- Modal Detalhe -->
         <div class="modal fade" id="ModalDetalheResposta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -497,8 +588,7 @@ session_start();
                             ajax: 'true'
                         }, function (j) {
                             if (j[0].riscobaixo === 1) {
-                                var options = '<option value="">Selecione</option>';
-                                options += '<option value="Aceito">Aceito</option>';
+                                var options = '<option value="Aceito">Aceito</option>';
                                 $('#resposta_situacao').html(options).show();
                             } else {
                                 var options = '<option value="">Selecione</option>';

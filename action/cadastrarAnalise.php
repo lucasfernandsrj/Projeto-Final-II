@@ -10,8 +10,11 @@ if (isset($btnCadastrar)) {
     $analise_idmodulo = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'analise_idmodulo', FILTER_SANITIZE_STRING)); //obrigatorio
     $analise_idrisco = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'analise_idrisco', FILTER_SANITIZE_STRING)); //obrigatorio
     $analise_situacao = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'analise_situacao', FILTER_SANITIZE_STRING)); //obrigatorio
+
     $analise_datainicio = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'analise_datainicio', FILTER_SANITIZE_STRING)); //obrigatorio
     $analise_datafim = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'analise_datafim', FILTER_SANITIZE_STRING));
+
+    $analise_orcamento = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'analise_orcamento', FILTER_SANITIZE_STRING));
     //$analise_medidadorisco = $analise_probabilidade * $analise_impacto;
 
     try {
@@ -22,7 +25,8 @@ if (isset($btnCadastrar)) {
                 'idmodulo' => $analise_idmodulo,
                 'idrisco' => $analise_idrisco,
                 'situacao' => $analise_situacao,
-                'datainicio' => $analise_datainicio
+                'datainicio' => $analise_datainicio,
+                'orcamento' => $analise_orcamento
                     ]
             );
         } else {
@@ -33,8 +37,8 @@ if (isset($btnCadastrar)) {
                         <span aria-hidden='true'>&times;</span>
                     </button>
                 </div>";
-            }else{
-                
+            } else {
+
                 $db->insert(
                         'tbanalise', [
                     'idanalista' => $analise_idanalista,
@@ -42,7 +46,8 @@ if (isset($btnCadastrar)) {
                     'idrisco' => $analise_idrisco,
                     'situacao' => $analise_situacao,
                     'datainicio' => $analise_datainicio,
-                    'datafim' => $analise_datafim
+                    'datafim' => $analise_datafim,
+                    'orcamento' => $analise_orcamento
                         ]
                 );
             }

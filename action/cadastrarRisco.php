@@ -5,12 +5,12 @@ require_once("../lib/Database/Connection.php");
 
 $btnCadastrar = filter_input(INPUT_POST, 'btnCadastrar', FILTER_SANITIZE_STRING);
 if (isset($btnCadastrar)) {
-    $risnome = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'risnome', FILTER_SANITIZE_STRING)); //obrigatorio
-    $risdescricao = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'risdescricao', FILTER_SANITIZE_STRING)); //obrigatorio
-    $catidcategoria1 = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'catidcategoria1', FILTER_SANITIZE_STRING)); //obrigatorio
-    $catidcategoria2 = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'catidcategoria2', FILTER_SANITIZE_STRING)); //obrigatorio
+    $risconome = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'risconome', FILTER_SANITIZE_STRING)); //obrigatorio
+    $riscodescricao = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'riscodescricao', FILTER_SANITIZE_STRING)); //obrigatorio
+    $categoriaidcategoria1 = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'categoriaidcategoria1', FILTER_SANITIZE_STRING)); //obrigatorio
+    $riscoidcategoria2 = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'riscoidcategoria2', FILTER_SANITIZE_STRING)); //obrigatorio
 
-    $query = "SELECT * FROM tbrisco where nome = '$risnome' LIMIT 1";
+    $query = "SELECT * FROM tbrisco where nome = '$risconome' LIMIT 1";
     $resultado = mysqli_query($conn, $query);
     $row = mysqli_affected_rows($conn);
     
@@ -26,9 +26,9 @@ if (isset($btnCadastrar)) {
         try {
             $db->insert(
                 'tbrisco', [
-                    'nome' => $risnome,
-                    'descricao' => $risdescricao,
-                    'idcategoria' => $catidcategoria2
+                    'nome' => $risconome,
+                    'descricao' => $riscodescricao,
+                    'idcategoria' => $riscoidcategoria2
                         ]
                 );
             if ($db->affected()) {

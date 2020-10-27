@@ -9,10 +9,6 @@ if (isset($btnCadastrar)) {
     $sistema_descricao = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'sistema_descricao', FILTER_SANITIZE_STRING)); //obrigatorio
     $sistema_dt_inicio = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'sistema_dt_inicio', FILTER_SANITIZE_STRING)); //obrigatorio
     $sistema_dt_final = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'sistema_dt_final', FILTER_SANITIZE_STRING));
-    
-    $modulo_nome = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'modulo_nome', FILTER_SANITIZE_STRING)); //obrigatorio
-    $modulo_descricao = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'modulo_descricao', FILTER_SANITIZE_STRING)); //obrigatorio
-    $modulo_ambiente = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'modulo_ambiente', FILTER_SANITIZE_STRING)); //obrigatorio
 
     $query = "SELECT * FROM tbsistema where nome = '$sistema_nome' LIMIT 1";
     $resultado = mysqli_query($conn, $query);
@@ -45,19 +41,6 @@ if (isset($btnCadastrar)) {
                         ]
                 );
             
-            $query2 = "SELECT idsistema FROM tbsistema where nome = '$sistema_nome' LIMIT 1";
-            $result2 = mysqli_query($conn, $query2);
-            $row2 = mysqli_fetch_assoc($result2);
-            $bd_idsistema = $row2['idsistema'];
-            
-            $db->insert(
-                'tbmodulo', [
-                    'nome' => $modulo_nome,
-                    'descricao' => $modulo_descricao,
-                    'ambiente' => $modulo_ambiente,
-                    'idsistema' => $bd_idsistema
-                        ]
-                );
             if ($db->affected()) {
                 $_SESSION['msg'] = "<div class='alert alert-success alert-dismissible fade show' role='alert'>
                     <strong>Adicionado!</strong> O cadastro foi realizado com sucesso.

@@ -14,7 +14,7 @@
             </div>
             <div class="footer-copyright text-lg-right my-auto">
                 <a class="small" href="index.php"><i class="fas fa-home"></i> Início</a>&nbsp;&nbsp;
-                <a class="small" href="index.php"><i class="fas fa-map"></i> Contate-nos</a>
+                <a class="small" href="contato.php"><i class="fas fa-map"></i> Contate-nos</a>
             </div>
         </div>    
     </div>

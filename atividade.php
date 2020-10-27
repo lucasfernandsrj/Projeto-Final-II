@@ -20,7 +20,10 @@ session_start();
                 <!-- Main Content -->
                 <div id="content">
                     <!-- Topbar -->
-                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">Cadastros
+                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                        <a href="analise2.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Análise do Analista</button></a>
+                        <a href="atividade.php"><button type="button" class="btn btn-outline-primary btn-lg mx-2">Atividade Mitigadora</button></a>
+                        <a href="resposta.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Resposta ao Risco</button></a>
                     </nav>
                     <!-- End of Topbar -->
                     <!-- Begin Page Content -->
@@ -58,6 +61,10 @@ session_start();
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover" id="DataTable" width="100%" cellspacing="0">
                                         <thead>
+                                            <tr>
+                                                <th class="text-center" colspan="4">Informações</th>
+                                                <th class="text-center" colspan="2">Ferramentas</th>
+                                            </tr>
                                             <tr>
                                                 <th>Objetivo</th>
                                                 <th>Descrição</th>

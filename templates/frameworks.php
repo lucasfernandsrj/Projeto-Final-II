@@ -65,3 +65,5 @@
 <script type="text/javascript" src="lib/bootstrap.js"></script>
 <!-- StartBootstrap - SB-Admin-2 -->
 <script type="text/javascript" src="lib/sb-admin-2.min.js"></script>
+
+<!-- <script type="text/javascript" src="vendor/DataTables2/datatables.min.js"></script>-->

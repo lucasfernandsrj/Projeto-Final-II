@@ -6,17 +6,20 @@ require_once("../lib/Database/Connection.php");
 
 $btnEditar = filter_input(INPUT_POST, 'btnEditar', FILTER_SANITIZE_STRING);
 if (isset($btnEditar)) {
-    $risidrisco = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_risidrisco', FILTER_SANITIZE_STRING));
-    $risnome = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_risnome', FILTER_SANITIZE_STRING)); //obrigatorio
-    $risdescricao = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_risdescricao', FILTER_SANITIZE_STRING)); //obrigatorio
-
+    $risidrisco = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_riscoidrisco', FILTER_SANITIZE_STRING));
+    $risnome = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_risconome', FILTER_SANITIZE_STRING)); //obrigatorio
+    $risdescricao = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_riscodescricao', FILTER_SANITIZE_STRING)); //obrigatorio
+    
+    $categoriaidcategoria2 = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_categoriaidcategoria2', FILTER_SANITIZE_STRING)); //obrigatorio
+    
 
     try {
         $db->update(
                 'tbrisco',
                 [
                     'nome' => $risnome,
-                    'descricao' => $risdescricao
+                    'descricao' => $risdescricao,
+                    'idcategoria' => $categoriaidcategoria2
                 ],
                 [
                     'idrisco' => $risidrisco

@@ -20,7 +20,12 @@ session_start();
                 <!-- Main Content -->
                 <div id="content">
                     <!-- Topbar -->
-                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">Cadastros
+                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                        <a href="sistema.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Sistema</button></a>
+                        <a href="modulo.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Módulo</button></a>
+                        <a href="risco.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Risco</button></a>
+                        <a href="analise.php"><button type="button" class="btn btn-outline-primary btn-lg mx-2">Análise do Gerente</button></a>
+                        <a href="analista.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Analista</button></a>
                     </nav>
                     <!-- End of Topbar -->
                     <!-- Begin Page Content -->
@@ -59,12 +64,17 @@ session_start();
                                     <table class="table table-bordered table-hover" id="DataTable" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
-                                                <th>ID Análise</th>
+                                                <th class="text-center" colspan="6">Informações</th>
+                                                <th class="text-center" colspan="2">Ferramentas</th>
+                                            </tr>
+                                            <tr>
+                                               
                                                 <th>Analista</th>
                                                 <th>Módulo</th>
                                                 <th>Risco</th>
                                                 <th>Situação</th>
                                                 <th>Data Início</th>
+                                                <th>Orçamento</th>
                                                 <th class="text-center">Detalhe</th>
                                                 <th class="text-center">Editar</th>
                                                 <!--<th class="text-center">Excluir</th>-->
@@ -72,13 +82,13 @@ session_start();
                                         </thead>
                                         <tfoot>
                                             <tr class="m-0 font-weight-bold text-dark">
-                                                <th>ID Análise</th>
+                                                
                                                 <th>Analista</th>
                                                 <th>Módulo</th>
                                                 <th>Risco</th>
                                                 <th>Situação</th>
                                                 <th>Data Início</th>
-                                                
+                                                <th>Orçamento</th>
                                                 <th class="text-center">Detalhe</th>
                                                 <th class="text-center">Editar</th>
                                                 <!--<th class="text-center">Excluir</th>-->
@@ -109,14 +119,24 @@ session_start();
                                                         tbrisco.idrisco = tbanalise.idrisco";
                                             $result = mysqli_query($conn, $query);
                                             foreach ($result as $row) {
+                                                include_once 'templates/function.php';
                                                 ?>
                                                 <tr>
-                                                    <td><?= $row['idanalise']; ?></td>
+                                                    
                                                     <td><?= $row['analista_nome']; ?></td>
                                                     <td><?= $row['modulo_nome']; ?></td>
                                                     <td><?= $row['risco_nome']; ?></td>
-                                                    <td><?= $row['situacao']; ?></td>
+                                                    <?php
+                                                    if ($row['situacao'] == 'Bloqueada') {
+                                                        ?><td class="text-warning">Bloqueada</td><?php
+                                                    } elseif ($row['situacao'] == 'Excluída') {
+                                                        ?><td class="text-danger">Excluída</td><?php
+                                                    } else {
+                                                        ?><td class="text-success">Aprovada</td><?php
+                                                    }
+                                                    ?>
                                                     <td><?= $row['dataInicio']; ?></td>
+                                                    <td><?= dinheiro($row['orcamento']); ?></td>
                                                     <td class="text-center">
                                                         <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#ModalDetalheAnalise"
                                                                 data-analiseanalistanome="<?= $row['analista_nome']; ?>"
@@ -125,6 +145,7 @@ session_start();
                                                                 data-analisesituacao="<?= $row['situacao']; ?>"
                                                                 data-analisedatainicio="<?= $row['dataInicio']; ?>"
                                                                 data-analisedatafim="<?= $row['dataFim']; ?>"
+                                                                data-analiseorcamento="<?= dinheiro($row['orcamento']); ?>"
                                                                 >
                                                             <i class="fas fa-fingerprint"></i>&nbsp;Detalhe
                                                         </button>
@@ -132,18 +153,19 @@ session_start();
                                                     <td class="text-center">
                                                         <button type="button" class="btn btn-outline-dark btn-sm" data-toggle="modal" data-target="#ModalEditarAnalise"
                                                                 data-analiseidanalise="<?= $row['idanalise']; ?>"
-                                                                
+
                                                                 data-analiseidanalista="<?= $row['idanalista']; ?>"
                                                                 data-analiseidmodulo="<?= $row['idmodulo']; ?>"
                                                                 data-analiseidrisco="<?= $row['idrisco']; ?>"
-                                                                
+
                                                                 data-analiseanalistanome="<?= $row['analista_nome']; ?>"
                                                                 data-analisemodulonome="<?= $row['modulo_nome']; ?>"
                                                                 data-analiserisconome="<?= $row['risco_nome']; ?>"
-                                                                
+
                                                                 data-analisedatainicio="<?= $row['dataInicio']; ?>"
                                                                 data-analisedatafim="<?= $row['dataFim']; ?>"
                                                                 data-analisesituacao="<?= $row['situacao']; ?>"
+                                                                data-analiseorcamento="<?= $row['orcamento']; ?>"
                                                                 >
                                                             <i class="fas fa-edit"></i>&nbsp;Editar
                                                         </button>
@@ -157,7 +179,7 @@ session_start();
                                                     </td>
                                                     -->
                                                 </tr>
-                                            <?php } ?>
+<?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -169,7 +191,7 @@ session_start();
                     <!-- /.container-fluid -->
                 </div>
                 <!-- End of Main Content -->
-                <?php include_once "templates/footer.php"; ?>
+<?php include_once "templates/footer.php"; ?>
             </div>
             <!-- End of Content Wrapper -->
         </div>
@@ -202,7 +224,7 @@ session_start();
                                             foreach ($result_analista as $row_analista) {
                                                 ?>
                                                 <option value="<?= $row_analista['idanalista']; ?>"><?= $row_analista['nome']; ?></option>
-                                            <?php } ?>
+<?php } ?>
                                         </select>
                                     </div>
                                 </div>
@@ -212,35 +234,35 @@ session_start();
                                         <select class="form-control" name="analise_idmodulo" required>
                                             <option value="">Selecione</option>
                                             <?php
-                                            $query_modulo = "SELECT idmodulo, nome FROM tbmodulo";
+                                            $query_modulo = "SELECT idmodulo, nome FROM tbmodulo WHERE nivel = 1";
                                             $result_modulo = mysqli_query($conn, $query_modulo);
                                             foreach ($result_modulo as $row_modulo) {
                                                 ?>
                                                 <option value="<?= $row_modulo['idmodulo']; ?>"><?= $row_modulo['nome']; ?></option>
-                                            <?php } ?>
+<?php } ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Risco</label>
+                                        <label for="recipient-name" class="col-form-label">Risco(s) Não atribuído(s)</label>
                                         <select class="form-control" name="analise_idrisco" required>
                                             <option value="">Selecione</option>
                                             <?php
-                                            $query_risco = "SELECT idrisco, nome FROM tbrisco";
+                                            $query_risco = "SELECT idrisco, nome FROM tbrisco WHERE idrisco not in (select idrisco from tbanalise)";
                                             $result_risco = mysqli_query($conn, $query_risco);
                                             foreach ($result_risco as $row_risco) {
                                                 ?>
                                                 <option value="<?= $row_risco['idrisco']; ?>"><?= $row_risco['nome']; ?></option>
-                                            <?php } ?>
+<?php } ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Situação</label>
-                                        <input type="text" class="form-control" value="Bloqueado" disabled>
-                                        <input type="hidden" class="form-control" name="analise_situacao" value="Bloqueado">
+                                        <input type="text" class="form-control" value="Bloqueada" disabled>
+                                        <input type="hidden" class="form-control" name="analise_situacao" value="Bloqueada">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -253,6 +275,12 @@ session_start();
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Data Fim</label>
                                         <input type="date" class="form-control" name="analise_datafim" >
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Orçamento</label>
+                                        <input type="text" class="form-control" name="analise_orcamento" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -287,7 +315,7 @@ session_start();
                             </div>
                             <div class="col-lg-6">
                                 <div>
-                                    <label class="col-form-label font-weight-bold">Nome do Analista</label>
+                                    <label class="col-form-label font-weight-bold">Nome do Analista Responsável</label>
                                     <p><output type="text" id="detalhe_analiseanalistanome"></output></p>
                                 </div>
                             </div>
@@ -319,6 +347,12 @@ session_start();
                                 <div>
                                     <label class="col-form-label font-weight-bold">Data Fim</label>
                                     <p><output type="date" id="detalhe_analisedatafim"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Orçamento</label>
+                                    <p><output type="text" id="detalhe_analiseorcamento"></output></p>
                                 </div>
                             </div>
                         </div>
@@ -359,7 +393,7 @@ session_start();
                                             foreach ($result_analista_edt as $row_analista_edt) {
                                                 ?>
                                                 <option value="<?= $row_analista_edt['idanalista']; ?>"><?= $row_analista_edt['nome']; ?></option>
-                                            <?php } ?>
+<?php } ?>
                                         </select>
                                     </div>
                                 </div>
@@ -374,7 +408,7 @@ session_start();
                                             foreach ($result_modulo_edt as $row_modulo_edt) {
                                                 ?>
                                                 <option value="<?= $row_modulo_edt['idmodulo']; ?>"><?= $row_modulo_edt['nome']; ?></option>
-                                            <?php } ?>
+<?php } ?>
                                         </select>
                                     </div>
                                 </div>
@@ -389,33 +423,39 @@ session_start();
                                             foreach ($result_risco_edt as $row_risco_edt) {
                                                 ?>
                                                 <option value="<?= $row_risco_edt['idrisco']; ?>"><?= $row_risco_edt['nome']; ?></option>
-                                            <?php } ?>
+<?php } ?>
                                         </select>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Situação</label>
-                                        
+
                                         <select class="form-control" name="editar_analisesituacao" id="editar_analisesituacao" required>
                                             <option value="">Selecione</option>
-                                            <option value="Bloqueado">Bloqueado</option>
-                                            <option value="Excluído">Excluído</option>
-                                            <option value="Aprovado">Aprovado</option>
+                                            <option value="Bloqueada">Bloqueada</option>
+                                            <option value="Excluída">Excluída</option>
+                                            <option value="Aprovada">Aprovada</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Data de Início*</label>
-                                        <input type="text" class="form-control" id="editar_analisedatainicio" name="editar_analisedatainicio" required>
+                                        <input type="date" class="form-control" id="editar_analisedatainicio" name="editar_analisedatainicio" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Data Fim</label>
-                                        <input type="text" class="form-control" id="editar_analisedatafim" name="editar_analisedatafim" required>
+                                        <input type="date" class="form-control" id="editar_analisedatafim" name="editar_analisedatafim" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Orçamento</label>
+                                        <input type="text" class="form-control" id="editar_analiseorcamento" name="editar_analiseorcamento" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -432,7 +472,7 @@ session_start();
             </div>
         </div>
         <!-- Fim Modal Editar -->
-        <?php include_once "templates/frameworks.php"; ?>
+<?php include_once "templates/frameworks.php"; ?>
 
         <!-- Modal Detalhe-->
         <script>
@@ -444,6 +484,7 @@ session_start();
                 var detalhe_analisesituacao = button.data('analisesituacao');
                 var detalhe_analisedatainicio = button.data('analisedatainicio');
                 var detalhe_analisedatafim = button.data('analisedatafim');
+                var detalhe_analiseorcamento = button.data('analiseorcamento');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
@@ -454,6 +495,7 @@ session_start();
                 modal.find('#detalhe_analisesituacao').val(detalhe_analisesituacao);
                 modal.find('#detalhe_analisedatainicio').val(detalhe_analisedatainicio);
                 modal.find('#detalhe_analisedatafim').val(detalhe_analisedatafim);
+                modal.find('#detalhe_analiseorcamento').val(detalhe_analiseorcamento);
             });
         </script>
         <!-- Fim Modal Detalhe-->
@@ -463,35 +505,37 @@ session_start();
             $('#ModalEditarAnalise').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal
                 var editar_analiseidanalise = button.data('analiseidanalise');
-                
+
                 var editar_analiseidanalista = button.data('analiseidanalista'); // Extract info from data-* attributes
                 var editar_analiseidmodulo = button.data('analiseidmodulo'); // Extract info from data-* attributes
                 var editar_analiseidrisco = button.data('analiseidrisco'); // Extract info from data-* attributes
-                
+
                 var editar_analiseanalistanome = button.data('analiseanalistanome');
                 var editar_analisemodulonome = button.data('analisemodulonome');
                 var editar_analiserisconome = button.data('analiserisconome');
-                
+
                 var editar_analisesituacao = button.data('analisesituacao');
                 var editar_analisedatainicio = button.data('analisedatainicio');
                 var editar_analisedatafim = button.data('analisedatafim');
+                var editar_analiseorcamento = button.data('analiseorcamento');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
                 modal.find('.modal-title').text('Editar Análise: ' + editar_analiseidanalista);
                 modal.find('#editar_analiseidanalise').val(editar_analiseidanalise);
-                
+
                 modal.find('#editar_analiseidanalista').val(editar_analiseidanalista);
                 modal.find('#editar_analiseidmodulo').val(editar_analiseidmodulo);
                 modal.find('#editar_analiseidrisco').val(editar_analiseidrisco);
-                
+
                 modal.find('#editar_analiseanalistanome').val(editar_analiseanalistanome);
                 modal.find('#editar_analisemodulonome').val(editar_analisemodulonome);
                 modal.find('#editar_analiserisconome').val(editar_analiserisconome);
-                
+
                 modal.find('#editar_analisesituacao').val(editar_analisesituacao);
                 modal.find('#editar_analisedatainicio').val(editar_analisedatainicio);
                 modal.find('#editar_analisedatafim').val(editar_analisedatafim);
+                modal.find('#editar_analiseorcamento').val(editar_analiseorcamento);
             });
         </script>
         <!-- Fim Modal Editar-->

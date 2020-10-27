@@ -10,13 +10,13 @@ if (isset($btnCadastrar)) {
     $analista_email = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'analista_email', FILTER_SANITIZE_STRING)); //obrigatorio
     $analista_cpf = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'analista_cpf', FILTER_SANITIZE_STRING)); //obrigatorio
 
-    $query = "SELECT * FROM tbanalista where nome = '$analista_nome' LIMIT 1";
+    $query = "SELECT * FROM tbanalista where cpf = '$analista_cpf' LIMIT 1";
     $resultado = mysqli_query($conn, $query);
     $row = mysqli_affected_rows($conn);
     
     if($row == 1){
         $_SESSION['msg'] = "<div class='alert alert-warning alert-dismissible fade show' role='alert'>
-                        <strong>Falha!</strong> Um cadastro com o mesmo nome já existe. Tente outro nome ou entre em contato com o Administrador!
+                        <strong>Falha!</strong> Um cadastro com o mesmo cpf já existe. Tente cadastrar outra pessoa ou entre em contato com o Administrador!
                         <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                             <span aria-hidden='true'>&times;</span>
                         </button>

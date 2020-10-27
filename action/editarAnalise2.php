@@ -8,8 +8,12 @@ $btnEditar = filter_input(INPUT_POST, 'btnEditar', FILTER_SANITIZE_STRING);
 if (isset($btnEditar)) {
     $analiseidanalise = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_analiseidanalise', FILTER_SANITIZE_STRING));
     
-    $analiseprobabilidade = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_analiseprobabilidade', FILTER_SANITIZE_STRING));
+    $analiseprobabilidade = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_analiseprobabilidade', FILTER_SANITIZE_STRING)); //obrigatorio
+    $analiseprobabilidadejustificativa = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_analiseprobabilidadejustificativa', FILTER_SANITIZE_STRING)); //obrigatorio
+    
     $analiseimpacto = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_analiseimpacto', FILTER_SANITIZE_STRING)); //obrigatorio
+    $analiseimpactojustificativa = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_analiseimpactojustificativa', FILTER_SANITIZE_STRING)); //obrigatorio
+    
     $analisemedidadorisco = $analiseprobabilidade * $analiseimpacto;
     $analisemedidadorisco_format = strval(number_format($analisemedidadorisco, 2));
 
@@ -18,7 +22,9 @@ if (isset($btnEditar)) {
                 'tbanalise',
                 [
                     'probabilidade' => $analiseprobabilidade,
+                    'probabilidadejustificativa' => $analiseprobabilidadejustificativa,
                     'impacto' => $analiseimpacto,
+                    'impactojustificativa' => $analiseimpactojustificativa,
                     'medidadorisco' => $analisemedidadorisco_format
                 ],
                 [

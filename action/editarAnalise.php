@@ -15,7 +15,9 @@ if (isset($btnEditar)) {
     $analisesituacao = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_analisesituacao', FILTER_SANITIZE_STRING)); //obrigatorio
     $analisedatainicio = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_analisedatainicio', FILTER_SANITIZE_STRING)); //obrigatorio
     $analisedatafim = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_analisedatafim', FILTER_SANITIZE_STRING)); //obrigatorio
-
+    
+    $analiseorcamento = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_analiseorcamento', FILTER_SANITIZE_STRING)); //obrigatorio
+    
     try {
         $db->update(
                 'tbanalise',
@@ -25,7 +27,8 @@ if (isset($btnEditar)) {
                     'idrisco' => $analiseidrisco,
                     'situacao' => $analisesituacao,
                     'dataInicio' => $analisedatainicio,
-                    'dataFim' => $analisedatafim
+                    'dataFim' => $analisedatafim,
+                    'orcamento' => $analiseorcamento
                 ],
                 [
                     'idanalise' => $analiseidanalise

@@ -20,7 +20,12 @@ session_start();
                 <!-- Main Content -->
                 <div id="content">
                     <!-- Topbar -->
-                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">Cadastros
+                    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                        <a href="sistema.php"><button type="button" class="btn btn-outline-primary btn-lg mx-2">Sistema</button></a>
+                        <a href="modulo.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Módulo</button></a>
+                        <a href="risco.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Risco</button></a>
+                        <a href="analise.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Análise do Gerente</button></a>
+                        <a href="analista.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Analista</button></a>
                     </nav>
                     <!-- End of Topbar -->
                     <!-- Begin Page Content -->
@@ -58,6 +63,10 @@ session_start();
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover" id="DataTable" width="100%" cellspacing="0">
                                         <thead>
+                                            <tr>
+                                                <th class="text-center" colspan="4">Informações</th>
+                                                <th class="text-center" colspan="2">Ferramentas</th>
+                                            </tr>
                                             <tr>
                                                 <th>Nome</th>
                                                 <th>Descrição</th>
@@ -140,7 +149,7 @@ session_start();
         <!-- End of Page Wrapper -->
 
         <!-- Modal Cadastrar -->
-        <div class="modal fade" id="ModalCadastrarSistema" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="ModalCadastrarSistema1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -155,7 +164,7 @@ session_start();
                                 <div class="col-lg-12">
                                     <h5><i class="fa fa-list"></i> Informações do Sistema</h5>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Nome</label>
                                         <input type="text" class="form-control" name="sistema_nome" required>
@@ -181,7 +190,7 @@ session_start();
                                 </div>
                                 <div class="col-lg-12">
                                     <hr>
-                                    <h5><i class="fa fa-list"></i> Informações do Módulo*</h5>
+                                    <h5><i class="fa fa-list"></i> Informações do Módulo</h5>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
@@ -206,7 +215,7 @@ session_start();
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
-                                    <small class="help-block">*Campo(s) obrigatório(s).</small>
+                                    <small class="help-block">*Todos os campos são obrigatórios.</small>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -220,6 +229,61 @@ session_start();
         </div>
         <!-- Fim Modal Cadastrar -->
 
+        <!-- Modal Cadastrar -->
+        <div class="modal fade" id="ModalCadastrarSistema" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Cadastrar Sistema</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="action/cadastrarSistema.php">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <h5><i class="fa fa-list"></i> Informações do Sistema</h5>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Nome</label>
+                                        <input type="text" class="form-control" name="sistema_nome" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label for="message-text" class="col-form-label">Descrição</label>
+                                        <textarea class="form-control" name="sistema_descricao" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="message-text" class="col-form-label">Data Inicial</label>
+                                        <input type="date" class="form-control" name="sistema_dt_inicio" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="message-text" class="col-form-label">Data Final</label>
+                                        <input type="date" class="form-control" name="sistema_dt_final" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <small class="help-block">*Todos os campos são obrigatórios.</small>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary" name="btnCadastrar">Confirmar Dados</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Fim Modal Cadastrar -->
+        
         <!-- Modal Detalhe -->
         <div class="modal fade" id="ModalDetalheSistema" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -292,19 +356,19 @@ session_start();
                                 <input type="hidden" class="form-control" id="editar_sistemaidsistema" name="editar_sistemaidsistema" required>
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Nome*</label>
+                                        <label for="recipient-name" class="col-form-label">Nome</label>
                                         <input type="text" class="form-control" id="editar_sistemanome" name="editar_sistemanome" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label for="message-text" class="col-form-label">Descrição*</label>
+                                        <label for="message-text" class="col-form-label">Descrição</label>
                                         <textarea class="form-control" id="editar_sistemadescricao" name="editar_sistemadescricao" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label for="message-text" class="col-form-label">Data Inicial*</label>
+                                        <label for="message-text" class="col-form-label">Data Inicial</label>
                                         <input type="date" class="form-control" id="editar_sistemadatainicio" name="editar_sistemadatainicio" required>
                                     </div>
                                 </div>
@@ -315,7 +379,7 @@ session_start();
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
-                                    <small class="help-block">*Campo(s) obrigatório(s).</small>
+                                    <small class="help-block">*Todos os campos obrigatórios.</small>
                                 </div>
                             </div>
                             <div class="modal-footer">
