@@ -9,16 +9,13 @@ if (isset($btnEditar)) {
     $analistaidanalista = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_analistaidanalista', FILTER_SANITIZE_STRING));
     $analistanome = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_analistanome', FILTER_SANITIZE_STRING)); //obrigatorio
     $analistaemail = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_analistaemail', FILTER_SANITIZE_STRING)); //obrigatorio
-    $analistacpf = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_analistacpf', FILTER_SANITIZE_STRING)); //obrigatorio
-
-
+    
     try {
         $db->update(
                 'tbanalista',
                 [
                     'nome' => $analistanome,
-                    'email' => $analistaemail,
-                    'cpf' => $analistacpf
+                    'email' => $analistaemail 
                 ],
                 [
                     'idanalista' => $analistaidanalista
@@ -27,7 +24,7 @@ if (isset($btnEditar)) {
 
         if ($db->affected()) {
             $_SESSION['msg'] = "<div class='alert alert-success alert-dismissible fade show' role='alert'>
-                    <strong>Adicionado!</strong> A edição foi realizada com sucesso.
+                    <strong>Alterado!</strong> A edição foi realizada com sucesso.
                     <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                         <span aria-hidden='true'>&times;</span>
                     </button>

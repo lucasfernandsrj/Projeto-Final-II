@@ -28,7 +28,7 @@ if (isset($btnEditar)) {
         );
         if ($db->affected()) {
             $_SESSION['msg'] = "<div class='alert alert-success alert-dismissible fade show' role='alert'>
-                    <strong>Adicionado!</strong> A edição foi realizada com sucesso.
+                    <strong>Alterado!</strong> A edição foi realizada com sucesso.
                     <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                         <span aria-hidden='true'>&times;</span>
                     </button>

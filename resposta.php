@@ -66,10 +66,10 @@ session_start();
                                 </div>
                                 <!-- Tabela -->
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-hover" id="DataTable" width="100%" cellspacing="0">
+                                    <table class="table table-bordered table-hover text-dark" id="DataTable" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
-                                                <th class="text-center" colspan="4">Informações</th>
+                                                <th class="text-center" colspan="5">Informações</th>
                                                 <th class="text-center" colspan="2">Ferramentas</th>
                                             </tr>
                                             <tr>
@@ -77,6 +77,7 @@ session_start();
                                                 <th>Descrição</th>
                                                 <th>Situação</th>
                                                 <th>Medida do Risco</th>
+                                                <th>Situação</th>
                                                 <th class="text-center">Detalhe</th>
                                                 <th class="text-center">Editar</th>
                                                 <!--<th class="text-center">Excluir</th>-->
@@ -88,6 +89,7 @@ session_start();
                                                 <th>Descrição</th>
                                                 <th>Situação</th>
                                                 <th>Medida do Risco</th>
+                                                <th>Situação</th>
                                                 <th class="text-center">Detalhe</th>
                                                 <th class="text-center">Editar</th>
                                                 <!--<th class="text-center">Excluir</th>-->
@@ -99,18 +101,28 @@ session_start();
                                             $query = "
                                                     SELECT 
                                                         tbresposta.*,
-                                                        tbanalise.medidadorisco,
-                                                        tbanalise.probabilidade,
-                                                        tbanalise.impacto,
-                                                        tbanalise.datainicio,
-                                                        tbanalise.datafim,
-                                                        tbanalise.situacao AS  analise_situacao
+                                                        tbanalise.medidadorisco AS analise_medidadorisco,
+                                                        tbanalise.probabilidade AS analise_probabilidade,
+                                                        tbanalise.probabilidadeJustificativa AS analise_probabilidadejustificativa,
+                                                        tbanalise.impacto AS analise_impacto,
+                                                        tbanalise.impactoJustificativa AS analise_impactojustificativa,
+                                                        tbanalise.datainicio AS analise_datainicio,
+                                                        tbanalise.datafim AS analise_datafim,
+                                                        tbanalise.situacao AS  analise_situacao,
+                                                        tbatividade.objetivo AS atividade_objetivo,
+                                                        tbatividade.descricao AS atividade_descricao,
+                                                        tbatividade.dataInicio AS atividade_datainicio,
+                                                        tbatividade.dataFim AS atividade_datafim
                                                     FROM 
                                                         tbresposta
                                                     LEFT JOIN
                                                         tbanalise
                                                     ON
-                                                        tbresposta.idanalise = tbanalise.idanalise";
+                                                        tbresposta.idanalise = tbanalise.idanalise
+                                                    LEFT JOIN
+                                                        tbatividade
+                                                    ON
+                                                        tbresposta.idatividade = tbatividade.idatividade";
                                             $result = mysqli_query($conn, $query);
                                             foreach ($result as $row) {
                                                 ?>
@@ -118,19 +130,41 @@ session_start();
                                                     <td><?= $row['nome']; ?></td>
                                                     <td><?= $row['descricao']; ?></td>
                                                     <td><?= $row['situacao']; ?></td>
-                                                    <td><?= $row['medidadorisco']; ?></td>
+                                                    <?php
+                                                    if ($row['analise_medidadorisco'] > 0.24) {
+                                                        ?><td class="text-danger"><?= $row['analise_medidadorisco']; ?> - Risco Alto</td>
+                                                        <?php
+                                                    } elseif ($row['analise_medidadorisco'] > 0.08) {
+                                                        ?><td class="text-warning"><?= $row['analise_medidadorisco']; ?> - Risco Médio</td>
+                                                        <?php
+                                                    } else {
+                                                        ?><td class="text-success"><?= $row['analise_medidadorisco']; ?> - Risco Baixo</td>
+                                                        <?php
+                                                    }
+                                                    ?>
+                                                    <td><?= $row['analise_situacao']; ?></td>
                                                     <td class="text-center">
                                                         <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#ModalDetalheResposta"
                                                                 data-respostanome="<?= $row['nome']; ?>"
                                                                 data-respostadescricao="<?= $row['descricao']; ?>"
                                                                 data-respostasituacao="<?= $row['situacao']; ?>"
-                                                                data-respostamedidadorisco="<?= $row['medidadorisco']; ?>"
-                                                                data-respostaprobabilidade="<?= $row['probabilidade']; ?>"
-                                                                data-respostaimpacto="<?= $row['impacto']; ?>"
-                                                                data-respostadatainicio="<?= $row['datainicio']; ?>"
-                                                                data-respostadatafim="<?= $row['datafim']; ?>"
-                                                                data-respostaanalisesituacao="<?= $row['analise_situacao']; ?>"
-                                                                data-respostaidatividade="<?= $row['idatividade']; ?>"
+                                                                
+                                                                data-analiseprobabilidade="<?= $row['analise_probabilidade']; ?>"
+                                                                data-analiseprobabilidadejustificativa="<?= $row['analise_probabilidadejustificativa']; ?>"
+                                                                data-analiseimpacto="<?= $row['analise_impacto']; ?>"
+                                                                data-analiseimpactojustificativa="<?= $row['analise_impactojustificativa']; ?>"
+                                                                data-analisemedidadorisco="<?= $row['analise_medidadorisco']; ?>"
+                                                                
+                                                                data-analisedatainicio="<?= $row['analise_datainicio']; ?>"
+                                                                data-analisedatafim="<?= $row['analise_datafim']; ?>"
+                                                                data-analisesituacao="<?= $row['analise_situacao']; ?>"
+                                                                
+                                                                data-analiseidatividade="<?= $row['idatividade']; ?>"
+                                                                
+                                                                data-atividadeobjetivo="<?= $row['atividade_objetivo']; ?>"
+                                                                data-atividadedescricao="<?= $row['atividade_descricao']; ?>"
+                                                                data-atividadedatainicio="<?= $row['atividade_datainicio']; ?>"
+                                                                data-atividadedatafim="<?= $row['atividade_datafim']; ?>"
                                                                 >
                                                             <i class="fas fa-fingerprint"></i>&nbsp;Detalhe
                                                         </button>
@@ -173,7 +207,7 @@ session_start();
         </div>
         <!-- End of Page Wrapper -->
 
-        <!-- Modal Cadastrar -->
+        <!-- Modal Cadastrar Resposta -->
         <div class="modal fade" id="ModalCadastrarResposta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -252,11 +286,11 @@ session_start();
                                         <select class="form-control" name="resposta_idatividade" id="resposta_idatividade">
                                             <option value="">Selecione</option>
                                             <?php
-                                            $query_atividade = "SELECT idatividade,objetivo FROM tbatividade";
+                                            $query_atividade = "SELECT idatividade,objetivo,dataInicio,dataFim FROM tbatividade";
                                             $result_atividade = mysqli_query($conn, $query_atividade);
                                             foreach ($result_atividade as $row_atividade) {
                                                 ?>
-                                                <option value="<?= $row_atividade['idatividade']; ?>"><?= $row_atividade['objetivo']; ?></option>
+                                                <option value="<?= $row_atividade['idatividade']; ?>"><?= $row_atividade['objetivo']; ?> (Validade de <?= $row_atividade['dataInicio']; ?> a <?= $row_atividade['dataFim']; ?>)</option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -276,7 +310,7 @@ session_start();
         </div>
         <!-- Fim Modal Cadastrar -->
 
-        <!-- Modal Cadastrar Atividade -->
+        <!-- Modal Cadastrar Atividade Mitigadora-->
         <div class="modal fade" id="ModalCadastrarAtividade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -344,21 +378,21 @@ session_start();
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-12">
-                                <h5><i class="fa fa-list"></i> Informações da Resposta ao Risco</h5>
+                                <h5 class="text-primary"><i class="fa fa-clipboard"></i> Informações da Resposta ao Risco</h5>
                             </div>
-                            <div class="col-lg-12">
+                            <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Nome</label>
                                     <p><output type="text" id="detalhe_respostanome"></output></p>
                                 </div>
                             </div>
-                            <div class="col-lg-12">
+                            <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Descrição</label>
                                     <p><output type="text" id="detalhe_respostadescricao"></output></p>
                                 </div>
                             </div>
-                            <div class="col-lg-12">
+                            <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Situação</label>
                                     <p><output type="text" id="detalhe_respostasituacao"></output></p>
@@ -366,59 +400,84 @@ session_start();
                             </div>
                             <div class="col-lg-12">
                                 <hr>
-                                <h5><i class="fa fa-list"></i> Informações do Sistema*</h5>
-                            </div>
-                            <div class="col-lg-12">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Medida do Risco</label>
-                                    <p><output type="text" id="detalhe_respostamedidadorisco"></output></p>
-                                </div>
+                                <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Análise</h5>
                             </div>
                             <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Probabilidade</label>
-                                    <p><output type="text" id="detalhe_respostaprobabilidade"></output></p>
+                                    <p><output type="text" id="detalhe_analiseprobabilidade"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Justificativa da Probabilidade</label>
+                                    <p><output type="text" id="detalhe_analiseprobabilidadejustificativa"></output></p>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Impacto</label>
-                                    <p><output type="text" id="detalhe_respostaimpacto"></output></p>
+                                    <p><output type="text" id="detalhe_analiseimpacto"></output></p>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div>
-                                    <label class="col-form-label font-weight-bold">Data de Início</label>
-                                    <p><output type="text" id="detalhe_respostadatainicio"></output></p>
+                                    <label class="col-form-label font-weight-bold">Justificativa do Impacto</label>
+                                    <p><output type="text" id="detalhe_analiseimpactojustificativa"></output></p>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div>
-                                    <label class="col-form-label font-weight-bold">Data Fim</label>
-                                    <p><output type="text" id="detalhe_respostadatafim"></output></p>
+                                    <label class="col-form-label font-weight-bold">Medida do Risco</label>
+                                    <p><output type="text" id="detalhe_analisemedidadorisco"></output></p>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Situação</label>
-                                    <p><output type="text" id="detalhe_respostaanalisesituacao"></output></p>
+                                    <p><output type="text" id="detalhe_analisesituacao"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Data de Início</label>
+                                    <p><output type="date" id="detalhe_analisedatainicio"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Data Fim</label>
+                                    <p><output type="date" id="detalhe_analisedatafim"></output></p>
                                 </div>
                             </div>
                             <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Atividade Mitigadora</label>
-                                        <select class="form-control" id="detalhe_respostaidatividade" disabled>
-                                            <option value="">Selecione</option>
-                                            <?php
-                                            $query_atividade_det = "SELECT idatividade,objetivo FROM tbatividade";
-                                            $result_atividade_det = mysqli_query($conn, $query_atividade_det);
-                                            foreach ($result_atividade_det as $row_atividade_det) {
-                                                ?>
-                                                <option value="<?= $row_atividade_det['idatividade']; ?>"><?= $row_atividade_det['objetivo']; ?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
+                                <hr>
+                                <h5 class="text-dark"><i class="fa fa-archive"></i> Informações da Atividade Mitigadora</h5>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Objetivo</label>
+                                    <p><output type="text" id="detalhe_atividadeobjetivo"></output></p>
                                 </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Descrição</label>
+                                    <p><output type="text" id="detalhe_atividadedescricao"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Data de Início</label>
+                                    <p><output type="date" id="detalhe_atividadedatainicio"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Data Final</label>
+                                    <p><output type="date" id="detalhe_atividadedatafim"></output></p>
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Fechar</button>
@@ -446,16 +505,10 @@ session_start();
                                     <h5><i class="fa fa-list"></i> Informações do Resposta ao Risco</h5>
                                 </div>
                                 <input type="hidden" class="form-control" id="editar_respostaidresposta" name="editar_respostaidresposta" required>
-                                <div class="col-lg-12">
+                                <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Nome*</label>
                                         <input type="text" class="form-control" id="editar_respostanome" name="editar_respostanome" required>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label for="message-text" class="col-form-label">Descrição*</label>
-                                        <textarea class="form-control" id="editar_respostadescricao" name="editar_respostadescricao" required></textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -470,17 +523,23 @@ session_start();
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label for="message-text" class="col-form-label">Descrição*</label>
+                                        <textarea class="form-control" id="editar_respostadescricao" name="editar_respostadescricao" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Atividade Mitigadora</label>
                                         <select class="form-control" name="editar_respostaidatividade" id="editar_respostaidatividade">
                                             <option value="">Selecione</option>
                                             <?php
-                                            $query_atividade_edt = "SELECT idatividade,objetivo FROM tbatividade";
+                                            $query_atividade_edt = "SELECT idatividade,objetivo,dataFim,dataInicio FROM tbatividade";
                                             $result_atividade_edt = mysqli_query($conn, $query_atividade_edt);
                                             foreach ($result_atividade_edt as $row_atividade_edt) {
                                                 ?>
-                                                <option value="<?= $row_atividade_edt['idatividade']; ?>"><?= $row_atividade_edt['objetivo']; ?></option>
+                                                <option value="<?= $row_atividade_edt['idatividade']; ?>"><?= $row_atividade_edt['objetivo']; ?> (Validade de <?= $row_atividade_edt['dataInicio']; ?> a <?= $row_atividade_edt['dataFim']; ?>)</option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -501,6 +560,25 @@ session_start();
         <!-- Fim Modal Editar -->
         <?php include_once "templates/frameworks.php"; ?>
 
+        <!-- JS Medida do Risco + Status -->
+        <script>
+            // Medida do Risco
+            function medidadoriscoprint(medidadorisco) {
+                var analisemedidadorisco_print;
+                if (medidadorisco === "") {
+                    analisemedidadorisco_print = "";
+                } else if (medidadorisco > 0.24) {
+                    analisemedidadorisco_print = medidadorisco + ' - Risco Alto';
+                } else if (medidadorisco > 0.08) {
+                    analisemedidadorisco_print = medidadorisco + ' - Risco Médio';
+                } else {
+                    analisemedidadorisco_print = medidadorisco + ' - Risco Baixo';
+                }
+                return analisemedidadorisco_print;
+            }
+        </script>
+        <!-- Fim JS Medida do Risco + Status -->
+        
         <!-- Modal Detalhe-->
         <script>
             $('#ModalDetalheResposta').on('show.bs.modal', function (event) {
@@ -509,13 +587,22 @@ session_start();
                 var detalhe_respostadescricao = button.data('respostadescricao');
                 var detalhe_respostasituacao = button.data('respostasituacao');
 
-                var detalhe_respostamedidadorisco = button.data('respostamedidadorisco');
-                var detalhe_respostaprobabilidade = button.data('respostaprobabilidade');
-                var detalhe_respostaimpacto = button.data('respostaimpacto');
-                var detalhe_respostadatainicio = button.data('respostadatainicio');
-                var detalhe_respostadatafim = button.data('respostadatafim');
-                var detalhe_respostaanalisesituacao = button.data('respostaanalisesituacao');
-                var detalhe_respostaidatividade = button.data('respostaidatividade');
+                var detalhe_analiseprobabilidade = button.data('analiseprobabilidade');
+                var detalhe_analiseprobabilidadejustificativa = button.data('analiseprobabilidadejustificativa');
+                var detalhe_analiseimpacto = button.data('analiseimpacto');
+                var detalhe_analiseimpactojustificativa = button.data('analiseimpactojustificativa');
+                var detalhe_analisemedidadorisco = button.data('analisemedidadorisco');
+                
+                var detalhe_analisedatainicio = button.data('analisedatainicio');
+                var detalhe_analisedatafim = button.data('analisedatafim');
+                var detalhe_analisesituacao = button.data('analisesituacao');
+                
+                var detalhe_analiseidatividade = button.data('analiseidatividade');
+                
+                var detalhe_atividadeobjetivo = button.data('atividadeobjetivo');
+                var detalhe_atividadedescricao = button.data('atividadedescricao');
+                var detalhe_atividadedatainicio = button.data('atividadedatainicio');
+                var detalhe_atividadedatafim = button.data('atividadedatafim');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
@@ -524,14 +611,43 @@ session_start();
                 modal.find('#detalhe_respostadescricao').val(detalhe_respostadescricao);
                 modal.find('#detalhe_respostasituacao').val(detalhe_respostasituacao);
 
-                modal.find('#detalhe_respostamedidadorisco').val(detalhe_respostamedidadorisco);
-                modal.find('#detalhe_respostaprobabilidade').val(detalhe_respostaprobabilidade);
-                modal.find('#detalhe_respostaimpacto').val(detalhe_respostaimpacto);
-                modal.find('#detalhe_respostadatainicio').val(detalhe_respostadatainicio);
-                modal.find('#detalhe_respostadatafim').val(detalhe_respostadatafim);
-                modal.find('#detalhe_respostaanalisesituacao').val(detalhe_respostaanalisesituacao);
+                modal.find('#detalhe_analiseprobabilidade').val(detalhe_analiseprobabilidade);
+                modal.find('#detalhe_analiseprobabilidadejustificativa').val(detalhe_analiseprobabilidadejustificativa);
+                modal.find('#detalhe_analiseimpacto').val(detalhe_analiseimpacto);
+                modal.find('#detalhe_analiseimpactojustificativa').val(detalhe_analiseimpactojustificativa);
+                //modal.find('#detalhe_analisemedidadorisco').val(medidadoriscoprint(detalhe_analisemedidadorisco));
+                var situacaocolor = "text-success";
+                if (detalhe_analisemedidadorisco > 0.24) {
+                    situacaocolor = 'text-danger';
+                } else if (detalhe_analisemedidadorisco > 0.08) {
+                    situacaocolor = "text-warning";
+                } else {
+                    situacaocolor = "text-success";
+                }
+                $('#detalhe_analisemedidadorisco').html('<p><output type="text" class="' + situacaocolor + '" id="detalhe_analisemedidadorisco">' + medidadoriscoprint(detalhe_analisemedidadorisco) + '</output></p>');
+
+                modal.find('#detalhe_analisedatainicio').val(detalhe_analisedatainicio);
+                modal.find('#detalhe_analisedatafim').val(detalhe_analisedatafim);
+                //modal.find('#detalhe_analisesituacao').val(detalhe_analisesituacao);
+                var situacaocolor = "text-success";
+                if (detalhe_analisesituacao === 'Aprovada') {
+                    situacaocolor = "text-success";
+                } else if (detalhe_analisesituacao === 'Reprovada') {
+                    situacaocolor = "text-danger";
+                } else if (detalhe_analisesituacao === 'Bloqueada') {
+                    situacaocolor = "text-dark";
+                } else {
+                    situacaocolor = "text-info";
+                }
+                $('#detalhe_analisesituacao').html('<p><output type="text" class="' + situacaocolor + '" id="detalhe_analisesituacao">' + detalhe_analisesituacao + '</output></p>');
+
                 
-                modal.find('#detalhe_respostaidatividade').val(detalhe_respostaidatividade);
+                modal.find('#detalhe_analiseidatividade').val(detalhe_analiseidatividade);
+                
+                modal.find('#detalhe_atividadeobjetivo').val(detalhe_atividadeobjetivo);
+                modal.find('#detalhe_atividadedescricao').val(detalhe_atividadedescricao);
+                modal.find('#detalhe_atividadedatainicio').val(detalhe_atividadedatainicio);
+                modal.find('#detalhe_atividadedatafim').val(detalhe_atividadedatafim);
             });
         </script>
         <!-- Fim Modal Detalhe-->

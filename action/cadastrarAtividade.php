@@ -7,18 +7,26 @@ require_once("../templates/function.php");
 
 $btnCadastrar = filter_input(INPUT_POST, 'btnCadastrar', FILTER_SANITIZE_STRING);
 if (isset($btnCadastrar)) {
-    $atividade_descricao = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'atividade_descricao', FILTER_SANITIZE_STRING)); //obrigatorio
     $atividade_objetivo = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'atividade_objetivo', FILTER_SANITIZE_STRING)); //obrigatorio
+    $atividade_descricao = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'atividade_descricao', FILTER_SANITIZE_STRING)); //obrigatorio
     $atividade_dt_inicio = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'atividade_dt_inicio', FILTER_SANITIZE_STRING)); //obrigatorio
     $atividade_dt_final = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'atividade_dt_final', FILTER_SANITIZE_STRING)); //obrigatorio
 
-    $query = "SELECT * FROM tbatividade where nome = '$atividade_objetivo' LIMIT 1";
+    $query = "SELECT * FROM tbatividade WHERE objetivo = '$atividade_objetivo' AND descricao = '$atividade_descricao' LIMIT 1";
     $resultado = mysqli_query($conn, $query);
     $row = mysqli_affected_rows($conn);
 
-    if ($row == 1) {
+    if (strtotime($atividade_dt_inicio) > strtotime($atividade_dt_final)) {
         $_SESSION['msg'] = "<div class='alert alert-warning alert-dismissible fade show' role='alert'>
-                        <strong>Falha!</strong> Um cadastro com o mesmo nome já existe. Tente outro nome ou entre em contato com o Administrador!
+                    <strong>Erro!</strong> Falha ao realizar o cadastro. A Data Final não pode ser anterior a Data de Início.
+                    <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </div>";
+        header('Location: ../atividade.php');
+    } elseif ($row == 1) {
+        $_SESSION['msg'] = "<div class='alert alert-warning alert-dismissible fade show' role='alert'>
+                        <strong>Falha!</strong> Um cadastro com as mesmas informações já existe. Tente outras informações ou entre em contato com o Administrador!
                         <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                             <span aria-hidden='true'>&times;</span>
                         </button>
@@ -28,8 +36,8 @@ if (isset($btnCadastrar)) {
         try {
             $db->insert(
                     'tbatividade', [
-                'descricao' => $atividade_descricao,
                 'objetivo' => $atividade_objetivo,
+                'descricao' => $atividade_descricao,
                 'datainicio' => $atividade_dt_inicio,
                 'datafim' => $atividade_dt_final
                     ]

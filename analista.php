@@ -61,7 +61,7 @@ session_start();
                                 </div>
                                 <!-- Tabela -->
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-hover" id="DataTable" width="100%" cellspacing="0">
+                                    <table class="table table-bordered table-hover text-dark" id="DataTable" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
                                                 <th class="text-center" colspan="3">Informações</th>
@@ -209,7 +209,7 @@ session_start();
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-12">
-                                <h5><i class="fa fa-list"></i> Informações do Analista</h5>
+                                <h5 class="text-primary"><i class="fa fa-clipboard"></i> Informações do Analista</h5>
                             </div>
                             <div class="col-lg-12">
                                 <div>

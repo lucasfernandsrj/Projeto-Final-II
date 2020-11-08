@@ -19,7 +19,7 @@
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
     <!-- Heading -->
-    <div class="sidebar-heading">
+    <div class="sidebar-heading text-light">
         Gerente de Sistema
     </div>
     <!-- Nav Item - Pages Collapse Menu -->
@@ -42,7 +42,7 @@
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
     <!-- Heading -->
-    <div class="sidebar-heading">
+    <div class="sidebar-heading text-light">
         Analista
     </div>
     <!-- Nav Item - Pages Collapse Menu -->

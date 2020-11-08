@@ -18,49 +18,60 @@ if (isset($btnEditar)) {
     
     $analiseorcamento = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'editar_analiseorcamento', FILTER_SANITIZE_STRING)); //obrigatorio
     
-    try {
-        $db->update(
-                'tbanalise',
-                [
-                    'idanalista' => $analiseidanalista,
-                    'idmodulo' => $analiseidmodulo,
-                    'idrisco' => $analiseidrisco,
-                    'situacao' => $analisesituacao,
-                    'dataInicio' => $analisedatainicio,
-                    'dataFim' => $analisedatafim,
-                    'orcamento' => $analiseorcamento
-                ],
-                [
-                    'idanalise' => $analiseidanalise
-                ]
-            );
-
-        if ($db->affected()) {
-            $_SESSION['msg'] = "<div class='alert alert-success alert-dismissible fade show' role='alert'>
-                    <strong>Adicionado!</strong> A edição foi realizada com sucesso.
+    if (strtotime($analisedatainicio) > strtotime($analisedatafim)) {
+        $_SESSION['msg'] = "<div class='alert alert-warning alert-dismissible fade show' role='alert'>
+                    <strong>Erro!</strong> Falha ao realizar a alteração. A Data Final não pode ser anterior a Data de Início.
                     <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                         <span aria-hidden='true'>&times;</span>
                     </button>
                 </div>";
-            header('Location: ../analise.php');
-        } else {
-            $_SESSION['msg'] = "<div class='alert alert-warning alert-dismissible fade show' role='alert'>
+        header('Location: ../sistema.php');
+    }else{
+        try {
+            $db->update(
+                    'tbanalise',
+                    [
+                        'idanalista' => $analiseidanalista,
+                        'idmodulo' => $analiseidmodulo,
+                        'idrisco' => $analiseidrisco,
+                        'situacao' => $analisesituacao,
+                        'dataInicio' => $analisedatainicio,
+                        'dataFim' => $analisedatafim,
+                        'orcamento' => $analiseorcamento
+                    ],
+                    [
+                        'idanalise' => $analiseidanalise
+                    ]
+            );
+
+            if ($db->affected()) {
+                $_SESSION['msg'] = "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+                    <strong>Alterado!</strong> A edição foi realizada com sucesso.
+                    <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </div>";
+                header('Location: ../analise.php');
+            } else {
+                $_SESSION['msg'] = "<div class='alert alert-warning alert-dismissible fade show' role='alert'>
                     <strong>Erro 003!</strong> Falha ao realizar a edição. Tente novamente mais tarde.
                     <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                         <span aria-hidden='true'>&times;</span>
                     </button>
                 </div>";
-            header('Location: ../analise.php');
-        }
-    } catch (Exception $ex) {
-        $_SESSION['msg'] = "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                header('Location: ../analise.php');
+            }
+        } catch (Exception $ex) {
+            $_SESSION['msg'] = "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
                         <strong>Erro 002!</strong> Falha ao realizar a edição.
                         <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                             <span aria-hidden='true'>&times;</span>
                         </button>
                     </div>";
-        header('Location: ../analise.php');
+            header('Location: ../analise.php');
+        }
     }
+    
 } else {
     $_SESSION['msg'] = "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
                         <strong>Erro 001!</strong> Entre em contato com o Administrador do Sistema.
