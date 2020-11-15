@@ -1,50 +1,17 @@
 <?php
 
-function validaCPF($cpf) {
-// Extrai somente os números
-$cpf = preg_replace('/[^0-9]/is', '', $cpf);
-
-// Verifica se foi informado todos os digitos corretamente
-if (strlen($cpf) != 11) {
-return false;
-}
-
-// Verifica se foi informada uma sequência de digitos repetidos. Ex: 111.111.111-11
-if (preg_match('/(\d)\1{10}/', $cpf)) {
-return false;
-}
-
-// Faz o calculo para validar o CPF
-for ($t = 9;
-$t < 11;
-$t++) {
-for ($d = 0, $c = 0;
-$c < $t;
-$c++) {
-$d += $cpf[$c] * (($t + 1) - $c);
-}
-$d = ((10 * $d) % 11) % 10;
-if ($cpf[$c] != $d) {
-return false;
-}
-}
-return true;
-}
-
 function dinheiro($valor) {
-$fmt = new \NumberFormatter('pt_BR', NumberFormatter::CURRENCY);
-return $fmt->formatCurrency($valor, "BRL");
+    $fmt = new \NumberFormatter('pt_BR', NumberFormatter::CURRENCY);
+    return $fmt->formatCurrency($valor, "BRL");
 }
 
-function montacpf($nbr_cpf){
+function montacpf($nbr_cpf) {
+    $parte_um = substr($nbr_cpf, 0, 3);
+    $parte_dois = substr($nbr_cpf, 3, 3);
+    $parte_tres = substr($nbr_cpf, 6, 3);
+    $parte_quatro = substr($nbr_cpf, 9, 2);
 
-$parte_um = substr($nbr_cpf, 0, 3);
-$parte_dois = substr($nbr_cpf, 3, 3);
-$parte_tres = substr($nbr_cpf, 6, 3);
-$parte_quatro = substr($nbr_cpf, 9, 2);
+    $monta_cpf = "$parte_um.$parte_dois.$parte_tres-$parte_quatro";
 
-$monta_cpf = "$parte_um.$parte_dois.$parte_tres-$parte_quatro";
-
-return $monta_cpf;
+    return $monta_cpf;
 }
-

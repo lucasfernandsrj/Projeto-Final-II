@@ -8,7 +8,7 @@ session_start();
     $conn = Database\ConnectionAbstract::getConn();
     //var_dump($conn);
 
-    $titulo = "Análise";
+    $titulo = "Análise do Gerente de Projeto";
     include_once "templates/head.php";
     ?>
     <body id="page-top">
@@ -38,7 +38,7 @@ session_start();
                         ?>
 
                         <!-- Page Heading -->
-                        <h1 class="h3 mb-2 text-gray-800">Análise do Gerente de Sistema</h1>
+                        <h1 class="h3 mb-2 text-gray-800">Análise do Gerente de Projeto</h1>
                         <p class="mb-4">A atual página mostra a relação de análises cadastradas. Permite ao gerente de projetos adicionar novas análises ou realizar alterações.</p>
 
                         <!-- DataTales Example -->
@@ -53,11 +53,7 @@ session_start();
                                             <i class="fas fa-list"></i>&nbsp;Cadastrar Análise
                                         </button>
                                     </div>
-                                    <div class="col-auto mb-2">
-                                        <button class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#ModalAn">
-                                            <i class="fas fa-print"></i>&nbsp;Gerar Relatório
-                                        </button>
-                                    </div>
+
                                 </div>
                                 <!-- Tabela -->
                                 <div class="table-responsive">
@@ -68,9 +64,10 @@ session_start();
                                                 <th class="text-center" colspan="2">Ferramentas</th>
                                             </tr>
                                             <tr>
-<th>Status</th>
+                                                <th>Status da Análise</th>
+                                                <th>Sistema</th>
                                                 <th>Analista</th>
-                                                <th>Módulo</th>
+                                                <!--<th>Módulo</th>-->
                                                 <th>Risco</th>
                                                 <th>Situação</th>
                                                 <th>Data de Início</th>
@@ -83,9 +80,10 @@ session_start();
                                         </thead>
                                         <tfoot>
                                             <tr class="m-0 font-weight-bold text-dark">
-<th>Status</th>
+                                                <th>Status da Análise</th>
+                                                <th>Sistema</th>
                                                 <th>Analista</th>
-                                                <th>Módulo</th>
+                                                <!--<th>Módulo</th>-->
                                                 <th>Risco</th>
                                                 <th>Situação</th>
                                                 <th>Data Início</th>
@@ -180,16 +178,16 @@ session_start();
                                                 include_once 'templates/function.php';
                                                 ?>
                                                 <tr>
-                                                    <?php 
-                                                    if($row['situacao'] == 'Em Análise' || $row['situacao'] == 'Bloqueada'){
-                                                        
-                                                    ?><th>Aberta</th><?php
-                                                    }else{
+                                                    <?php
+                                                    if ($row['situacao'] == 'Em Análise' || $row['situacao'] == 'Bloqueada') {
+                                                        ?><th class="text-success">Aberta</th><?php
+                                                    } else {
                                                         ?><th>Encerrada</th><?php
-                                                    }
-                                                    ?>
+                                                        }
+                                                        ?>
+                                                    <td><?= $row_sistema['sistema_nome']; ?></td>
                                                     <td><?= $row['analista_nome']; ?></td>
-                                                    <td><?= $row['modulo_nome']; ?></td>
+                                                    <!--<td><?= $row['modulo_nome']; ?></td>-->
                                                     <td><?= $row['risco_nome']; ?></td>
                                                     <?php
                                                     if ($row['situacao'] == 'Em Análise') {
@@ -206,9 +204,9 @@ session_start();
                                                     <?php
                                                     $data_atual = date("Y/m/d");
                                                     $data_fim = $row['dataFim'];
-                                                    if (strtotime($data_fim) < strtotime($data_atual) && $row['situacao'] !== 'Reprovada' && $row['situacao'] !== 'Aprovada'){
+                                                    if (strtotime($data_fim) < strtotime($data_atual) && $row['situacao'] !== 'Reprovada' && $row['situacao'] !== 'Aprovada') {
                                                         ?><td class="text-danger"><?= $data_fim; ?></td><?php
-                                                    }else{
+                                                    } else {
                                                         ?><td><?= $data_fim; ?></td><?php
                                                     }
                                                     ?>
@@ -275,7 +273,7 @@ session_start();
                                                     </td>
                                                     -->
                                                 </tr>
-<?php } ?>
+                                            <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -287,7 +285,7 @@ session_start();
                     <!-- /.container-fluid -->
                 </div>
                 <!-- End of Main Content -->
-<?php include_once "templates/footer.php"; ?>
+                <?php include_once "templates/footer.php"; ?>
             </div>
             <!-- End of Content Wrapper -->
         </div>
@@ -320,7 +318,7 @@ session_start();
                                             foreach ($result_sistema as $row_sistema) {
                                                 ?>
                                                 <option value="<?= $row_sistema['idsistema']; ?>"><?= $row_sistema['nome']; ?></option>
-<?php } ?>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                 </div>
@@ -335,7 +333,7 @@ session_start();
                                             foreach ($result_analista as $row_analista) {
                                                 ?>
                                                 <option value="<?= $row_analista['idanalista']; ?>"><?= $row_analista['nome']; ?></option>
-<?php } ?>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                 </div>
@@ -358,7 +356,7 @@ session_start();
                                             foreach ($result_risco as $row_risco) {
                                                 ?>
                                                 <option value="<?= $row_risco['idrisco']; ?>"><?= $row_risco['nome']; ?></option>
-<?php } ?>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                 </div>
@@ -412,7 +410,7 @@ session_start();
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" id="printThis">
                         <div class="row">
                             <div class="col-lg-12">
                                 <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Risco</h5>
@@ -559,9 +557,10 @@ session_start();
                             </div>
 
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Fechar</button>
-                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        <button id="btnPrint" type="button" class="btn btn-info"><i class="fas fa-print"></i> Gerar Print</button>
                     </div>
                 </div>
             </div>
@@ -596,7 +595,7 @@ session_start();
                                             foreach ($result_analista_edt as $row_analista_edt) {
                                                 ?>
                                                 <option value="<?= $row_analista_edt['idanalista']; ?>"><?= $row_analista_edt['nome']; ?></option>
-<?php } ?>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                 </div>
@@ -611,7 +610,7 @@ session_start();
                                             foreach ($result_modulo_edt as $row_modulo_edt) {
                                                 ?>
                                                 <option value="<?= $row_modulo_edt['idmodulo']; ?>"><?= $row_modulo_edt['nome']; ?></option>
-<?php } ?>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                 </div>
@@ -626,7 +625,7 @@ session_start();
                                             foreach ($result_risco_edt as $row_risco_edt) {
                                                 ?>
                                                 <option value="<?= $row_risco_edt['idmodulo']; ?>"><?= $row_risco_edt['nome']; ?></option>
-<?php } ?>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                 </div>
@@ -676,7 +675,7 @@ session_start();
             </div>
         </div>
         <!-- Fim Modal Editar -->
-<?php include_once "templates/frameworks.php"; ?>
+        <?php include_once "templates/frameworks.php"; ?>
 
         <!-- JS Medida do Risco + Status -->
         <script>
@@ -848,9 +847,42 @@ session_start();
             $(document).ready(function () {
                 $('#DataTable').DataTable({
                     buttons: [
-                        'print'
-                    ]
-                });
+                        {
+                            extend: 'copy',
+                            text: '<i class="fas fa-print"></i> Copiar Tabela'
+                        }, {
+                            extend: 'excel',
+                            text: '<i class="fas fa-file-excel"></i> Gerar Relatório: Excel'
+                        }, {
+                            extend: 'pdf',
+                            text: '<i class="fas fa-file-pdf"></i> Gerar Relatório: PDF'
+                        }
+                    ], initComplete: function () {
+                        this.api().columns().every(function () {
+                            var column = this;
+                            column.data().unique().sort().each(function (x, z) {
+                                if (x.length < 100) {
+                                    var select = $('<select><option value="">Todos</option></select>')
+                                            .appendTo($(column.footer()).empty())
+                                            .on('change', function () {
+                                                var val = $.fn.dataTable.util.escapeRegex(
+                                                        $(this).val()
+                                                        );
+                                                column
+                                                        .search(val ? '^' + val + '$' : '', true, false)
+                                                        .draw();
+                                            });
+                                    column.data().unique().sort().each(function (d, j) {
+                                        if (d.length < 100) {
+                                            select.append('<option value="' + d + '">' + d + '</option>');
+                                        }
+                                    });
+                                }
+                            });
+
+                        });
+                    }
+                }).buttons().container().appendTo('.col-md-6:eq(0)');
             });
         </script>
         <!-- Fim Reseta Modal Cadastrar ao Fechar-->
@@ -880,6 +912,30 @@ session_start();
             });
         </script>
         <!-- Fim JS Selecionar Modulo -->
+        <!-- JS Print Modal Detalhe-->
+        <script>
+            document.getElementById("btnPrint").onclick = function () {
+                printElement(document.getElementById("printThis"));
+            };
+
+            function printElement(elem) {
+                var domClone = elem.cloneNode(true);
+
+                var $printSection = document.getElementById("printSection");
+
+                if (!$printSection) {
+                    var $printSection = document.createElement("div");
+                    $printSection.id = "printSection";
+                    document.body.appendChild($printSection);
+                }
+
+                $printSection.innerHTML = "";
+                $printSection.appendChild(domClone);
+                window.print();
+            }
+            ;
+        </script>
+        <!-- End JS Print Modal Detalhe-->
     </body>
 
 </html>

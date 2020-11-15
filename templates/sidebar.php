@@ -20,7 +20,7 @@
     <hr class="sidebar-divider d-none d-md-block">
     <!-- Heading -->
     <div class="sidebar-heading text-light">
-        Gerente de Sistema
+        Gerente de Projeto
     </div>
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">

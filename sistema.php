@@ -53,11 +53,6 @@ session_start();
                                             <i class="fas fa-list"></i>&nbsp;Cadastrar Sistema
                                         </button>
                                     </div>
-                                    <div class="col-auto mb-2">
-                                        <button class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#ModalAn">
-                                            <i class="fas fa-print"></i>&nbsp;Gerar Relatório
-                                        </button>
-                                    </div>
                                 </div>
                                 <!-- Tabela -->
                                 <div class="table-responsive">
@@ -148,12 +143,12 @@ session_start();
         </div>
         <!-- End of Page Wrapper -->
 
-        <!-- Modal Cadastrar -->
+        <!-- Modal Cadastrar 
         <div class="modal fade" id="ModalCadastrarSistema1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Cadastrar Sistema</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Cadastrar Sistema2</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -227,7 +222,7 @@ session_start();
                 </div>
             </div>
         </div>
-        <!-- Fim Modal Cadastrar -->
+         Fim Modal Cadastrar -->
 
         <!-- Modal Cadastrar -->
         <div class="modal fade" id="ModalCadastrarSistema" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -283,7 +278,7 @@ session_start();
             </div>
         </div>
         <!-- Fim Modal Cadastrar -->
-        
+
         <!-- Modal Detalhe -->
         <div class="modal fade" id="ModalDetalheSistema" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -294,7 +289,7 @@ session_start();
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" id="printThis">
                         <div class="row">
                             <div class="col-lg-12">
                                 <h5 class="text-primary"><i class="fa fa-clipboard"></i> Informações do Sistema</h5>
@@ -324,10 +319,11 @@ session_start();
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Fechar</button>
-                        </div>
                     </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                            <button id="btnPrint" type="button" class="btn btn-info"><i class="fas fa-print"></i> Gerar Print</button>
+                        </div>
                 </div>
             </div>
         </div>
@@ -443,12 +439,71 @@ session_start();
             $(document).ready(function () {
                 $('#DataTable').DataTable({
                     buttons: [
-                        'print'
-                    ]
-                });
+                        {
+                            extend: 'copy',
+                            text: '<i class="fas fa-copy"></i> Copiar Tabela'
+                        }, {
+                            extend: 'excel',
+                            text: '<i class="fas fa-file-excel"></i> Gerar Relatório: Excel'
+                        }, {
+                            extend: 'pdf',
+                            text: '<i class="fas fa-file-pdf"></i> Gerar Relatório: PDF'
+                        }
+                    ],initComplete: function () {
+                        this.api().columns().every(function () {
+                            var column = this;
+                            column.data().unique().sort().each(function (x, z) {
+                                if (x.length < 100) {
+                                    var select = $('<select><option value="">Todos</option></select>')
+                                            .appendTo($(column.footer()).empty())
+                                            .on('change', function () {
+                                                var val = $.fn.dataTable.util.escapeRegex(
+                                                        $(this).val()
+                                                        );
+                                                column
+                                                        .search(val ? '^' + val + '$' : '', true, false)
+                                                        .draw();
+                                            });
+                                    column.data().unique().sort().each(function (d, j) {
+                                        if (d.length < 100) {
+                                            select.append('<option value="' + d + '">' + d + '</option>');
+                                        }
+                                    });
+                                }
+                            });
+
+                        });
+                    }
+                }).buttons().container().appendTo('.col-md-6:eq(0)');;
             });
         </script>
+        
+        
         <!-- Fim Reseta Modal Cadastrar ao Fechar-->
+        <!-- JS Print Modal Detalhe-->
+        <script>
+            document.getElementById("btnPrint").onclick = function () {
+                printElement(document.getElementById("printThis"));
+            };
+
+            function printElement(elem) {
+                var domClone = elem.cloneNode(true);
+
+                var $printSection = document.getElementById("printSection");
+
+                if (!$printSection) {
+                    var $printSection = document.createElement("div");
+                    $printSection.id = "printSection";
+                    document.body.appendChild($printSection);
+                }
+
+                $printSection.innerHTML = "";
+                $printSection.appendChild(domClone);
+                window.print();
+            }
+            ;
+        </script>
+        <!-- End JS Print Modal Detalhe-->
     </body>
 
 </html>

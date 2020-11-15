@@ -53,15 +53,10 @@ session_start();
                                             <i class="fas fa-list"></i>&nbsp;Cadastrar Analista
                                         </button>
                                     </div>
-                                    <div class="col-auto mb-2">
-                                        <button class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#ModalAn">
-                                            <i class="fas fa-print"></i>&nbsp;Gerar Relatório
-                                        </button>
-                                    </div>
                                 </div>
                                 <!-- Tabela -->
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-hover text-dark" id="DataTable" width="100%" cellspacing="0">
+                                    <table class="table table-striped table-bordered" id="DataTable" width="100%">
                                         <thead>
                                             <tr>
                                                 <th class="text-center" colspan="3">Informações</th>
@@ -70,7 +65,7 @@ session_start();
                                             <tr>
                                                 <th>Nome</th>
                                                 <th>E-mail</th>
-                                                <th>CPF</th>
+
                                                 <th class="text-center">Detalhe</th>
                                                 <th class="text-center">Editar</th>
                                                 <!--<th class="text-center">Excluir</th>-->
@@ -80,7 +75,7 @@ session_start();
                                             <tr class="m-0 font-weight-bold text-dark">
                                                 <th>Nome</th>
                                                 <th>E-mail</th>
-                                                <th>CPF</th>
+
                                                 <th class="text-center">Detalhe</th>
                                                 <th class="text-center">Editar</th>
                                                 <!--<th class="text-center">Excluir</th>-->
@@ -100,12 +95,12 @@ session_start();
                                                 <tr>
                                                     <td><?= $row['nome']; ?></td>
                                                     <td><?= $row['email']; ?></td>
-                                                    <td><?= $row['cpf']; ?></td>
+
                                                     <td class="text-center">
                                                         <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#ModalDetalheAnalista"
                                                                 data-analistanome="<?= $row['nome']; ?>"
                                                                 data-analistaemail="<?= $row['email']; ?>"
-                                                                data-analistacpf="<?= $row['cpf']; ?>"
+
                                                                 >
                                                             <i class="fas fa-fingerprint"></i>&nbsp;Detalhe
                                                         </button>
@@ -115,7 +110,7 @@ session_start();
                                                                 data-analistaidanalista="<?= $row['idanalista']; ?>"
                                                                 data-analistanome="<?= $row['nome']; ?>"
                                                                 data-analistaemail="<?= $row['email']; ?>"
-                                                                data-analistacpf="<?= $row['cpf']; ?>"
+
                                                                 >
                                                             <i class="fas fa-edit"></i>&nbsp;Editar
                                                         </button>
@@ -149,7 +144,7 @@ session_start();
 
         <!-- Modal Cadastrar -->
         <div class="modal fade" id="ModalCadastrarAnalista" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Cadastrar Analista</h5>
@@ -175,12 +170,6 @@ session_start();
                                         <input type="email" class="form-control" name="analista_email" required>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">CPF</label>
-                                        <input type="text" class="form-control" name="analista_cpf" minlength="11" maxlength="11" required>
-                                    </div>
-                                </div>
                                 <div class="col-lg-12">
                                     <small class="help-block">*Campo(s) obrigatório(s).</small>
                                 </div>
@@ -198,20 +187,25 @@ session_start();
 
         <!-- Modal Detalhe -->
         <div class="modal fade" id="ModalDetalheAnalista" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
+            <!-- Dialog Modal -->
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <!-- Content Modal -->
                 <div class="modal-content">
+                    <!-- Head Modal -->
                     <div class="modal-header">
                         <h5 class="modal-title">Detalhe</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
+                    <!-- Fim Head Modal -->
+                    <!-- Body Modal -->
+                    <div class="modal-body" id="printThis">
                         <div class="row">
                             <div class="col-lg-12">
                                 <h5 class="text-primary"><i class="fa fa-clipboard"></i> Informações do Analista</h5>
                             </div>
-                            <div class="col-lg-12">
+                            <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Nome</label>
                                     <p><output type="text" id="detalhe_analistanome"></output></p>
@@ -223,25 +217,25 @@ session_start();
                                     <p><output type="text" id="detalhe_analistaemail"></output></p>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">CPF</label>
-                                    <p><output type="text" id="detalhe_analistacpf"></output></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Fechar</button>
                         </div>
                     </div>
+                    <!-- Fim Body Modal -->
+                    <!-- Footer Modal -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        <button id="btnPrint" type="button" class="btn btn-info"><i class="fas fa-print"></i> Gerar Print</button>
+                    </div>
+                    <!-- Fim Footer Modal -->
                 </div>
+                <!-- Fim Content Modal -->
             </div>
+            <!-- Fim Dialog Modal -->
         </div>
         <!-- Fim Modal Detalhe -->
 
         <!-- Modal Editar -->
         <div class="modal fade" id="ModalEditarAnalista" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Editar Analista</h5>
@@ -262,16 +256,10 @@ session_start();
                                         <input type="text" class="form-control" id="editar_analistanome" name="editar_analistanome" required>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">E-mail*</label>
                                         <input type="email" class="form-control" id="editar_analistaemail" name="editar_analistaemail" required>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label for="message-text" class="col-form-label">CPF*</label>
-                                        <p><output type="text" id="editar_analistacpf"></output></p>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -289,6 +277,11 @@ session_start();
         </div>
         <!-- Fim Modal Editar -->
         <?php include_once "templates/frameworks.php"; ?>
+        <!--<script src="https://code.jquery.com/jquery-3.5.1.js"></script>-->
+        <!--<script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>-->
+        <!--<script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>-->
+
+
         <!-- Redefinir CPF -->
         <script>
             function replaceCPF(cpf) {
@@ -296,22 +289,20 @@ session_start();
             }
         </script>
         <!-- Fim Redefinir CPF -->
-        
+
         <!-- Modal Detalhe-->
         <script>
             $('#ModalDetalheAnalista').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal
                 var detalhe_analistanome = button.data('analistanome'); // Extract info from data-* attributes
                 var detalhe_analistaemail = button.data('analistaemail');
-                var detalhe_analistacpf = button.data('analistacpf');
+
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
                 modal.find('.modal-title').text('Detalhe do Analista: ' + detalhe_analistanome);
                 modal.find('#detalhe_analistanome').val(detalhe_analistanome);
                 modal.find('#detalhe_analistaemail').val(detalhe_analistaemail);
-                var detalhe_analistacpf_mod = replaceCPF(detalhe_analistacpf.toString());
-                modal.find('#detalhe_analistacpf').val(detalhe_analistacpf_mod);
             });
         </script>
         <!-- Fim Modal Detalhe-->
@@ -323,7 +314,6 @@ session_start();
                 var editar_analistaidanalista = button.data('analistaidanalista'); // Extract info from data-* attributes
                 var editar_analistanome = button.data('analistanome'); // Extract info from data-* attributes
                 var editar_analistaemail = button.data('analistaemail'); // Extract info from data-* attributes
-                var editar_analistacpf = button.data('analistacpf');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
@@ -331,8 +321,6 @@ session_start();
                 modal.find('#editar_analistaidanalista').val(editar_analistaidanalista);
                 modal.find('#editar_analistanome').val(editar_analistanome);
                 modal.find('#editar_analistaemail').val(editar_analistaemail);
-                var editar_analistacpf_mod = replaceCPF(editar_analistacpf.toString());
-                modal.find('#editar_analistacpf').val(editar_analistacpf_mod);
             });
         </script>
         <!-- Fim Modal Editar-->
@@ -348,12 +336,71 @@ session_start();
             $(document).ready(function () {
                 $('#DataTable').DataTable({
                     buttons: [
-                        'print'
-                    ]
-                });
+                        {
+                            extend: 'copy',
+                            text: '<i class="fas fa-copy"></i> Copiar Tabela'
+                        }, {
+                            extend: 'excel',
+                            text: '<i class="fas fa-file-excel"></i> Gerar Relatório: Excel'
+                        }, {
+                            extend: 'pdf',
+                            text: '<i class="fas fa-file-pdf"></i> Gerar Relatório: PDF'
+                        }
+                    ],initComplete: function () {
+                        this.api().columns().every(function () {
+                            var column = this;
+                            column.data().unique().sort().each(function (x, z) {
+                                if (x.length < 100) {
+                                    var select = $('<select><option value="">Todos</option></select>')
+                                            .appendTo($(column.footer()).empty())
+                                            .on('change', function () {
+                                                var val = $.fn.dataTable.util.escapeRegex(
+                                                        $(this).val()
+                                                        );
+                                                column
+                                                        .search(val ? '^' + val + '$' : '', true, false)
+                                                        .draw();
+                                            });
+                                    column.data().unique().sort().each(function (d, j) {
+                                        if (d.length < 100) {
+                                            select.append('<option value="' + d + '">' + d + '</option>');
+                                        }
+                                    });
+                                }
+                            });
+
+                        });
+                    }
+
+                }).buttons().container().appendTo('.col-md-6:eq(0)');
             });
         </script>
+        
         <!-- Fim Reseta Modal Cadastrar ao Fechar-->
+        <!-- JS Print Modal Detalhe-->
+        <script>
+            document.getElementById("btnPrint").onclick = function () {
+                printElement(document.getElementById("printThis"));
+            };
+
+            function printElement(elem) {
+                var domClone = elem.cloneNode(true);
+
+                var $printSection = document.getElementById("printSection");
+
+                if (!$printSection) {
+                    var $printSection = document.createElement("div");
+                    $printSection.id = "printSection";
+                    document.body.appendChild($printSection);
+                }
+
+                $printSection.innerHTML = "";
+                $printSection.appendChild(domClone);
+                window.print();
+            }
+            ;
+        </script>
+        <!-- End JS Print Modal Detalhe-->
     </body>
 
 </html>

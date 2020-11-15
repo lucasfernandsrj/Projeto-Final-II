@@ -56,11 +56,6 @@ session_start();
                                             <i class="fas fa-list"></i>&nbsp;Vincular Módulo
                                         </button>
                                     </div>
-                                    <div class="col-auto mb-2">
-                                        <button class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#ModalAn">
-                                            <i class="fas fa-print"></i>&nbsp;Gerar Relatório
-                                        </button>
-                                    </div>
                                 </div>
                                 <!-- Tabela -->
                                 <div class="table-responsive">
@@ -355,7 +350,7 @@ session_start();
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" id="printThis">
                         <div class="row">
                             <div class="col-lg-12">
                                 <h5 class="text-primary"><i class="fa fa-clipboard"></i> Informações do Módulo</h5>
@@ -385,10 +380,11 @@ session_start();
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-block" data-dismiss="modal">Fechar</button>
-                        </div>
                     </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                            <button id="btnPrint" type="button" class="btn btn-info"><i class="fas fa-print"></i> Gerar Print</button>
+                        </div>
                 </div>
             </div>
         </div>
@@ -566,7 +562,18 @@ session_start();
         <script>
             $(document).ready(function () {
                 $('#DataTableModulo').DataTable({
-                    "pagingType": "full_numbers",
+                    "pagingType": "full_numbers",buttons: [
+                        {
+                            extend: 'copy',
+                            text: '<i class="fas fa-copy"></i> Copiar Tabela'
+                        }, {
+                            extend: 'excel',
+                            text: '<i class="fas fa-file-excel"></i> Gerar Relatório: Excel'
+                        }, {
+                            extend: 'pdf',
+                            text: '<i class="fas fa-file-pdf"></i> Gerar Relatório: PDF'
+                        }
+                    ],
                     initComplete: function () {
                         this.api().columns().every(function () {
                             var column = this;
@@ -592,10 +599,34 @@ session_start();
 
                         });
                     }
-                });
+                }).buttons().container().appendTo('.col-md-6:eq(0)');
             });
         </script>
         <!-- Fim Datatable -->
+        <!-- JS Print Modal Detalhe-->
+        <script>
+            document.getElementById("btnPrint").onclick = function () {
+                printElement(document.getElementById("printThis"));
+            };
+
+            function printElement(elem) {
+                var domClone = elem.cloneNode(true);
+
+                var $printSection = document.getElementById("printSection");
+
+                if (!$printSection) {
+                    var $printSection = document.createElement("div");
+                    $printSection.id = "printSection";
+                    document.body.appendChild($printSection);
+                }
+
+                $printSection.innerHTML = "";
+                $printSection.appendChild(domClone);
+                window.print();
+            }
+            ;
+        </script>
+        <!-- End JS Print Modal Detalhe-->
     </body>
 
 </html>

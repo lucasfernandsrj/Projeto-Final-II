@@ -106,7 +106,7 @@ session_start();
                             </div>
 
                             <!-- Pending Requests Card Example -->
-                            
+
                             <div class="col-xl-3 col-md-6 mb-4">
                                 <div class="card border-left-danger shadow h-100 py-2">
                                     <div class="card-body">
@@ -138,6 +138,7 @@ session_start();
                                     <!-- Card Body -->
                                     <div class="card-body">
                                         <div id="dashboard_analise_status_list"></div>
+                                        
                                         <!--
                                         <h4 class="small font-weight-bold" >Risco: RIS Novidade<span class="float-right">Orçamento: R$ 5000,00</span></h4>
                                         <h4 class="small font-weight-bold" >Situação da Análise: Bloqueada<span class="float-right">Progresso: 20%</span></h4>
@@ -260,32 +261,32 @@ session_start();
                                             var analise_orcamento = j[i].analise[x].analise_orcamento;
                                             var analise_porcentagem_value = 0;
                                             var analise_porcentagem_color = 0;
-                                            if(analise_situacao === 'Bloqueada'){
+                                            if (analise_situacao === 'Bloqueada') {
                                                 analise_porcentagem_value = 50;
                                                 analise_porcentagem_color = 'bg-dark';
-                                            }else if (analise_situacao === 'Em Análise') {
+                                            } else if (analise_situacao === 'Em Análise') {
                                                 analise_porcentagem_value = 25;
                                                 analise_porcentagem_color = 'bg-info';
-                                            }else if (analise_situacao === 'Aprovada') {
+                                            } else if (analise_situacao === 'Aprovada') {
                                                 analise_porcentagem_value = 100;
                                                 analise_porcentagem_color = 'bg-success';
-                                            }else if (analise_situacao === 'Reprovada') {
+                                            } else if (analise_situacao === 'Reprovada') {
                                                 analise_porcentagem_value = 100;
                                                 analise_porcentagem_color = 'bg-danger';
-                                            }else{
+                                            } else {
                                                 analise_porcentagem_value = 0;
                                                 analise_porcentagem_color = 'bg-dark';
-                                            } 
-                                            status += '<h4 class="small font-weight-bold" >Risco: '+analise_risco_nome+'<span class="float-right">Orçamento: R$ '+analise_orcamento+',00</span></h4>\n\
-                                            <h4 class="small font-weight-bold" >Situação da Análise: '+analise_situacao+'<span class="float-right">Progresso: '+analise_porcentagem_value+'%</span></h4>\n\
-                                            <div class="progress mb-4"><div class="progress-bar '+analise_porcentagem_color+'" role="progressbar" style="width: '+analise_porcentagem_value+'%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div></div>';
+                                            }
+                                            status += '<h4 class="small font-weight-bold" >Risco: ' + analise_risco_nome + '<span class="float-right">Orçamento: R$ ' + analise_orcamento + ',00</span></h4>\n\
+                                            <h4 class="small font-weight-bold" >Situação da Análise: ' + analise_situacao + '<span class="float-right">Progresso: ' + analise_porcentagem_value + '%</span></h4>\n\
+                                            <div class="progress mb-4"><div class="progress-bar ' + analise_porcentagem_color + '" role="progressbar" style="width: ' + analise_porcentagem_value + '%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div></div>';
                                         }
                                     }
 
 
                                 }
-                                
-                                    $('#dashboard_analise_status_list').html(status);
+
+                                $('#dashboard_analise_status_list').html(status);
                                 if (orcamento_total > 0) {
                                     $('#dashboard_analise_orcamento_total').html('<div class="h5 mb-0 font-weight-bold text-gray-800">R$ ' + orcamento_total + ',00</div>');
                                 } else {
@@ -316,12 +317,13 @@ session_start();
 
                                 } else {
                                     $('#dashboard_analise_medidadorisco').html('<div class="h5 mb-0 font-weight-bold text-gray-800">Não cadastrada</div>');
-
+$('#dashboard_analise_status_list').html('<h4 class="small font-weight-bold" >Nenhum dado foi encontrado.</h4>');
                                 }
                             } else {
                                 $('#dashboard_modulo_qtd').html('Sem registros');
                                 $('#dashboard_analise_orcamento_total').html('<div class="h5 mb-0 font-weight-bold text-gray-800">R$ 0,00</div>');
                                 $('#dashboard_analise_medidadorisco').html('<div class="h5 mb-0 font-weight-bold text-gray-800">Sem registros</div>');
+                            $('#dashboard_analise_status_list').html('<h4 class="small font-weight-bold" >Nenhum dado foi encontrado.</h4>');
                             }
                         });
                     } else {
@@ -329,7 +331,7 @@ session_start();
                         $('#dashboard_modulo_qtd').html('Sistema não selecionado');
                         $('#dashboard_analise_orcamento_total').html('Sistema não selecionado');
                         $('#dashboard_analise_medidadorisco').html('<div class="h5 mb-0 font-weight-bold text-gray-800">Sistema não selecionado</div>');
-
+                        $('#dashboard_analise_status_list').html('<h4 class="small font-weight-bold" >Nenhum dado foi encontrado.</h4>');
                     }
                 });
             });
