@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 require_once("../lib/Database/Connection.php");
@@ -10,11 +11,15 @@ if (isset($btnCadastrar)) {
     $sistema_dt_inicio = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'sistema_dt_inicio', FILTER_SANITIZE_STRING)); //obrigatorio
     $sistema_dt_final = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'sistema_dt_final', FILTER_SANITIZE_STRING));
 
+    $modulo_nome = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'modulo_nome', FILTER_SANITIZE_STRING));
+    $modulo_descricao = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'modulo_descricao', FILTER_SANITIZE_STRING));
+    $modulo_ambiente = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'modulo_ambiente', FILTER_SANITIZE_STRING));
+
     $query = "SELECT * FROM tbsistema where nome = '$sistema_nome' LIMIT 1";
     $resultado = mysqli_query($conn, $query);
     $row = mysqli_affected_rows($conn);
-    
-    if($row == 1){
+
+    if ($row == 1) {
         $_SESSION['msg'] = "<div class='alert alert-warning alert-dismissible fade show' role='alert'>
                         <strong>Falha!</strong> Um cadastro com o mesmo nome já existe. Tente outro nome ou entre em contato com o Administrador!
                         <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
@@ -22,36 +27,62 @@ if (isset($btnCadastrar)) {
                         </button>
                     </div>";
         header('Location: ../sistema.php');
-    }else if(strtotime($sistema_dt_inicio) > strtotime($sistema_dt_final) ){
+    } else if (strtotime($sistema_dt_inicio) > strtotime($sistema_dt_final)) {
         $_SESSION['msg'] = "<div class='alert alert-warning alert-dismissible fade show' role='alert'>
                     <strong>Erro!</strong> Falha ao realizar o cadastro. A Data Final não pode ser anterior a Data de Início.
                     <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                         <span aria-hidden='true'>&times;</span>
                     </button>
                 </div>";
-                header('Location: ../sistema.php');
-    }else{
+        header('Location: ../sistema.php');
+    } else {
         try {
             $db->insert(
-                'tbsistema', [
-                    'nome' => $sistema_nome,
-                    'descricao' => $sistema_descricao,
-                    'dataInicio' => $sistema_dt_inicio,
-                    'dataFim' => $sistema_dt_final
-                        ]
-                );
-            
+                    'tbsistema', [
+                'nome' => $sistema_nome,
+                'descricao' => $sistema_descricao,
+                'dataInicio' => $sistema_dt_inicio,
+                'dataFim' => $sistema_dt_final
+                    ]
+            );
+
             if ($db->affected()) {
-                $_SESSION['msg'] = "<div class='alert alert-success alert-dismissible fade show' role='alert'>
-                    <strong>Adicionado!</strong> O cadastro foi realizado com sucesso.
-                    <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
-                        <span aria-hidden='true'>&times;</span>
-                    </button>
-                </div>";
-                header('Location: ../sistema.php');
+                $query_mod = "SELECT idsistema FROM tbsistema WHERE nome = '$sistema_nome' LIMIT 1";
+                $resultado_mod = mysqli_query($conn, $query_mod);
+
+                while ($row_mod = mysqli_fetch_row($resultado_mod)) {
+                    $idsistema = $row_mod[0];
+                    $db->insert(
+                            'tbmodulo', [
+                        'nome' => $modulo_nome,
+                        'descricao' => $modulo_descricao,
+                        'ambiente' => $modulo_ambiente,
+                        'idsistema' => $idsistema,
+                        'nivel' => '1'
+                            ]
+                    );
+                    if ($db->affected()) {
+                        $_SESSION['msg'] = "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+                        <strong>Adicionado!</strong> O cadastro foi realizado com sucesso.
+                        <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+                            <span aria-hidden='true'>&times;</span>
+                        </button>
+                        </div>";
+                        header('Location: ../sistema.php');
+                    } else {
+                        $_SESSION['msg'] = "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                        <strong>Erro!</strong>Erro 002 -  Falha ao realizar o cadastro.
+                        <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+                            <span aria-hidden='true'>&times;</span>
+                        </button>
+                        </div>";
+                        header('Location: ../sistema.php');
+                    }
+                }
+                mysqli_free_result($resultado_mod);
             } else {
                 $_SESSION['msg'] = "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
-                    <strong>Erro!</strong> Falha ao realizar o cadastro.
+                    <strong>Erro!</strong>Erro 001 - Falha ao realizar o cadastro.
                     <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                         <span aria-hidden='true'>&times;</span>
                     </button>
@@ -68,7 +99,7 @@ if (isset($btnCadastrar)) {
             header('Location: ../sistema.php');
         }
     }
-}else{
+} else {
     $_SESSION['msg'] = "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
                         <strong>Erro!</strong> Falha ao realizar o cadastro.
                         <button type='button' class='close' data-dismiss='alert' aria-label='Close'>

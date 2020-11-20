@@ -36,6 +36,12 @@ session_start();
                             unset($_SESSION['msg']);
                         }
                         ?>
+                        <?php
+                        if (isset($_SESSION['msgs'])) {
+                            echo $_SESSION['msgs'];
+                            unset($_SESSION['msgs']);
+                        }
+                        ?>
 
                         <!-- Page Heading -->
                         <h1 class="h3 mb-2 text-gray-800">Análise do Gerente de Projeto</h1>
@@ -60,8 +66,8 @@ session_start();
                                     <table class="table table-bordered table-hover text-dark" id="DataTable" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
-                                                <th class="text-center" colspan="8">Informações</th>
-                                                <th class="text-center" colspan="2">Ferramentas</th>
+                                                <th class="text-center" colspan="7">Informações</th>
+                                                <th class="text-center" colspan="3">Ferramentas</th>
                                             </tr>
                                             <tr>
                                                 <th>Status da Análise</th>
@@ -70,11 +76,12 @@ session_start();
                                                 <!--<th>Módulo</th>-->
                                                 <th>Risco</th>
                                                 <th>Situação</th>
-                                                <th>Data de Início</th>
+                                                <!--<th>Data de Início</th>-->
                                                 <th>Prazo Final</th>
                                                 <th>Orçamento</th>
                                                 <th class="text-center">Detalhe</th>
                                                 <th class="text-center">Editar</th>
+                                                <th class="text-center">Notificar</th>
                                                 <!--<th class="text-center">Excluir</th>-->
                                             </tr>
                                         </thead>
@@ -86,11 +93,12 @@ session_start();
                                                 <!--<th>Módulo</th>-->
                                                 <th>Risco</th>
                                                 <th>Situação</th>
-                                                <th>Data Início</th>
+                                                <!--<th>Data de Início</th>-->
                                                 <th>Prazo Final</th>
                                                 <th>Orçamento</th>
                                                 <th class="text-center">Detalhe</th>
                                                 <th class="text-center">Editar</th>
+                                                <th class="text-center">Notificar</th>
                                                 <!--<th class="text-center">Excluir</th>-->
                                             </tr>
                                         </tfoot>
@@ -164,14 +172,20 @@ session_start();
                                                     $risco_idcategoria = $row['risco_idcategoria'];
                                                     $query_categoria = "SELECT 
                                                                 tbcategoria.nome AS categoria_nome, 
-                                                                tbcategoria.nivel AS categoria_nivel
+                                                                tbcategoria.nivel AS categoria_nivel,
+                                                                tbcategoria.fk_idcategoria AS fk_idcategoria_categoria
                                                             FROM 
                                                                 tbcategoria 
                                                             WHERE 
                                                                 idcategoria = $risco_idcategoria LIMIT 1";
                                                     $result_categoria = mysqli_query($conn, $query_categoria);
                                                     foreach ($result_categoria as $row_categoria) {
-                                                        
+                                                        $fk_idcategoria = $row_categoria['fk_idcategoria_categoria'];
+                                                        $querycategoria = "SELECT nome FROM tbcategoria WHERE idcategoria = $fk_idcategoria LIMIT 1";
+                                                        $resultcategoria = mysqli_query($conn, $querycategoria);
+                                                        foreach ($resultcategoria as $rowcategoria) {
+                                                            $nome_categoria1 = $rowcategoria['nome'];
+                                                        }
                                                     }
                                                 }
 
@@ -200,7 +214,7 @@ session_start();
                                                         ?><td class="text-success">Aprovada</td><?php
                                                     }
                                                     ?>
-                                                    <td><?= $row['dataInicio']; ?></td>
+                                                    <!--<td><?= $row['dataInicio']; ?></td>-->
                                                     <?php
                                                     $data_atual = date("Y/m/d");
                                                     $data_fim = $row['dataFim'];
@@ -238,8 +252,10 @@ session_start();
                                                                 data-analisesistemadatainicio="<?= $row_sistema['sistema_dataInicio']; ?>"
                                                                 data-analisesistemadatafim="<?= $row_sistema['sistema_dataFim']; ?>"
 
-                                                                data-analisecategorianome="<?= $row_categoria['categoria_nome']; ?>"
-                                                                data-analisecategorianivel="<?= $row_categoria['categoria_nivel']; ?>"
+                                                                data-analisecategorianome2="<?= $row_categoria['categoria_nome']; ?>"
+                                                                data-analisecategorianivel2="<?= $row_categoria['categoria_nivel']; ?>"
+
+                                                                data-analisecategorianome1="<?= $nome_categoria1; ?>"
                                                                 >
                                                             <i class="fas fa-fingerprint"></i>&nbsp;Detalhe
                                                         </button>
@@ -264,14 +280,17 @@ session_start();
                                                             <i class="fas fa-edit"></i>&nbsp;Editar
                                                         </button>
                                                     </td>
-                                                    <!--
+
                                                     <td class="text-center">
-                                                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                                        <button type="button" class="btn btn-outline-success btn-sm"data-toggle="modal" data-target="#ModalEmailAnalise"
+                                                                data-risconome="<?= $row['risco_nome']; ?>"
+                                                                data-analistanome="<?= $row['analista_nome']; ?>"
+                                                                data-analistaemail="<?= $row['analista_email']; ?>"
                                                                 >
-                                                            <i class="fas fa-eraser"></i>&nbsp;Excluir
+                                                            <i class="fas fa-envelope"></i>&nbsp;Enviar Notificação
                                                         </button>
                                                     </td>
-                                                    -->
+
                                                 </tr>
                                             <?php } ?>
                                         </tbody>
@@ -413,97 +432,7 @@ session_start();
                     <div class="modal-body" id="printThis">
                         <div class="row">
                             <div class="col-lg-12">
-                                <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Risco</h5>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Nome do Risco</label>
-                                    <p><output type="text" id="detalhe_analiserisconome"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Descrição</label>
-                                    <p><output type="text" id="detalhe_analiseriscodescricao"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-12 ">
-                                <hr>
-                                <h5 class="text-dark"><i class="fa fa-archive"></i> Informações da Categoria</h5>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Nome da Categoria</label>
-                                    <p><output type="text" id="detalhe_analisecategorianome"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Nível</label>
-                                    <p><output type="text" id="detalhe_analisecategorianivel"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-12 ">
-                                <hr>
-                                <h5 class="text-primary"><i class="fa fa-clipboard"></i> Informações da Análise</h5>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Situação</label>
-                                    <p><output type="text" id="detalhe_analisesituacao"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Orçamento</label>
-                                    <p><output type="text" id="detalhe_analiseorcamento"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Probabilidade</label>
-                                    <p><output type="text" id="detalhe_analiseprobabilidade"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Justificativa da Probabilidade</label>
-                                    <p><output type="text" id="detalhe_analiseprobabilidadejustificativa"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Impacto</label>
-                                    <p><output type="text" id="detalhe_analiseimpacto"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Justificativa do Impacto</label>
-                                    <p><output type="text" id="detalhe_analiseimpactojustificativa"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Medida do Risco</label>
-                                    <p><output type="text" id="detalhe_analisemedidadorisco"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Data de Início</label>
-                                    <p><output type="date" id="detalhe_analisedatainicio"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Data Fim</label>
-                                    <p><output type="date" id="detalhe_analisedatafim"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <hr>
-                                <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Sistema</h5>
+                                <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Sistema</h5><!-- Título -->
                             </div>
                             <div class="col-lg-12">
                                 <div>
@@ -525,7 +454,7 @@ session_start();
                             </div>
                             <div class="col-lg-12">
                                 <hr>
-                                <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Módulo</h5>
+                                <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Módulo</h5><!-- Título -->
                             </div>
                             <div class="col-lg-6">
                                 <div>
@@ -541,7 +470,98 @@ session_start();
                             </div>
                             <div class="col-lg-12">
                                 <hr>
-                                <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Analista</h5>
+                                <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Risco</h5><!-- Título -->
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Nome do Risco</label>
+                                    <p><output type="text" id="detalhe_analiserisconome"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Descrição</label>
+                                    <p><output type="text" id="detalhe_analiseriscodescricao"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 ">
+                                <hr>
+                                <h5 class="text-dark"><i class="fa fa-archive"></i> Informações da Categoria</h5><!-- Título -->
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Nome da Categoria (Nv. 1)</label>
+                                    <p><output type="text" id="detalhe_analisecategorianome1"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Nome da Categoria (Nv. 2)</label>
+                                    <p><output type="text" id="detalhe_analisecategorianome2"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 ">
+                                <hr>
+                                <h5 class="text-primary"><i class="fa fa-clipboard"></i> Informações da Análise</h5><!-- Título -->
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Situação</label>
+                                    <p><output type="text" id="detalhe_analisesituacao"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6" id="detalhe_show_orcamento">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Orçamento</label>
+                                    <p><output type="text" id="detalhe_analiseorcamento"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6" id="detalhe_show_probabilidade">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Probabilidade</label>
+                                    <p><output type="text" id="detalhe_analiseprobabilidade"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6" id="detalhe_show_justificativa_probabilidade">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Justificativa da Probabilidade</label>
+                                    <p><output type="text" id="detalhe_analiseprobabilidadejustificativa"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6" id="detalhe_show_impacto">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Impacto</label>
+                                    <p><output type="text" id="detalhe_analiseimpacto"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6" id="detalhe_show_justificativa_impacto">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Justificativa do Impacto</label>
+                                    <p><output type="text" id="detalhe_analiseimpactojustificativa"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-12" id="detalhe_show_medidadorisco">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Medida do Risco</label>
+                                    <p><output type="text" id="detalhe_analisemedidadorisco"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Data de Início</label>
+                                    <p><output type="date" id="detalhe_analisedatainicio"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Data Fim</label>
+                                    <p><output type="date" id="detalhe_analisedatafim"></output></p>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <hr>
+                                <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Analista</h5><!-- Título -->
                             </div>
                             <div class="col-lg-6">
                                 <div>
@@ -675,6 +695,37 @@ session_start();
             </div>
         </div>
         <!-- Fim Modal Editar -->
+
+        <!-- Modal Email -->
+        <div class="modal fade" id="ModalEmailAnalise" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Email</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="post" action="action/enviarNotificacao.php">
+                        <div class="row">
+                            <div class="col-sm-auto p-sm-4">
+                                <div>
+                                    <p><output type="text" id="email_mensagem"></output></p>
+                                </div>
+                            </div>
+                            <input type="hidden" class="form-control" id="risconome" name="risconome">
+                            <input type="hidden" class="form-control" id="analistanome" name="analistanome">
+                            <input type="hidden" class="form-control" id="analistaemail" name="analistaemail">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                            <button type="submit" class="btn btn-success" name="btnEmail"><i class="fas fa-envelope-square"></i> Confirmar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Fim Modal Email -->
         <?php include_once "templates/frameworks.php"; ?>
 
         <!-- JS Medida do Risco + Status -->
@@ -727,8 +778,10 @@ session_start();
                 var detalhe_analisesistemadatainicio = button.data('analisesistemadatainicio');
                 var detalhe_analisesistemadatafim = button.data('analisesistemadatafim');
 
-                var detalhe_analisecategorianome = button.data('analisecategorianome');
-                var detalhe_analisecategorianivel = button.data('analisecategorianivel');
+                var detalhe_analisecategorianome2 = button.data('analisecategorianome2');
+                var detalhe_analisecategorianivel2 = button.data('analisecategorianivel2');
+
+                var detalhe_analisecategorianome1 = button.data('analisecategorianome1');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
@@ -757,6 +810,21 @@ session_start();
                 }
                 $('#detalhe_analisesituacao').html('<p><output type="text" class="' + situacaocolor + '" id="detalhe_analisesituacao">' + detalhe_analisesituacao + '</output></p>');
 
+                if (detalhe_analisesituacao === 'Em Análise') {
+                    $('#detalhe_show_orcamento').hide();
+                    $('#detalhe_show_probabilidade').hide();
+                    $('#detalhe_show_justificativa_probabilidade').hide();
+                    $('#detalhe_show_impacto').hide();
+                    $('#detalhe_show_justificativa_impacto').hide();
+                    $('#detalhe_show_medidadorisco').hide();
+                } else {
+                    $('#detalhe_show_orcamento').show();
+                    $('#detalhe_show_probabilidade').show();
+                    $('#detalhe_show_justificativa_probabilidade').show();
+                    $('#detalhe_show_impacto').show();
+                    $('#detalhe_show_justificativa_impacto').show();
+                    $('#detalhe_show_medidadorisco').show();
+                }
 
                 modal.find('#detalhe_analiseorcamento').val(detalhe_analiseorcamento);
 
@@ -782,8 +850,10 @@ session_start();
                 modal.find('#detalhe_analisesistemadatainicio').val(detalhe_analisesistemadatainicio);
                 modal.find('#detalhe_analisesistemadatafim').val(detalhe_analisesistemadatafim);
 
-                modal.find('#detalhe_analisecategorianome').val(detalhe_analisecategorianome);
-                modal.find('#detalhe_analisecategorianivel').val(detalhe_analisecategorianivel);
+                modal.find('#detalhe_analisecategorianome2').val(detalhe_analisecategorianome2);
+                modal.find('#detalhe_analisecategorianivel2').val(detalhe_analisecategorianivel2);
+
+                modal.find('#detalhe_analisecategorianome1').val(detalhe_analisecategorianome1);
             });
         </script>
         <!-- Fim Modal Detalhe-->
@@ -835,7 +905,22 @@ session_start();
             });
         </script>
         <!-- Fim Modal Editar-->
-
+        <!-- Modal Email-->
+        <script>
+            $('#ModalEmailAnalise').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var risconome = button.data('risconome');
+                var analistanome = button.data('analistanome');
+                var analistaemail = button.data('analistaemail');
+                var modal = $(this);
+                modal.find('.modal-title').text('Notificar por Email o Analista ' + analistanome);
+                modal.find('#email_mensagem').html('Deseja notificar por E-mail o(a) analista <b>' + analistanome + '</b> sobre análise o risco <b>' + risconome + '</b>?');
+                modal.find('#risconome').val(risconome);
+                modal.find('#analistanome').val(analistanome);
+                modal.find('#analistaemail').val(analistaemail);
+            });
+        </script>
+        <!-- Fim Modal Email-->
         <!-- Reseta Modal Cadastrar ao Fechar-->
         <script>
             $('#ModalCadastrarAnalise').on('hidden.bs.modal', function () {

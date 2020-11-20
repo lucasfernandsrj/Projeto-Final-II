@@ -25,12 +25,13 @@ if (isset($btnCadastrar)) {
         header('Location: ../modulo.php');
     } else {
 
-        $query_fk = "SELECT nivel,ambiente FROM tbmodulo WHERE idmodulo = '$modulofk_idmodulo' LIMIT 1";
+        $query_fk = "SELECT nivel,ambiente,idsistema FROM tbmodulo WHERE idmodulo = '$modulofk_idmodulo' LIMIT 1";
         $resultado_fk = mysqli_query($conn, $query_fk);
         $row_fk = mysqli_fetch_row($resultado_fk);
         
         $fk_nivel = $row_fk[0];
         $fk_ambiente = $row_fk[1];
+        $fk_idsistema = $row_fk[2];
         $novo_nivel = intval($fk_nivel) + 1;
 
         try {
@@ -40,7 +41,8 @@ if (isset($btnCadastrar)) {
                 'descricao' => $modulodescricao,
                 'fk_idmodulo' => $modulofk_idmodulo,
                 'nivel' => $novo_nivel,
-                'ambiente' => $fk_ambiente
+                'ambiente' => $fk_ambiente,
+                'idsistema' => $fk_idsistema
                     ]
             );
             if ($db->affected()) {

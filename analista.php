@@ -59,11 +59,11 @@ session_start();
                                     <table class="table table-striped table-bordered" id="DataTable" width="100%">
                                         <thead>
                                             <tr>
-                                                <th class="text-center" colspan="3">Informações</th>
+                                                <th class="text-center" colspan="2">Informações</th>
                                                 <th class="text-center" colspan="2">Ferramentas</th>
                                             </tr>
                                             <tr>
-                                                <th>Nome</th>
+                                                <th>Nome do Analista</th>
                                                 <th>E-mail</th>
 
                                                 <th class="text-center">Detalhe</th>
@@ -73,7 +73,7 @@ session_start();
                                         </thead>
                                         <tfoot>
                                             <tr class="m-0 font-weight-bold text-dark">
-                                                <th>Nome</th>
+                                                <th>Nome do Analista</th>
                                                 <th>E-mail</th>
 
                                                 <th class="text-center">Detalhe</th>

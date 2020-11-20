@@ -128,50 +128,14 @@ session_start();
 
                         <div class="row">
 
-                            <!-- Area Chart -->
-                            <div class="col-xl-8 col-lg-7">
-                                <div class="card shadow mb-4">
-                                    <!-- Card Header - Dropdown -->
-                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                        <h6 class="m-0 font-weight-bold text-primary">Status das Análises do Sistema SIS Industria Bell</h6>
-                                    </div>
-                                    <!-- Card Body -->
-                                    <div class="card-body">
-                                        <div id="dashboard_analise_status_list"></div>
-                                        
-                                        <!--
-                                        <h4 class="small font-weight-bold" >Risco: RIS Novidade<span class="float-right">Orçamento: R$ 5000,00</span></h4>
-                                        <h4 class="small font-weight-bold" >Situação da Análise: Bloqueada<span class="float-right">Progresso: 20%</span></h4>
-                                        <div class="progress mb-4">
-                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        
-                                        <h4 class="small font-weight-bold">Sales Tracking <span class="float-right">40%</span></h4>
-                                        <div class="progress mb-4">
-                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <h4 class="small font-weight-bold">Customer Database <span class="float-right">60%</span></h4>
-                                        <div class="progress mb-4">
-                                            <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <h4 class="small font-weight-bold">Payout Details <span class="float-right">80%</span></h4>
-                                        <div class="progress mb-4">
-                                            <div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div>
-                                        <h4 class="small font-weight-bold">Account Setup <span class="float-right">Complete!</span></h4>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                        </div> -->
-                                    </div>
-                                </div>
-                            </div>
+                            
 
                             <!-- Pie Chart -->
                             <div class="col-xl-4 col-lg-5">
                                 <div class="card shadow mb-4">
                                     <!-- Card Header - Dropdown -->
                                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                        <h6 class="m-0 font-weight-bold text-primary">Situação das Análises Cadastradas</h6>
+                                        <h6 class="m-0 font-weight-bold text-primary">Situação de todas as Análises Cadastradas</h6>
                                     </div>
                                     <!-- Card Body -->
                                     <div class="card-body">
@@ -212,6 +176,21 @@ session_start();
                                     </div>
                                 </div>
                             </div>
+                            <!-- Area Chart -->
+                            <div class="col-xl-8 col-lg-7" id="status_show_analise">
+                                <div class="card shadow mb-4">
+                                    <!-- Card Header - Dropdown -->
+                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-primary">Status das Análises do Sistema SIS Industria Bell</h6>
+                                    </div>
+                                    <!-- Card Body -->
+                                    <div class="card-body">
+                                        <div id="dashboard_analise_status_list"><h4 class="small font-weight-bold" >Nenhum dado foi encontrado.</h4></div>
+                                        
+                                        
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!-- /.container-fluid -->
@@ -234,13 +213,14 @@ session_start();
         <script type="text/javascript">
             $(function () {
                 $('#dashboard_nomesistema').change(function () {
+                    $('#dashboard_analise_status_list').html('');
                     if ($(this).val()) {
                         $.getJSON('action/dashboardSelecionarModulo.php?search=', {
                             idsistema: $(this).val(),
                             ajax: 'true'
                         }, function (j) {
                             if (j.length > 0) {
-
+                                console.log(j);
                                 $('#dashboard_modulo_qtd').html(j.length);
                                 var orcamento_total = 0;
                                 var medidadorisco_analisadas_soma = 0;
@@ -261,25 +241,30 @@ session_start();
                                             var analise_orcamento = j[i].analise[x].analise_orcamento;
                                             var analise_porcentagem_value = 0;
                                             var analise_porcentagem_color = 0;
+                                            var analise_porcentagem_status = 'Aberta';
                                             if (analise_situacao === 'Bloqueada') {
                                                 analise_porcentagem_value = 50;
-                                                analise_porcentagem_color = 'bg-dark';
+                                                analise_porcentagem_color = 'dark';
+                                                analise_porcentagem_status = 'Aberta';
                                             } else if (analise_situacao === 'Em Análise') {
                                                 analise_porcentagem_value = 25;
-                                                analise_porcentagem_color = 'bg-info';
+                                                analise_porcentagem_color = 'info';
+                                                analise_porcentagem_status = 'Aberta';
                                             } else if (analise_situacao === 'Aprovada') {
                                                 analise_porcentagem_value = 100;
-                                                analise_porcentagem_color = 'bg-success';
+                                                analise_porcentagem_color = 'success';
+                                                analise_porcentagem_status = 'Encerrada';
                                             } else if (analise_situacao === 'Reprovada') {
                                                 analise_porcentagem_value = 100;
-                                                analise_porcentagem_color = 'bg-danger';
+                                                analise_porcentagem_color = 'danger';
+                                                analise_porcentagem_status = 'Encerrada';
                                             } else {
                                                 analise_porcentagem_value = 0;
                                                 analise_porcentagem_color = 'bg-dark';
                                             }
                                             status += '<h4 class="small font-weight-bold" >Risco: ' + analise_risco_nome + '<span class="float-right">Orçamento: R$ ' + analise_orcamento + ',00</span></h4>\n\
-                                            <h4 class="small font-weight-bold" >Situação da Análise: ' + analise_situacao + '<span class="float-right">Progresso: ' + analise_porcentagem_value + '%</span></h4>\n\
-                                            <div class="progress mb-4"><div class="progress-bar ' + analise_porcentagem_color + '" role="progressbar" style="width: ' + analise_porcentagem_value + '%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div></div>';
+                                            <h4 class="small font-weight-bold" >Status: '+analise_porcentagem_status+' <span class="float-right">Situação da Análise: ' + analise_situacao + '</span><span class="badge badge-pill badge-'+analise_porcentagem_color+'">Progresso: ' + analise_porcentagem_value + '%</span></h4>\n\
+                                            <div class="progress mb-4"><div class="progress-bar bg-' + analise_porcentagem_color + '" role="progressbar" style="width: ' + analise_porcentagem_value + '%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div></div>';
                                         }
                                     }
 

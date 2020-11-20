@@ -1,0 +1,28 @@
+ordem detalhe:
+sistema (nome sistema_nome, dataInicio sistema_dataInicio, dataFinal sistema_dataFim)
+modulo (nome modulo_nome, ambiente modulo_ambiente, idsistema* modulo_idsistema)
+sistemanome detalhe_sistemanome
+sistemadatainicio detalhe_sistemadatainicio
+sistemadatafinal detalhe_sistemadatafinal
+
+risco (nome risco_nome, descricao risco_descricao, idcategoria* risco_idcategoria)
+categoria (nome, nivel)
+
+analise (dataInicio, dataFinal, situacao, orcamento, probabilidade, probabilidadeJustificativa, impacto, impactoJustificativa, medidaDoRisco)
+analista (nome analista_nome, email analista_email)
+--------------------------
+analise (dataInicio, dataFinal, situacao, orcamento, probabilidade, probabilidadeJustificativa, impacto, impactoJustificativa, medidaDoRisco)
+analista (nome analista_nome, email analista_email)
+
+resposta (nome, descricao, situcao)
+atividade (objetivo, descricao, dataInicio, dataFim)
+
+
+analisecategorianome1
+
+detalhe_show_orcamento
+detalhe_show_probabilidade
+detalhe_show_justificativa_probabilidade
+detalhe_show_impacto
+detalhe_show_justificativa_impacto
+detalhe_show_medidadorisco

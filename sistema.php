@@ -59,14 +59,15 @@ session_start();
                                     <table class="table table-bordered table-hover text-dark" id="DataTable" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
-                                                <th class="text-center" colspan="4">Informações</th>
+                                                <th class="text-center" colspan="5">Informações</th>
                                                 <th class="text-center" colspan="2">Ferramentas</th>
                                             </tr>
                                             <tr>
-                                                <th>Nome</th>
+                                                <th>Nome do Sistema</th>
                                                 <th>Descrição</th>
                                                 <th>Data Inicial</th>
                                                 <th>Data Final</th>
+                                                <th>Qtd. de Módulos</th>
                                                 <th class="text-center">Detalhe</th>
                                                 <th class="text-center">Editar</th>
                                                 <!--<th class="text-center">Excluir</th>-->
@@ -74,10 +75,11 @@ session_start();
                                         </thead>
                                         <tfoot>
                                             <tr class="m-0 font-weight-bold text-dark">
-                                                <th class="text-left">Nome</th>
+                                                <th>Nome do Sistema</th>
                                                 <th>Descrição</th>
                                                 <th>Data Inicial</th>
                                                 <th>Data Final</th>
+                                                <th>Qtd. de Módulos</th>
                                                 <th class="text-center">Detalhe</th>
                                                 <th class="text-center">Editar</th>
                                                 <!--<th class="text-center">Excluir</th>-->
@@ -89,12 +91,17 @@ session_start();
                                             $query = "SELECT * FROM tbsistema";
                                             $result = mysqli_query($conn, $query);
                                             foreach ($result as $row) {
+                                                $idsistema = $row['idsistema'];
+                                                $query_modulo="SELECT count(*) as quantidade FROM projetofinal2.tbmodulo WHERE idsistema = $idsistema;";
+                                                $result_modulo = mysqli_query($conn, $query_modulo);
+                                                $row_modulo = mysqli_fetch_row($result_modulo);
                                                 ?>
                                                 <tr>
                                                     <td><?= $row['nome']; ?></td>
                                                     <td><?= $row['descricao']; ?></td>
                                                     <td><?= $row['dataInicio']; ?></td>
                                                     <td><?= $row['dataFim']; ?></td>
+                                                    <td><?= $row_modulo[0]; ?></td>
                                                     <td class="text-center">
                                                         <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#ModalDetalheSistema"
                                                                 data-sistemanome="<?= $row['nome']; ?>"
@@ -143,12 +150,12 @@ session_start();
         </div>
         <!-- End of Page Wrapper -->
 
-        <!-- Modal Cadastrar 
-        <div class="modal fade" id="ModalCadastrarSistema1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <!-- Modal Cadastrar -->
+        <div class="modal fade" id="ModalCadastrarSistema" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Cadastrar Sistema2</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Cadastrar Sistema</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -204,64 +211,9 @@ session_start();
                                         <label for="recipient-name" class="col-form-label">Ambiente Organizacional</label>
                                         <select class="form-control" name="modulo_ambiente" required>
                                             <option value="">Selecione</option>
-                                            <option value="Administrativo">Administrativo</option>
-                                            <option value="Configuração">Configuração</option>
+                                            <option value="Interno">Interno</option>
+                                            <option value="Externo">Externo</option>
                                         </select>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <small class="help-block">*Todos os campos são obrigatórios.</small>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" class="btn btn-primary" name="btnCadastrar">Confirmar Dados</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-         Fim Modal Cadastrar -->
-
-        <!-- Modal Cadastrar -->
-        <div class="modal fade" id="ModalCadastrarSistema" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Cadastrar Sistema</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="post" action="action/cadastrarSistema.php">
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <h5><i class="fa fa-list"></i> Informações do Sistema</h5>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Nome</label>
-                                        <input type="text" class="form-control" name="sistema_nome" required>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label for="message-text" class="col-form-label">Descrição</label>
-                                        <textarea class="form-control" name="sistema_descricao" required></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label for="message-text" class="col-form-label">Data Inicial</label>
-                                        <input type="date" class="form-control" name="sistema_dt_inicio" required>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label for="message-text" class="col-form-label">Data Final</label>
-                                        <input type="date" class="form-control" name="sistema_dt_final" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">

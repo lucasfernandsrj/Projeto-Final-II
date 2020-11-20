@@ -67,35 +67,35 @@ session_start();
                                     </div>
                                     <!--Grid column-->
                                     <div class="col-lg-7 col-md-12 mb-4 mb-md-0">
-                                        <form method="post"action="action/addContact.php">
+                                        <form method="post"action="includes/addContact.php">
                                             <div class="row">
                                                 <!--Grid column-->
                                                 <div class="col-md-12">
                                                     <!-- Material outline input -->
                                                     <div class="md-form md-outline mt-3">
                                                         <label for="form-first-name">Nome Completo</label>
-                                                        <input type="text" id="form-nome-contato" name="nome" class="form-control" required>
+                                                        <input type="text" id="form-nome-contato" name="form-nome-contato" class="form-control" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <!-- Material outline input -->
                                                     <div class="md-form md-outline mt-3">
                                                         <label for="form-email">E-mail</label>
-                                                        <input type="email" id="form-email-contato" name="email" class="form-control" required>
+                                                        <input type="email" id="form-email-contato" name="form-email-contato" class="form-control" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <!-- Material outline input -->
                                                     <div class="md-form md-outline">
                                                         <label for="form-subject">Assunto</label>
-                                                        <input type="text" id="form-assunto-contato" name="assunto" class="form-control" required>
+                                                        <input type="text" id="form-assunto-contato" name="form-assunto-contato" class="form-control" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <!--Material textarea-->
                                                     <div class="md-form md-outline mb-3">
                                                         <label for="form-message" pl>Como podemos ajudá-lo?</label>
-                                                        <textarea id="form-mensagem-contato" name="mensagem" class="md-textarea form-control" rows="3" required></textarea>
+                                                        <textarea id="form-mensagem-contato" name="form-mensagem-contato" class="md-textarea form-control" rows="3" required></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">

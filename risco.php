@@ -63,7 +63,7 @@ session_start();
                                                 <th class="text-center" colspan="2">Ferramentas</th>
                                             </tr>
                                             <tr>
-                                                <th>Nome</th>
+                                                <th>Nome do Risco</th>
                                                 <th>Descrição</th>
                                                 <th>Nome da Categoria</th>
                                                 <th class="text-center">Detalhe</th>
@@ -73,7 +73,7 @@ session_start();
                                         </thead>
                                         <tfoot>
                                             <tr class="m-0 font-weight-bold text-dark">
-                                                <th class="text-left">Nome</th>
+                                                <th>Nome do Risco</th>
                                                 <th>Descrição</th>
                                                 <th>Nome da Categoria</th>
                                                 <th class="text-center">Detalhe</th>

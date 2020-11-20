@@ -67,11 +67,11 @@ session_start();
                                             </tr>
                                             <tr>
                                                 <th>ID</th>
-                                                <th>Nível</th>
-                                                <th>Nome</th>
-                                                <th>Ambiente</th>
                                                 <th>Sistema</th>
-                                                <th>Módulo Vinculado</th>
+                                                <th>Nível</th>
+                                                <th>Nome do Módulo</th>
+                                                <th>Ambiente</th>
+                                                <th>Módulo Superior</th>
                                                 <th class="text-center">Detalhe</th>
                                                 <th class="text-center">Editar</th>
                                                 <!--<th class="text-center">Excluir</th>-->
@@ -80,11 +80,11 @@ session_start();
                                         <tfoot>
                                             <tr class="m-0 font-weight-bold text-dark">
                                                 <th>ID</th>
-                                                <th>Nível</th>
-                                                <th>Nome</th>
-                                                <th>Ambiente</th>
                                                 <th>Sistema</th>
-                                                <th>Módulo Vinculado</th>
+                                                <th>Nível</th>
+                                                <th>Nome do Módulo</th>
+                                                <th>Ambiente</th>
+                                                <th>Módulo Superior</th>
                                                 <th class="text-center">Detalhe</th>
                                                 <th class="text-center">Editar</th>
                                                 <!--<th class="text-center">Excluir</th>-->
@@ -93,32 +93,31 @@ session_start();
                                         <tbody>
                                             <?php
                                             require_once("lib/Database/Connection.php");
-                                            $query = "
-                                                    SELECT 
-                                                        tbmodulo.*,
-                                                        tbsistema.nome sistema_nome
-                                                    FROM 
-                                                        tbmodulo 
-                                                    LEFT JOIN 
-                                                        tbsistema
-                                                    ON 
-                                                        tbmodulo.idsistema = tbsistema.idsistema";
+                                            $query = "SELECT 
+    tbmodulo.*,
+    tbsistema.nome sistema_nome,
+    tbsistema.dataInicio sistema_datainicio,
+    tbsistema.dataFim sistema_datafinal
+FROM
+    tbmodulo
+        LEFT JOIN
+    tbsistema ON tbmodulo.idsistema = tbsistema.idsistema;";
                                             $result = mysqli_query($conn, $query);
                                             foreach ($result as $row) {
                                                 ?>
                                                 <tr>
                                                     <td><?= $row['idmodulo']; ?></td>
+                                                    <td><?= $row['sistema_nome']; ?></td>
                                                     <td><?= $row['nivel']; ?></td>
                                                     <td><?= $row['nome']; ?></td>
                                                     <td><?= $row['ambiente']; ?></td>
-                                                    <td><?= $row['sistema_nome']; ?></td>
-                                                    <?php
-                                                    if ($row['fk_idmodulo'] != "") {
-                                                        $fk_idmodulo = $row['fk_idmodulo'];
-                                                        $query_fk_idmodulo = "SELECT nome FROM tbmodulo WHERE idmodulo = $fk_idmodulo";
-                                                        $result_fk_idmodulo = mysqli_query($conn, $query_fk_idmodulo);
-                                                        foreach ($result_fk_idmodulo as $row_fk_idmodulo) {
-                                                            ?>
+    <?php
+    if ($row['fk_idmodulo'] != "") {
+        $fk_idmodulo = $row['fk_idmodulo'];
+        $query_fk_idmodulo = "SELECT nome FROM tbmodulo WHERE idmodulo = $fk_idmodulo";
+        $result_fk_idmodulo = mysqli_query($conn, $query_fk_idmodulo);
+        foreach ($result_fk_idmodulo as $row_fk_idmodulo) {
+            ?>
                                                             <td><?= $row_fk_idmodulo['nome']; ?> (ID: <?= $row['fk_idmodulo']; ?>)</td><?php
                                                         }
                                                     } else {
@@ -132,6 +131,9 @@ session_start();
                                                                 data-moduloambiente="<?= $row['ambiente']; ?>"
                                                                 data-modulofkidmodulo="<?= $row['fk_idmodulo']; ?>"
                                                                 data-modulonivel="<?= $row['nivel']; ?>"
+                                                                data-sistemanome="<?= $row['sistema_nome']; ?>"
+                                                                data-sistemadatainicio="<?= $row['sistema_datainicio']; ?>"
+                                                                data-sistemadatafinal="<?= $row['sistema_datafinal']; ?>"
                                                                 >
                                                             <i class="fas fa-fingerprint"></i>&nbsp;Detalhe
                                                         </button>
@@ -157,7 +159,7 @@ session_start();
                                                     </td>
                                                     -->
                                                 </tr>
-                                            <?php } ?>
+<?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -169,7 +171,7 @@ session_start();
                     <!-- /.container-fluid -->
                 </div>
                 <!-- End of Main Content -->
-                <?php include_once "templates/footer.php"; ?>
+<?php include_once "templates/footer.php"; ?>
             </div>
             <!-- End of Content Wrapper -->
         </div>
@@ -208,8 +210,8 @@ session_start();
                                         <label for="recipient-name" class="col-form-label">Ambiente Organizacional</label>
                                         <select class="form-control" name="moduloambiente" required>
                                             <option value="">Selecione</option>
-                                            <option value="Administrativo">Administrativo</option>
-                                            <option value="Configuração">Configuração</option>
+                                            <option value="Interno">Interno</option>
+                                            <option value="Externo">Externo</option>
                                         </select>
                                     </div>
                                 </div>
@@ -229,11 +231,11 @@ session_start();
                                         <label for="recipient-name" class="col-form-label">Nome do Sistema</label>
                                         <select class="form-control" name="moduloidsistema" required>
                                             <option value="">Selecione</option>
-                                            <?php
-                                            $query_sistema = "SELECT idsistema, nome FROM tbsistema";
-                                            $result_sistema = mysqli_query($conn, $query_sistema);
-                                            foreach ($result_sistema as $row_sistema) {
-                                                ?>
+<?php
+$query_sistema = "SELECT idsistema, nome FROM tbsistema";
+$result_sistema = mysqli_query($conn, $query_sistema);
+foreach ($result_sistema as $row_sistema) {
+    ?>
                                                 <option value="<?= $row_sistema['idsistema']; ?>"><?= $row_sistema['nome']; ?></option>
                                             <?php } ?>
                                         </select>
@@ -291,18 +293,18 @@ session_start();
                                         <label for="recipient-name" class="col-form-label">Nome do Módulo*²</label>
                                         <select class="form-control" name="modulofk_idmodulo" required>
                                             <option value="">Selecione</option>
-                                            <?php
-                                            $query_modulo2 = "SELECT idmodulo,nivel, nome,idsistema,fk_idmodulo FROM tbmodulo WHERE nivel < 3 ORDER BY idsistema ASC, nivel ASC";
-                                            $result_modulo2 = mysqli_query($conn, $query_modulo2);
-                                            foreach ($result_modulo2 as $row_modulo2) {
-                                                if ($row_modulo2['nivel'] == 1) {
-                                                    $modulo_idsistema_nv1 = $row_modulo2['idsistema'];
-                                                    $query_modulonv1 = "SELECT nome FROM tbsistema WHERE idsistema = '$modulo_idsistema_nv1' LIMIT 1";
-                                                    $result_modulonv1 = mysqli_query($conn, $query_modulonv1);
-                                                    foreach ($result_modulonv1 as $row_modulonv1) {
-                                                        $sistema_nome_nv1 = $row_modulonv1['nome'];
-                                                    }
-                                                    ?>
+<?php
+$query_modulo2 = "SELECT idmodulo,nivel, nome,idsistema,fk_idmodulo FROM tbmodulo WHERE nivel < 3 ORDER BY idsistema ASC, nivel ASC";
+$result_modulo2 = mysqli_query($conn, $query_modulo2);
+foreach ($result_modulo2 as $row_modulo2) {
+    if ($row_modulo2['nivel'] == 1) {
+        $modulo_idsistema_nv1 = $row_modulo2['idsistema'];
+        $query_modulonv1 = "SELECT nome FROM tbsistema WHERE idsistema = '$modulo_idsistema_nv1' LIMIT 1";
+        $result_modulonv1 = mysqli_query($conn, $query_modulonv1);
+        foreach ($result_modulonv1 as $row_modulonv1) {
+            $sistema_nome_nv1 = $row_modulonv1['nome'];
+        }
+        ?>
                                                     <option value="<?= $row_modulo2['idmodulo']; ?>">ID: <?= $row_modulo2['idmodulo']; ?> - Nível: <?= $row_modulo2['nivel']; ?> - Sistema: <?= $sistema_nome_nv1; ?> - Módulo: <?= $row_modulo2['nome']; ?></option>
                                                     <?php
                                                 } else {
@@ -352,6 +354,32 @@ session_start();
                     </div>
                     <div class="modal-body" id="printThis">
                         <div class="row">
+                            <div class="col-auto" id="info_sistema">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Sistema</h5><!-- Título -->
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div>
+                                            <label class="col-form-label font-weight-bold">Nome do Sistema</label>
+                                            <p><output type="text" id="detalhe_sistemanome"></output></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div>
+                                            <label class="col-form-label font-weight-bold">Data de Início</label>
+                                            <p><output type="date" id="detalhe_sistemadatainicio"></output></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div>
+                                            <label class="col-form-label font-weight-bold">Data Final</label>
+                                            <p><output type="date" id="detalhe_sistemadatafinal"></output></p>
+                                        </div>
+                                    </div></div>
+                            </div>
                             <div class="col-lg-12">
                                 <h5 class="text-primary"><i class="fa fa-clipboard"></i> Informações do Módulo</h5>
                             </div>
@@ -381,10 +409,10 @@ session_start();
                             </div>
                         </div>
                     </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                            <button id="btnPrint" type="button" class="btn btn-info"><i class="fas fa-print"></i> Gerar Print</button>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        <button id="btnPrint" type="button" class="btn btn-info"><i class="fas fa-print"></i> Gerar Print</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -424,8 +452,8 @@ session_start();
                                         <label for="message-text" class="col-form-label">Ambiente Organizacional</label>
                                         <select class="form-control" id="editar_moduloambiente" name="editar_moduloambiente" required>
                                             <option value="">Selecione</option>
-                                            <option value="Administrativo">Administrativo</option>
-                                            <option value="Configuração">Configuração</option>
+                                            <option value="Interno">Interno</option>
+                                            <option value="Externo">Externo</option>
                                         </select>
                                     </div>
                                 </div>
@@ -440,18 +468,18 @@ session_start();
                                         <label for="recipient-name" class="col-form-label">Nome do Módulo*²</label>
                                         <select class="form-control" id="editar_modulofkidmodulo" name="editar_modulofkidmodulo">
                                             <option value="">Selecione</option>
-                                            <?php
-                                            $query_modulo2 = "SELECT idmodulo,nivel, nome,idsistema,fk_idmodulo FROM tbmodulo WHERE nivel < 3 ORDER BY idsistema ASC, nivel ASC";
-                                            $result_modulo2 = mysqli_query($conn, $query_modulo2);
-                                            foreach ($result_modulo2 as $row_modulo2) {
-                                                if ($row_modulo2['nivel'] == 1) {
-                                                    $modulo_idsistema_nv1 = $row_modulo2['idsistema'];
-                                                    $query_modulonv1 = "SELECT nome FROM tbsistema WHERE idsistema = '$modulo_idsistema_nv1' LIMIT 1";
-                                                    $result_modulonv1 = mysqli_query($conn, $query_modulonv1);
-                                                    foreach ($result_modulonv1 as $row_modulonv1) {
-                                                        $sistema_nome_nv1 = $row_modulonv1['nome'];
-                                                    }
-                                                    ?>
+<?php
+$query_modulo2 = "SELECT idmodulo,nivel, nome,idsistema,fk_idmodulo FROM tbmodulo WHERE nivel < 3 ORDER BY idsistema ASC, nivel ASC";
+$result_modulo2 = mysqli_query($conn, $query_modulo2);
+foreach ($result_modulo2 as $row_modulo2) {
+    if ($row_modulo2['nivel'] == 1) {
+        $modulo_idsistema_nv1 = $row_modulo2['idsistema'];
+        $query_modulonv1 = "SELECT nome FROM tbsistema WHERE idsistema = '$modulo_idsistema_nv1' LIMIT 1";
+        $result_modulonv1 = mysqli_query($conn, $query_modulonv1);
+        foreach ($result_modulonv1 as $row_modulonv1) {
+            $sistema_nome_nv1 = $row_modulonv1['nome'];
+        }
+        ?>
                                                     <option value="<?= $row_modulo2['idmodulo']; ?>">ID: <?= $row_modulo2['idmodulo']; ?> - Nível: <?= $row_modulo2['nivel']; ?> - Módulo: <?= $row_modulo2['nome']; ?> - Sistema: <?= $sistema_nome_nv1; ?> </option>
                                                     <?php
                                                 } else {
@@ -488,7 +516,7 @@ session_start();
             </div>
         </div>
         <!-- Fim Modal Editar -->
-        <?php include_once "templates/frameworks.php"; ?>
+<?php include_once "templates/frameworks.php"; ?>
 
         <!-- Modal Detalhe-->
         <script>
@@ -499,6 +527,10 @@ session_start();
                 var detalhe_moduloambiente = button.data('moduloambiente');
                 var detalhe_modulofk_idmodulo = button.data('modulofkidmodulo');
                 var detalhe_modulonivel = button.data('modulonivel');
+
+                var detalhe_sistemanome = button.data('sistemanome');
+                var detalhe_sistemadatainicio = button.data('sistemadatainicio');
+                var detalhe_sistemadatafinal = button.data('sistemadatafinal');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
@@ -508,6 +540,14 @@ session_start();
                 modal.find('#detalhe_moduloambiente').val(detalhe_moduloambiente);
                 modal.find('#detalhe_modulofk_idmodulo').val(detalhe_modulofk_idmodulo);
                 modal.find('#detalhe_modulonivel').val(detalhe_modulonivel);
+                if (detalhe_modulonivel === 1) {
+                    $('#info_sistema').show();
+                    modal.find('#detalhe_sistemanome').val(detalhe_sistemanome);
+                    modal.find('#detalhe_sistemadatainicio').val(detalhe_sistemadatainicio);
+                    modal.find('#detalhe_sistemadatafinal').val(detalhe_sistemadatafinal);
+                } else {
+                    $('#info_sistema').hide();
+                }
             });
         </script>
         <!-- Fim Modal Detalhe-->
@@ -562,7 +602,7 @@ session_start();
         <script>
             $(document).ready(function () {
                 $('#DataTableModulo').DataTable({
-                    "pagingType": "full_numbers",buttons: [
+                    "pagingType": "full_numbers", buttons: [
                         {
                             extend: 'copy',
                             text: '<i class="fas fa-copy"></i> Copiar Tabela'

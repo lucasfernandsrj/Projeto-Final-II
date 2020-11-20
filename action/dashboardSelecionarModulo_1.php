@@ -95,7 +95,17 @@ WHERE
                 //echo $soma_medidadorisco;
             }
         }
-
+        $array_modulo1[] = array(
+            'idmodulo4564564' => $row_modulo2['idmodulo'],
+            'nome' => $row_modulo2['nome'],
+            'nivel' => $row_modulo2['nivel'],
+            'idsistema' => $row_modulo2['idsistema'],
+            'fk_idmodulo' => $row_modulo2['fk_idmodulo'],
+            'soma_orcamento' => $soma_orcamento2,
+            'analise' => $analise2,
+            'medidadorisco_analisada' => $soma_medidadorisco2,
+            'medidadoriscototal' => $soma_medidadorisco_total2
+        );
         $query_modulo3 = "SELECT 
     idmodulo, nome, nivel, fk_idmodulo,idsistema
 FROM
@@ -133,6 +143,17 @@ WHERE
                     //echo $soma_medidadorisco;
                 }
             }
+            $array_modulo1[] = array(
+                'idmodulo12312323' => $row_modulo3['idmodulo'],
+                'nome' => $row_modulo3['nome'],
+                'nivel' => $row_modulo3['nivel'],
+                'idsistema' => $row_modulo3['idsistema'],
+                'fk_idmodulo' => $row_modulo3['fk_idmodulo'],
+                'soma_orcamento' => $soma_orcamento3,
+                'analise' => $analise3,
+                'medidadorisco_analisada' => $soma_medidadorisco3,
+                'medidadoriscototal' => $soma_medidadorisco_total3
+            );
         }
     }
 }
