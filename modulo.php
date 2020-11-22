@@ -62,11 +62,10 @@ session_start();
                                     <table class="table table-bordered table-hover text-dark" id="DataTableModulo" width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
-                                                <th class="text-center" colspan="6">Informações</th>
+                                                <th class="text-center" colspan="5">Informações</th>
                                                 <th class="text-center" colspan="2">Ferramentas</th>
                                             </tr>
                                             <tr>
-                                                <th>ID</th>
                                                 <th>Sistema</th>
                                                 <th>Nível</th>
                                                 <th>Nome do Módulo</th>
@@ -79,7 +78,6 @@ session_start();
                                         </thead>
                                         <tfoot>
                                             <tr class="m-0 font-weight-bold text-dark">
-                                                <th>ID</th>
                                                 <th>Sistema</th>
                                                 <th>Nível</th>
                                                 <th>Nome do Módulo</th>
@@ -106,26 +104,25 @@ FROM
                                             foreach ($result as $row) {
                                                 ?>
                                                 <tr>
-                                                    <td><?= $row['idmodulo']; ?></td>
                                                     <td><?= $row['sistema_nome']; ?></td>
                                                     <td><?= $row['nivel']; ?></td>
                                                     <td><?= $row['nome']; ?></td>
                                                     <td><?= $row['ambiente']; ?></td>
-    <?php
-    if ($row['fk_idmodulo'] != "") {
-        $fk_idmodulo = $row['fk_idmodulo'];
-        $query_fk_idmodulo = "SELECT nome FROM tbmodulo WHERE idmodulo = $fk_idmodulo";
-        $result_fk_idmodulo = mysqli_query($conn, $query_fk_idmodulo);
-        foreach ($result_fk_idmodulo as $row_fk_idmodulo) {
-            ?>
-                                                            <td><?= $row_fk_idmodulo['nome']; ?> (ID: <?= $row['fk_idmodulo']; ?>)</td><?php
+                                                    <?php
+                                                    if ($row['fk_idmodulo'] != "") {
+                                                        $fk_idmodulo = $row['fk_idmodulo'];
+                                                        $query_fk_idmodulo = "SELECT nome FROM tbmodulo WHERE idmodulo = $fk_idmodulo";
+                                                        $result_fk_idmodulo = mysqli_query($conn, $query_fk_idmodulo);
+                                                        foreach ($result_fk_idmodulo as $row_fk_idmodulo) {
+                                                            ?>
+                                                            <td><?= $row_fk_idmodulo['nome']; ?></td><?php
                                                         }
                                                     } else {
                                                         ?><td></td><?php
                                                     }
                                                     ?>
                                                     <td class="text-center">
-                                                        <button type="button" onClick="Detalhe(this)" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#ModalDetalheModulo"
+                                                        <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#ModalDetalheModulo"
                                                                 data-modulonome="<?= $row['nome']; ?>"
                                                                 data-modulodescricao="<?= $row['descricao']; ?>"
                                                                 data-moduloambiente="<?= $row['ambiente']; ?>"
@@ -159,7 +156,7 @@ FROM
                                                     </td>
                                                     -->
                                                 </tr>
-<?php } ?>
+                                            <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
@@ -171,7 +168,7 @@ FROM
                     <!-- /.container-fluid -->
                 </div>
                 <!-- End of Main Content -->
-<?php include_once "templates/footer.php"; ?>
+                <?php include_once "templates/footer.php"; ?>
             </div>
             <!-- End of Content Wrapper -->
         </div>
@@ -231,11 +228,11 @@ FROM
                                         <label for="recipient-name" class="col-form-label">Nome do Sistema</label>
                                         <select class="form-control" name="moduloidsistema" required>
                                             <option value="">Selecione</option>
-<?php
-$query_sistema = "SELECT idsistema, nome FROM tbsistema";
-$result_sistema = mysqli_query($conn, $query_sistema);
-foreach ($result_sistema as $row_sistema) {
-    ?>
+                                            <?php
+                                            $query_sistema = "SELECT idsistema, nome FROM tbsistema";
+                                            $result_sistema = mysqli_query($conn, $query_sistema);
+                                            foreach ($result_sistema as $row_sistema) {
+                                                ?>
                                                 <option value="<?= $row_sistema['idsistema']; ?>"><?= $row_sistema['nome']; ?></option>
                                             <?php } ?>
                                         </select>
@@ -272,10 +269,16 @@ foreach ($result_sistema as $row_sistema) {
                                 <div class="col-lg-12">
                                     <h5><i class="fa fa-list"></i> Informações do Módulo</h5>
                                 </div>
-                                <div class="col-lg-12">
+                                <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Nome do Módulo</label>
                                         <input type="text" class="form-control" name="modulonome" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Nível</label>
+                                        <input type="text" class="form-control" id="vincularmodulonivel" value="2" disabled>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -286,40 +289,23 @@ foreach ($result_sistema as $row_sistema) {
                                 </div>
                                 <div class="col-lg-12">
                                     <hr>
-                                    <h5><i class="fa fa-list"></i> Informações do Módulo*</h5>
+                                    <h5><i class="fa fa-list"></i> Informações do Módulo Superior*²</h5>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="message-text" class="col-form-label">Nível</label>
+                                        <select class="form-control" name="modulosuperiornivel" id="modulosuperiornivel" required>
+                                            <option value="">Selecione</option>
+                                            <option value="1">Nível 1</option>
+                                            <option value="2">Nível 2</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Nome do Módulo*²</label>
-                                        <select class="form-control" name="modulofk_idmodulo" required>
+                                        <label for="recipient-name" class="col-form-label">Nome do Módulo Superior</label>
+                                        <select class="form-control" id="modulofk_idmodulo" name="modulofk_idmodulo" required>
                                             <option value="">Selecione</option>
-<?php
-$query_modulo2 = "SELECT idmodulo,nivel, nome,idsistema,fk_idmodulo FROM tbmodulo WHERE nivel < 3 ORDER BY idsistema ASC, nivel ASC";
-$result_modulo2 = mysqli_query($conn, $query_modulo2);
-foreach ($result_modulo2 as $row_modulo2) {
-    if ($row_modulo2['nivel'] == 1) {
-        $modulo_idsistema_nv1 = $row_modulo2['idsistema'];
-        $query_modulonv1 = "SELECT nome FROM tbsistema WHERE idsistema = '$modulo_idsistema_nv1' LIMIT 1";
-        $result_modulonv1 = mysqli_query($conn, $query_modulonv1);
-        foreach ($result_modulonv1 as $row_modulonv1) {
-            $sistema_nome_nv1 = $row_modulonv1['nome'];
-        }
-        ?>
-                                                    <option value="<?= $row_modulo2['idmodulo']; ?>">ID: <?= $row_modulo2['idmodulo']; ?> - Nível: <?= $row_modulo2['nivel']; ?> - Sistema: <?= $sistema_nome_nv1; ?> - Módulo: <?= $row_modulo2['nome']; ?></option>
-                                                    <?php
-                                                } else {
-                                                    $modulo_fk_idmodulo = $row_modulo2['fk_idmodulo'];
-                                                    $query_modulofk = "SELECT nome,nivel,idmodulo FROM tbmodulo WHERE idmodulo = '$modulo_fk_idmodulo' LIMIT 1";
-                                                    $result_modulofk = mysqli_query($conn, $query_modulofk);
-                                                    foreach ($result_modulofk as $row_modulofk) {
-                                                        $modulofk_nome = $row_modulofk['nome'];
-                                                    }
-                                                    ?>
-                                                    <option value="<?= $row_modulo2['idmodulo']; ?>">ID: <?= $row_modulo2['idmodulo']; ?> - Nível: <?= $row_modulo2['nivel']; ?> - Módulo: <?= $row_modulo2['nome']; ?> - Módulo Vinculado: <?= $modulofk_nome; ?> (ID: <?= $row_modulofk['idmodulo']; ?>)</option>
-                                                    <?php
-                                                }
-                                                ?>
-                                            <?php } ?>
                                         </select>
                                     </div>
                                 </div>
@@ -354,19 +340,17 @@ foreach ($result_modulo2 as $row_modulo2) {
                     </div>
                     <div class="modal-body" id="printThis">
                         <div class="row">
-                            <div class="col-auto" id="info_sistema">
+                            <div class="col-lg-12" id="info_sistema">
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Sistema</h5><!-- Título -->
                                     </div>
-                                    <div class="col-lg-6">
+                                    <div class="col-lg-12">
                                         <div>
                                             <label class="col-form-label font-weight-bold">Nome do Sistema</label>
                                             <p><output type="text" id="detalhe_sistemanome"></output></p>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-lg-6">
                                         <div>
                                             <label class="col-form-label font-weight-bold">Data de Início</label>
@@ -378,7 +362,74 @@ foreach ($result_modulo2 as $row_modulo2) {
                                             <label class="col-form-label font-weight-bold">Data Final</label>
                                             <p><output type="date" id="detalhe_sistemadatafinal"></output></p>
                                         </div>
-                                    </div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="modulo_superior2" class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Módulo Superior</h5>
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <div>
+                                            <label class="col-form-label font-weight-bold">Nome</label>
+                                            <p><output type="text" id="detalhe_superior2modulonome"></output></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6" id="mostra_modambiente">
+                                        <div>
+                                            <label class="col-form-label font-weight-bold">Ambiente Organizacional</label>
+                                            <p><output type="text" id="detalhe_superior2moduloambiente"></output></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <div>
+                                            <label class="col-form-label font-weight-bold">Descrição</label>
+                                            <p><output type="text" id="detalhe_superior2modulodescricao"></output></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div>
+                                            <label class="col-form-label font-weight-bold">Nível</label>
+                                            <p><output type="text" id="detalhe_superior2modulonivel"></output></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="modulo_superior" class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Módulo Superior</h5>
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <div>
+                                            <label class="col-form-label font-weight-bold">Nome</label>
+                                            <p><output type="text" id="detalhe_superiormodulonome"></output></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6" id="mostra_modambiente">
+                                        <div>
+                                            <label class="col-form-label font-weight-bold">Ambiente Organizacional</label>
+                                            <p><output type="text" id="detalhe_superiormoduloambiente"></output></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6">
+                                        <div>
+                                            <label class="col-form-label font-weight-bold">Descrição</label>
+                                            <p><output type="text" id="detalhe_superiormodulodescricao"></output></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div>
+                                            <label class="col-form-label font-weight-bold">Nível</label>
+                                            <p><output type="text" id="detalhe_superiormodulonivel"></output></p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-lg-12">
                                 <h5 class="text-primary"><i class="fa fa-clipboard"></i> Informações do Módulo</h5>
@@ -461,49 +512,19 @@ foreach ($result_modulo2 as $row_modulo2) {
                                     <div class="form-group">
                                         <label for="message-text" class="col-form-label">Nível</label>
                                         <input type="text" class="form-control" id="editar_modulonivel" disabled>
+                                        <input type="hidden" class="form-control" id="editar_modulonivel2" name="editar_modulonivel2">
                                     </div>
                                 </div>
                                 <div class="col-lg-12" id="mostra_modulo">
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Nome do Módulo*²</label>
+                                        <label for="recipient-name" class="col-form-label">Nome do Módulo Superior*²</label>
                                         <select class="form-control" id="editar_modulofkidmodulo" name="editar_modulofkidmodulo">
                                             <option value="">Selecione</option>
-<?php
-$query_modulo2 = "SELECT idmodulo,nivel, nome,idsistema,fk_idmodulo FROM tbmodulo WHERE nivel < 3 ORDER BY idsistema ASC, nivel ASC";
-$result_modulo2 = mysqli_query($conn, $query_modulo2);
-foreach ($result_modulo2 as $row_modulo2) {
-    if ($row_modulo2['nivel'] == 1) {
-        $modulo_idsistema_nv1 = $row_modulo2['idsistema'];
-        $query_modulonv1 = "SELECT nome FROM tbsistema WHERE idsistema = '$modulo_idsistema_nv1' LIMIT 1";
-        $result_modulonv1 = mysqli_query($conn, $query_modulonv1);
-        foreach ($result_modulonv1 as $row_modulonv1) {
-            $sistema_nome_nv1 = $row_modulonv1['nome'];
-        }
-        ?>
-                                                    <option value="<?= $row_modulo2['idmodulo']; ?>">ID: <?= $row_modulo2['idmodulo']; ?> - Nível: <?= $row_modulo2['nivel']; ?> - Módulo: <?= $row_modulo2['nome']; ?> - Sistema: <?= $sistema_nome_nv1; ?> </option>
-                                                    <?php
-                                                } else {
-                                                    $modulo_fk_idmodulo = $row_modulo2['fk_idmodulo'];
-
-                                                    $query_modulofk = "SELECT nome,nivel,idmodulo FROM tbmodulo WHERE idmodulo = '$modulo_fk_idmodulo' LIMIT 1";
-                                                    $result_modulofk = mysqli_query($conn, $query_modulofk);
-                                                    foreach ($result_modulofk as $row_modulofk) {
-                                                        $modulofk_nome = $row_modulofk['nome'];
-                                                    }
-                                                    ?>
-                                                    <option value="<?= $row_modulo2['idmodulo']; ?>">ID: <?= $row_modulo2['idmodulo']; ?> - Nível: <?= $row_modulo2['nivel']; ?> - Módulo: <?= $row_modulo2['nome']; ?> - Módulo Vinculado: <?= $modulofk_nome; ?> (ID: <?= $row_modulofk['idmodulo']; ?>)</option>
-                                                    <?php
-                                                }
-                                                ?>
-                                            <?php } ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
                                     <small class="help-block">*Campo(s) obrigatório(s).</small>
-                                </div>
-                                <div class="col-lg-12">
-                                    <small class="help-block">*²O campo exibe uma lista de módulos até o nível 2.</small>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -516,7 +537,7 @@ foreach ($result_modulo2 as $row_modulo2) {
             </div>
         </div>
         <!-- Fim Modal Editar -->
-<?php include_once "templates/frameworks.php"; ?>
+        <?php include_once "templates/frameworks.php"; ?>
 
         <!-- Modal Detalhe-->
         <script>
@@ -542,11 +563,38 @@ foreach ($result_modulo2 as $row_modulo2) {
                 modal.find('#detalhe_modulonivel').val(detalhe_modulonivel);
                 if (detalhe_modulonivel === 1) {
                     $('#info_sistema').show();
+                    $('#modulo_superior').hide();
+                    $('#modulo_superior2').hide();
                     modal.find('#detalhe_sistemanome').val(detalhe_sistemanome);
                     modal.find('#detalhe_sistemadatainicio').val(detalhe_sistemadatainicio);
                     modal.find('#detalhe_sistemadatafinal').val(detalhe_sistemadatafinal);
                 } else {
                     $('#info_sistema').hide();
+                    $('#modulo_superior').show();
+                    $('#modulo_superior2').hide();
+                    $.getJSON('action/selecionarModuloPorId.php?search=', {
+                        idmodulo: detalhe_modulofk_idmodulo,
+                        ajax: 'true'
+                    }, function (j) {
+                        //console.log(j[1] !== undefined);
+                        if (j.length > 0) {
+                            modal.find('#detalhe_superiormodulonome').val(j[0].nome);
+                            modal.find('#detalhe_superiormodulodescricao').val(j[0].descricao);
+                            modal.find('#detalhe_superiormoduloambiente').val(j[0].ambiente);
+                            modal.find('#detalhe_superiormodulonivel').val(j[0].nivel);
+                            if (j[1] !== undefined) {
+                                //console.log(j[1]);
+                                $('#modulo_superior2').show();
+                                modal.find('#detalhe_superior2modulonome').val(j[1].nome);
+                                modal.find('#detalhe_superior2modulodescricao').val(j[1].descricao);
+                                modal.find('#detalhe_superior2moduloambiente').val(j[1].ambiente);
+                                modal.find('#detalhe_superior2modulonivel').val(j[1].nivel);
+                            }
+                        } else {
+                            $('#modulo_superior').hide();
+                            $('#modulo_superior2').hide();
+                        }
+                    });
                 }
             });
         </script>
@@ -570,8 +618,26 @@ foreach ($result_modulo2 as $row_modulo2) {
                 modal.find('#editar_modulonome').val(editar_modulonome);
                 modal.find('#editar_modulodescricao').val(editar_modulodescricao);
                 modal.find('#editar_moduloambiente').val(editar_moduloambiente);
-                modal.find('#editar_modulofkidmodulo').val(editar_modulofkidmodulo);
+                //modal.find('#editar_modulofkidmodulo').val(editar_modulofkidmodulo);
                 modal.find('#editar_modulonivel').val(editar_modulonivel);
+                if (editar_modulonivel) {
+                    $.getJSON('action/selecionarModuloPorNivel.php?search=', {
+                        nivel: (parseInt(editar_modulonivel) - 1),
+                        ajax: 'true'
+                    }, function (j) {
+                        var options = '<option value="">Selecione</option>';
+                        if (j.length > 0) {
+                            for (var i = 0; i < j.length; i++) {
+                                options += '<option value="' + j[i].idmodulo + '">Sistema: ' + j[i].sistemanome + ' - Módulo: ' + j[i].modulonome + '</option>';
+                            }
+                            $('#editar_modulofkidmodulo').html(options).show();
+                            $('#editar_modulofkidmodulo').val(editar_modulofkidmodulo);
+                        } else {
+                            $('#editar_modulofkidmodulo').html('<option value="">*Não há opções disponíveis</option>');
+                        }
+                    });
+                }
+                modal.find('#editar_modulonivel2').val(editar_modulonivel);
 
                 if (editar_modulonivel === 1) {
                     $('#mostra_modulo').hide();
@@ -667,6 +733,42 @@ foreach ($result_modulo2 as $row_modulo2) {
             ;
         </script>
         <!-- End JS Print Modal Detalhe-->
+        <!-- JS Selecionar Modulo por Nivel -->
+        <script type="text/javascript">
+            $(function () {
+                $('#modulosuperiornivel').change(function () {
+                    //console.log($('#modulosuperiornivel').val());
+                    if ($('#modulosuperiornivel').val() === '1') {
+                        $('#vincularmodulonivel').val(2);
+
+                    } else if ($('#modulosuperiornivel').val() === '2') {
+                        $('#vincularmodulonivel').val(3);
+
+                    } else {
+                        $('#vincularmodulonivel').val('2');
+                    }
+                    if ($(this).val()) {
+                        $.getJSON('action/selecionarModuloPorNivel.php?search=', {
+                            nivel: $(this).val(),
+                            ajax: 'true'
+                        }, function (j) {
+                            var options = '<option value="">Selecione</option>';
+                            if (j.length > 0) {
+                                for (var i = 0; i < j.length; i++) {
+                                    options += '<option value="' + j[i].idmodulo + '">Sistema: ' + j[i].sistemanome + ' - Módulo: ' + j[i].modulonome + '</option>';
+                                }
+                                $('#modulofk_idmodulo').html(options).show();
+                            } else {
+                                $('#modulofk_idmodulo').html('<option value="">*Não há opções disponíveis</option>');
+                            }
+                        });
+                    } else {
+                        $('#modulofk_idmodulo').html('<option value="">Selecione</option>');
+                    }
+                });
+            });
+        </script>
+        <!-- Fim JS Selecionar Modulo por Nivel -->
     </body>
 
 </html>

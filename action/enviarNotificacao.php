@@ -10,12 +10,17 @@ if (isset($btnEmail)) {
     try {
 
         $nome = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'analistanome', FILTER_SANITIZE_STRING)); //obrigatorio
+        $nome_split = preg_split('/ /',$nome, -1,PREG_SPLIT_NO_EMPTY);
         $email = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'analistaemail', FILTER_SANITIZE_EMAIL)); //obrigatorio
         $risconome = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'risconome', FILTER_SANITIZE_STRING)); //obrigatorio
+        
+        $analisedatainicio = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'analisedatainicio', FILTER_SANITIZE_STRING)); //obrigatorio
+        $analisedatafim = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'analisedatafim', FILTER_SANITIZE_STRING)); //obrigatorio
         $dt_atual = date("d/m/Y");
         $assunto = 'Analista, uma nova Análise de Risco foi atribuída a você.';
-        $mensagem = 'Prezado(a), Analista ' . $nome . '<p><br>
-Estamos entrando em contato no dia ' . $dt_atual . ' para informar que o risco "' . $risconome . '" foi atribuído a você!
+        $mensagem = 'Prezado(a) ' . $nome_split[0] . ',<p><br>
+Estamos entrando em contato no dia ' . $dt_atual . ' para informar que a Análise do Risco "' . $risconome . '" foi atribuída a você!
+<p>Data de Início da Análise: '.$analisedatainicio.'<p> Prazo Final: '.$analisedatafim.';
 <p><br>
 Att,<p>
 Equipe de Notificação<p>

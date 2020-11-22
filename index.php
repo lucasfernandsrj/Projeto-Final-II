@@ -220,7 +220,7 @@ session_start();
                             ajax: 'true'
                         }, function (j) {
                             if (j.length > 0) {
-                                console.log(j);
+                                //console.log(j);
                                 $('#dashboard_modulo_qtd').html(j.length);
                                 var orcamento_total = 0;
                                 var medidadorisco_analisadas_soma = 0;

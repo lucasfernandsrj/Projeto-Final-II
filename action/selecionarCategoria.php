@@ -11,6 +11,7 @@ $query_categoria2 = "SELECT
         ORDER BY
             nome;";
 $result_categoria2 = mysqli_query($conn, $query_categoria2);
+$array_categoria2 = [];
 while ($row_categoria2 = mysqli_fetch_assoc($result_categoria2)) {
     $array_categoria2[] = array(
         'idcategoria' => $row_categoria2['idcategoria'],

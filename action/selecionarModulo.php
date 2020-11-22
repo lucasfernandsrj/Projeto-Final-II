@@ -3,7 +3,7 @@ require_once("../lib/Database/Connection.php");
 $idsistema = $_REQUEST['idsistema'];
 $query_modulo = 
         "SELECT 
-            idmodulo, nome 
+            idmodulo, nome, descricao 
         FROM 
             tbmodulo
         WHERE 

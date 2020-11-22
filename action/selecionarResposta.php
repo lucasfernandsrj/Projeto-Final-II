@@ -10,6 +10,7 @@ $query_resposta = "SELECT
         WHERE 
             idanalise=$idanalise";
 $result_resposta = mysqli_query($conn, $query_resposta);
+$array_resposta = [];
 while ($row_resposta = mysqli_fetch_assoc($result_resposta)) {
     if ($row_resposta['medidadorisco'] < 0.08) {
         $array_resposta[] = array(

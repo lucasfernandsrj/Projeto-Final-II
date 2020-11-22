@@ -92,7 +92,7 @@ session_start();
                                             $result = mysqli_query($conn, $query);
                                             foreach ($result as $row) {
                                                 $idsistema = $row['idsistema'];
-                                                $query_modulo="SELECT count(*) as quantidade FROM projetofinal2.tbmodulo WHERE idsistema = $idsistema;";
+                                                $query_modulo = "SELECT count(*) as quantidade FROM projetofinal2.tbmodulo WHERE idsistema = $idsistema;";
                                                 $result_modulo = mysqli_query($conn, $query_modulo);
                                                 $row_modulo = mysqli_fetch_row($result_modulo);
                                                 ?>
@@ -272,10 +272,10 @@ session_start();
                             </div>
                         </div>
                     </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                            <button id="btnPrint" type="button" class="btn btn-info"><i class="fas fa-print"></i> Gerar Print</button>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        <button id="btnPrint" type="button" class="btn btn-info"><i class="fas fa-print"></i> Gerar Print</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -401,7 +401,7 @@ session_start();
                             extend: 'pdf',
                             text: '<i class="fas fa-file-pdf"></i> Gerar Relatório: PDF'
                         }
-                    ],initComplete: function () {
+                    ], initComplete: function () {
                         this.api().columns().every(function () {
                             var column = this;
                             column.data().unique().sort().each(function (x, z) {
@@ -426,11 +426,12 @@ session_start();
 
                         });
                     }
-                }).buttons().container().appendTo('.col-md-6:eq(0)');;
+                }).buttons().container().appendTo('.col-md-6:eq(0)');
+                ;
             });
         </script>
-        
-        
+
+
         <!-- Fim Reseta Modal Cadastrar ao Fechar-->
         <!-- JS Print Modal Detalhe-->
         <script>

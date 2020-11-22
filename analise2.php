@@ -22,8 +22,8 @@ session_start();
                     <!-- Topbar -->
                     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
                         <a href="analise2.php"><button type="button" class="btn btn-outline-primary btn-lg mx-2">Análise do Analista</button></a>
-                        <a href="atividade.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Atividade Mitigadora</button></a>
                         <a href="resposta.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Resposta ao Risco</button></a>
+                        <a href="atividade.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Atividade</button></a>
                     </nav>
                     <!-- End of Topbar -->
                     <!-- Begin Page Content -->
@@ -46,7 +46,7 @@ session_start();
                                 <h6 class="m-0 font-weight-bold text-primary">Análise</h6>
                             </div>
                             <div class="card-body">
-                                
+
                                 <!-- Tabela -->
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover text-dark" id="DataTable" width="100%" cellspacing="0">
@@ -56,10 +56,10 @@ session_start();
                                                 <th class="text-center" colspan="2">Ferramentas</th>
                                             </tr>
                                             <tr>
-
-                                                <th>Analista</th>
                                                 <th>Risco</th>
-                                                <th>Probabilide</th>
+                                                <th>Analista</th>
+                                                <th>Status</th>
+                                                <th>Probabilidade</th>
                                                 <th>Impacto</th>
                                                 <th>Medida do Risco</th>
                                                 <th>Data Fim</th>
@@ -72,9 +72,10 @@ session_start();
                                         <tfoot>
                                             <tr class="m-0 font-weight-bold text-dark">
 
-                                                <th>Analista</th>
                                                 <th>Risco</th>
-                                                <th>Probabilide</th>
+                                                <th>Analista</th>
+                                                <th>Status</th>
+                                                <th>Probabilidade</th>
                                                 <th>Impacto</th>
                                                 <th>Medida do Risco</th>
                                                 <th>Data Fim</th>
@@ -87,35 +88,51 @@ session_start();
                                         <tbody>
                                             <?php
                                             require_once("lib/Database/Connection.php");
-                                            $query = "
-                                                    SELECT 
-                                                        tbmodulo.nome AS modulo_nome, tbmodulo.ambiente AS modulo_ambiente,tbmodulo.idsistema AS modulo_idsistema,
-                                                        tbrisco.nome AS risco_nome, tbrisco.descricao AS risco_descricao, tbrisco.idcategoria AS risco_idcategoria,
-                                                        tbanalise.*,
-                                                        tbanalista.nome AS analista_nome, tbanalista.email AS analista_email
-                                                    FROM 
-                                                        tbanalise
-                                                    LEFT JOIN
-                                                        tbanalista
-                                                    ON
-                                                        tbanalista.idanalista = tbanalise.idanalista
-                                                    LEFT JOIN
-                                                        tbmodulo
-                                                    ON
-                                                        tbmodulo.idmodulo = tbanalise.idmodulo
-                                                    LEFT JOIN
-                                                        tbrisco
-                                                    ON
-                                                        tbrisco.idrisco = tbanalise.idrisco
-                                                    WHERE
-                                                        situacao = 'Em Análise' OR situacao = 'Bloqueada'";
+                                            $query = "SELECT 
+    tbrisco.nome AS risco_nome,
+    tbrisco.descricao AS risco_descricao,
+    tbrisco.idcategoria AS risco_idcategoria,
+    tbmodulo.nome AS modulo_nome,
+    tbmodulo.descricao AS modulo_descricao,
+    tbmodulo.ambiente AS modulo_ambiente,
+    tbmodulo.idsistema AS modulo_idsistema,
+    tbanalise.*,
+    tbanalista.nome AS analista_nome,
+    tbanalista.email AS analista_email,
+    tbresposta.nome AS resposta_nome,
+    tbresposta.descricao AS resposta_descricao,
+    tbresposta.situacao AS resposta_situacao
+FROM
+    tbanalise
+        LEFT JOIN
+    tbanalista ON tbanalista.idanalista = tbanalise.idanalista
+        LEFT JOIN
+    tbmodulo ON tbmodulo.idmodulo = tbanalise.idmodulo
+        LEFT JOIN
+    tbrisco ON tbrisco.idrisco = tbanalise.idrisco
+        LEFT JOIN
+    tbresposta ON tbresposta.idanalise = tbanalise.idanalise
+WHERE
+    tbanalise.situacao = 'Em Análise'
+        OR tbanalise.situacao = 'Bloqueada'";
                                             $result = mysqli_query($conn, $query);
                                             foreach ($result as $row) {
                                                 ?>
                                                 <tr>
 
-                                                    <td><?= $row['analista_nome']; ?></td>
                                                     <td><?= $row['risco_nome']; ?></td>
+                                                    <td><?= $row['analista_nome']; ?></td>
+                                                    <?php
+                                                    if ($row['situacao'] == 'Em Análise') {
+                                                        ?><td class="text-info">Em Análise</td><?php
+                                                    } elseif ($row['situacao'] == 'Bloqueada') {
+                                                        ?><td class="text-dark">Bloqueada</td><?php
+                                                    } elseif ($row['situacao'] == 'Reprovada') {
+                                                        ?><td class="text-danger">Reprovada</td><?php
+                                                    } else {
+                                                        ?><td class="text-success">Aprovada</td><?php
+                                                    }
+                                                    ?>
                                                     <td><?= $row['probabilidade']; ?></td>
                                                     <td><?= $row['impacto']; ?></td>
                                                     <?php
@@ -137,10 +154,8 @@ session_start();
                                                     <td><?= $row['dataFim']; ?></td>
                                                     <td class="text-center">
                                                         <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#ModalDetalheAnalise"
-                                                                data-analiseanalistanome="<?= $row['analista_nome']; ?>"
-                                                                data-analiseanalistaemail="<?= $row['analista_email']; ?>"
-
                                                                 data-analisemodulonome="<?= $row['modulo_nome']; ?>"
+                                                                data-modulodescricao="<?= $row['modulo_descricao']; ?>"
                                                                 data-analisemoduloambiente="<?= $row['modulo_ambiente']; ?>"
 
                                                                 data-analiserisconome="<?= $row['risco_nome']; ?>"
@@ -156,6 +171,13 @@ session_start();
                                                                 data-analiseimpacto="<?= $row['impacto']; ?>"
                                                                 data-analiseimpactojustificativa="<?= $row['impactoJustificativa']; ?>"
                                                                 data-analisemedidadorisco="<?= $row['medidaDoRisco']; ?>"
+
+                                                                data-analiseanalistanome="<?= $row['analista_nome']; ?>"
+                                                                data-analiseanalistaemail="<?= $row['analista_email']; ?>"
+
+                                                                data-respostanome="<?= $row['resposta_nome']; ?>"
+                                                                data-respostadescricao="<?= $row['resposta_descricao']; ?>"
+                                                                data-respostasituacao="<?= $row['resposta_situacao']; ?>"
                                                                 >
                                                             <i class="fas fa-fingerprint"></i>&nbsp;Detalhe
                                                         </button>
@@ -227,8 +249,89 @@ session_start();
                     <div class="modal-body" id="printThis">
                         <div class="row">
                             <div class="col-lg-12">
+                                <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Módulo</h5>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Nome</label>
+                                    <p><output type="text" id="detalhe_analisemodulonome"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Descrição</label>
+                                    <p><output type="text" id="detalhe_modulodescricao"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Ambiente</label>
+                                    <p><output type="text" id="detalhe_analisemoduloambiente"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <hr>
+                                <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Risco</h5>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Nome</label>
+                                    <p><output type="text" id="detalhe_analiserisconome"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Descrição</label>
+                                    <p><output type="text" id="detalhe_analiseriscodescricao"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <hr>
+                                <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Analista</h5>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Nome</label>
+                                    <p><output type="text" id="detalhe_analiseanalistanome"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">E-mail</label>
+                                    <p><output type="text" id="detalhe_analiseanalistaemail"></output></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="infoanalise">
+                            <div class="col-lg-12">
                                 <h5 class="text-primary"><i class="fa fa-clipboard"></i> Informações da Análise</h5>
                             </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Situação</label>
+                                    <p><output type="text" id="detalhe_analisesituacao"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Orçamento</label>
+                                    <p><output type="text" id="detalhe_analiseorcamento"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Data de Início</label>
+                                    <p><output type="date" id="detalhe_analisedatainicio"></output></p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label class="col-form-label font-weight-bold">Data Fim</label>
+                                    <p><output type="date" id="detalhe_analisedatafim"></output></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="infoanalise2">
                             <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Probabilidade</label>
@@ -253,70 +356,42 @@ session_start();
                                     <p><output type="text" id="detalhe_analiseimpactojustificativa"></output></p>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Medida do Risco</label>
                                     <p><output type="text" id="detalhe_analisemedidadorisco"></output></p>
                                 </div>
                             </div>
+                        </div>
+                        <div class="row" id="resposta_detalhe">
                             <div class="col-lg-12">
                                 <hr>
-                                <h5 class="text-dark"><i class="fa fa-archive"></i> Informações Adicionais</h5>
+                                <h5 class="text-dark"><i class="fa fa-archive"></i> Informações da Resposta</h5>
                             </div>
                             <div class="col-lg-6">
                                 <div>
-                                    <label class="col-form-label font-weight-bold">Nome do Analista Responsável</label>
-                                    <p><output type="text" id="detalhe_analiseanalistanome"></output></p>
+                                    <label class="col-form-label font-weight-bold">Nome</label>
+                                    <p><output type="text" id="detalhe_respostanome"></output></p>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div>
-                                    <label class="col-form-label font-weight-bold">Nome do Módulo</label>
-                                    <p><output type="text" id="detalhe_analisemodulonome"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Nome do Risco</label>
-                                    <p><output type="text" id="detalhe_analiserisconome"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Descrição do Risco</label>
-                                    <p><output type="text" id="detalhe_analiseriscodescricao"></output></p>
+                                    <label class="col-form-label font-weight-bold">Descrição</label>
+                                    <p><output type="text" id="detalhe_respostadescricao"></output></p>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Situação</label>
-                                    <p><output type="text" id="detalhe_analisesituacao"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Data de Início</label>
-                                    <p><output type="date" id="detalhe_analisedatainicio"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Data Fim</label>
-                                    <p><output type="date" id="detalhe_analisedatafim"></output></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div>
-                                    <label class="col-form-label font-weight-bold">Orçamento</label>
-                                    <p><output type="text" id="detalhe_analiseorcamento"></output></p>
+                                    <p><output type="text" id="detalhe_respostasituacao"></output></p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                            <button id="btnPrint" type="button" class="btn btn-info"><i class="fas fa-print"></i> Gerar Print</button>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        <button id="btnPrint" type="button" class="btn btn-info"><i class="fas fa-print"></i> Gerar Print</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -377,10 +452,34 @@ session_start();
                                         <textarea class="form-control" rows="1" id="editar_analiseimpactojustificativa" name="editar_analiseimpactojustificativa" required></textarea>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <div class="col-lg-12">
                                     <div>
                                         <label class="col-form-label font-weight-bold">Medida do Risco</label>
                                         <p><output type="text" id="editar_analisemedidadorisco"></output></p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div>
+                                        <label class="col-form-label font-weight-bold">Situação</label>
+                                        <p><output type="text" id="editar_analisesituacao"></output></p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div>
+                                        <label class="col-form-label font-weight-bold">Data de Início</label>
+                                        <p><output type="text" id="editar_analisedatainicio"></output></p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div>
+                                        <label class="col-form-label font-weight-bold">Data Fim</label>
+                                        <p><output type="text" id="editar_analisedatafim"></output></p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div>
+                                        <label class="col-form-label font-weight-bold">Orçamento</label>
+                                        <p><output type="text" id="editar_analiseorcamento"></output></p>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -411,30 +510,7 @@ session_start();
                                         <p><output type="text" id="editar_analiseriscodescricao"></output></p>
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
-                                    <div>
-                                        <label class="col-form-label font-weight-bold">Situação</label>
-                                        <p><output type="text" id="editar_analisesituacao"></output></p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div>
-                                        <label class="col-form-label font-weight-bold">Data de Início</label>
-                                        <p><output type="text" id="editar_analisedatainicio"></output></p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div>
-                                        <label class="col-form-label font-weight-bold">Data Fim</label>
-                                        <p><output type="text" id="editar_analisedatafim"></output></p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div>
-                                        <label class="col-form-label font-weight-bold">Orçamento</label>
-                                        <p><output type="text" id="editar_analiseorcamento"></output></p>
-                                    </div>
-                                </div>
+                                
                                 <div class="col-lg-12">
                                     <small class="help-block">*Campo(s) obrigatório(s).</small>
                                 </div>
@@ -474,10 +550,8 @@ session_start();
         <script>
             $('#ModalDetalheAnalise').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget); // Button that triggered the modal
-                var detalhe_analiseanalistanome = button.data('analiseanalistanome'); // Extract info from data-* attributes
-                var detalhe_analiseanalistaemail = button.data('analiseanalistaemail');
-
                 var detalhe_analisemodulonome = button.data('analisemodulonome');
+                var detalhe_modulodescricao = button.data('modulodescricao');
                 var detalhe_analisemoduloambiente = button.data('analisemoduloambiente');
 
                 var detalhe_analiserisconome = button.data('analiserisconome');
@@ -493,17 +567,22 @@ session_start();
                 var detalhe_analiseimpacto = button.data('analiseimpacto');
                 var detalhe_analiseimpactojustificativa = button.data('analiseimpactojustificativa');
                 var detalhe_analisemedidadorisco = button.data('analisemedidadorisco');
+
+                var detalhe_analiseanalistanome = button.data('analiseanalistanome'); // Extract info from data-* attributes
+                var detalhe_analiseanalistaemail = button.data('analiseanalistaemail');
+
+                var detalhe_respostanome = button.data('respostanome');
+                var detalhe_respostadescricao = button.data('respostadescricao');
+                var detalhe_respostasituacao = button.data('respostasituacao');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
                 modal.find('.modal-title').text('Detalhe da Análise: ' + detalhe_analiseanalistanome);
-                
-                modal.find('#detalhe_analiseanalistanome').val(detalhe_analiseanalistanome);
-                modal.find('#detalhe_analiseanalistaemail').val(detalhe_analiseanalistaemail);
-                
+
                 modal.find('#detalhe_analisemodulonome').val(detalhe_analisemodulonome);
+                modal.find('#detalhe_modulodescricao').val(detalhe_modulodescricao);
                 modal.find('#detalhe_analisemoduloambiente').val(detalhe_analisemoduloambiente);
-                
+
                 modal.find('#detalhe_analiserisconome').val(detalhe_analiserisconome);
                 modal.find('#detalhe_analiseriscodescricao').val(detalhe_analiseriscodescricao);
 
@@ -544,7 +623,13 @@ session_start();
                     modal.find('#detalhe_analiseimpacto').val(detalhe_analiseimpacto);
                 }
                 modal.find('#detalhe_analiseimpactojustificativa').val(detalhe_analiseimpactojustificativa);
-
+                if (detalhe_analisemedidadorisco === "") {
+                    $('#infoanalise').show();
+                    $('#infoanalise2').hide();
+                } else {
+                    $('#infoanalise').show();
+                    $('#infoanalise2').show();
+                }
                 var situacaocolor = "text-success";
                 if (detalhe_analisemedidadorisco > 0.24) {
                     situacaocolor = 'text-danger';
@@ -555,6 +640,17 @@ session_start();
                 }
                 $('#detalhe_analisemedidadorisco').html('<p><output type="text" class="' + situacaocolor + '" id="detalhe_analisemedidadorisco">' + medidadoriscoprint(detalhe_analisemedidadorisco) + '</output></p>');
 
+                modal.find('#detalhe_analiseanalistanome').val(detalhe_analiseanalistanome);
+                modal.find('#detalhe_analiseanalistaemail').val(detalhe_analiseanalistaemail);
+
+                if (detalhe_respostanome === '') {
+                    $('#resposta_detalhe').hide();
+                } else {
+                    $('#resposta_detalhe').show();
+                }
+                modal.find('#detalhe_respostanome').val(detalhe_respostanome);
+                modal.find('#detalhe_respostadescricao').val(detalhe_respostadescricao);
+                modal.find('#detalhe_respostasituacao').val(detalhe_respostasituacao);
             });
         </script>
         <!-- Fim Modal Detalhe-->
@@ -647,7 +743,7 @@ session_start();
                             extend: 'pdf',
                             text: '<i class="fas fa-file-pdf"></i> Gerar Relatório: PDF'
                         }
-                    ],initComplete: function () {
+                    ], initComplete: function () {
                         this.api().columns().every(function () {
                             var column = this;
                             column.data().unique().sort().each(function (x, z) {

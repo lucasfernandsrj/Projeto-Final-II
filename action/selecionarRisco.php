@@ -11,6 +11,7 @@ $query = "SELECT
         OR
             idrisco NOT IN (SELECT idrisco FROM tbanalise)";
 $result = mysqli_query($conn, $query);
+$array_risco = [];
 while ($row = mysqli_fetch_assoc($result)) {
         $array_risco[] = array(
             'idrisco' => $row['idrisco'],

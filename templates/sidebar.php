@@ -55,7 +55,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Componentes:</h6>
                 <a class="collapse-item" href="analise2.php">Análise do Analista</a>
-                <a class="collapse-item" href="atividade.php">Atividade Mitigadora</a>
+                <a class="collapse-item" href="atividade.php">Atividade</a>
                 <a class="collapse-item" href="resposta.php">Resposta ao Risco</a>
             </div>
         </div>

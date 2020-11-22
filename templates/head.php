@@ -9,7 +9,7 @@
     <title>Gerenciamento de Risco - <?php echo $titulo ?></title>
     <link href="img/favicon.png" rel="icon">
     <!-- Datatables Bootstrap 4 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" type="text/css">
+    
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" type="text/css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.bootstrap4.min.css" type="text/css">
     

@@ -100,7 +100,7 @@ session_start();
                                                 $fk_idcategoria = $row['fk_idcategoria_categoria'];
                                                 $querycategoria = "SELECT nome FROM tbcategoria WHERE idcategoria = $fk_idcategoria LIMIT 1";
                                                 $resultcategoria = mysqli_query($conn, $querycategoria);
-                                                foreach ($resultcategoria as $rowcategoria){
+                                                foreach ($resultcategoria as $rowcategoria) {
                                                     $nome_categoria1 = $rowcategoria['nome'];
                                                 }
                                                 ?>
@@ -112,7 +112,7 @@ session_start();
                                                         <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#ModalDetalheRisco"
                                                                 data-risconome="<?= $row['nome']; ?>"
                                                                 data-riscodescricao="<?= $row['descricao']; ?>"
-                                                                
+
                                                                 data-risconomecategoria1="<?= $nome_categoria1; ?>"
                                                                 data-risconomecategoria2="<?= $row['nome_categoria']; ?>"
                                                                 >
@@ -124,7 +124,7 @@ session_start();
                                                                 data-riscoidrisco="<?= $row['idrisco']; ?>"
                                                                 data-risconome="<?= $row['nome']; ?>"
                                                                 data-riscodescricao="<?= $row['descricao']; ?>"
-                                                                
+
                                                                 data-risconomecategoria="<?= $row['nome_categoria']; ?>"
                                                                 data-riscoidcategoria="<?= $row['idcategoria']; ?>"
                                                                 data-riscofkidcategoria="<?= $row['fk_idcategoria_categoria']; ?>"
@@ -274,10 +274,10 @@ session_start();
                             </div>
                         </div>
                     </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                            <button id="btnPrint" type="button" class="btn btn-info"><i class="fas fa-print"></i> Gerar Print</button>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                        <button id="btnPrint" type="button" class="btn btn-info"><i class="fas fa-print"></i> Gerar Print</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -366,7 +366,7 @@ session_start();
                 var button = $(event.relatedTarget); // Button that triggered the modal
                 var detalhe_risconome = button.data('risconome'); // Extract info from data-* attributes
                 var detalhe_riscodescricao = button.data('riscodescricao');
-                
+
                 var detalhe_risconomecategoria1 = button.data('risconomecategoria1');
                 var detalhe_risconomecategoria2 = button.data('risconomecategoria2');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
@@ -375,7 +375,7 @@ session_start();
                 modal.find('.modal-title').text('Detalhe do Risco: ' + detalhe_risconome);
                 modal.find('#detalhe_risconome').val(detalhe_risconome);
                 modal.find('#detalhe_riscodescricao').val(detalhe_riscodescricao);
-                
+
                 modal.find('#detalhe_risconomecategoria1').val(detalhe_risconomecategoria1);
                 modal.find('#detalhe_risconomecategoria2').val(detalhe_risconomecategoria2);
             });
@@ -389,7 +389,7 @@ session_start();
                 var editar_riscoidrisco = button.data('riscoidrisco'); // Extract info from data-* attributes
                 var editar_risconome = button.data('risconome'); // Extract info from data-* attributes
                 var editar_riscodescricao = button.data('riscodescricao');
-                
+
                 var editar_risconomecategoria = button.data('risconomecategoria');
                 var editar_riscoidcategoria = button.data('riscoidcategoria');
                 var editar_riscofkidcategoria = button.data('riscofkidcategoria');
@@ -400,7 +400,7 @@ session_start();
                 modal.find('#editar_riscoidrisco').val(editar_riscoidrisco);
                 modal.find('#editar_risconome').val(editar_risconome);
                 modal.find('#editar_riscodescricao').val(editar_riscodescricao);
-                
+
                 modal.find('#editar_risconomecategoria').val(editar_risconomecategoria);
                 modal.find('#editar_riscoidcategoria1').val(editar_riscofkidcategoria);
                 modal.find('#editar_categoriaidcategoria2').val(editar_riscoidcategoria);
@@ -429,7 +429,7 @@ session_start();
                             extend: 'pdf',
                             text: '<i class="fas fa-file-pdf"></i> Gerar Relatório: PDF'
                         }
-                    ],initComplete: function () {
+                    ], initComplete: function () {
                         this.api().columns().every(function () {
                             var column = this;
                             column.data().unique().sort().each(function (x, z) {
@@ -481,7 +481,7 @@ session_start();
             });
         </script>
         <!-- Fim JS Seleciona a Categoria em Cadastrar Risco -->
-        
+
         <!-- JS Seleciona a Categoria em Editar Risco -->
         <script type="text/javascript">
             $(function () {
@@ -503,7 +503,7 @@ session_start();
                 });
             });
         </script>
-        
+
         <!-- Fim JS Seleciona a Categoria em Cadastrar Risco -->
         <!-- JS Print Modal Detalhe-->
         <script>

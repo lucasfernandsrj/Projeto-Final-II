@@ -8,7 +8,7 @@ session_start();
     $conn = Database\ConnectionAbstract::getConn();
     //var_dump($conn);
 
-    $titulo = "Atividade Mitigadora";
+    $titulo = "Atividade";
     include_once "templates/head.php";
     ?>
     <body id="page-top">
@@ -22,8 +22,8 @@ session_start();
                     <!-- Topbar -->
                     <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
                         <a href="analise2.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Análise do Analista</button></a>
-                        <a href="atividade.php"><button type="button" class="btn btn-outline-primary btn-lg mx-2">Atividade Mitigadora</button></a>
                         <a href="resposta.php"><button type="button" class="btn btn-outline-dark btn-lg mx-2">Resposta ao Risco</button></a>
+                        <a href="atividade.php"><button type="button" class="btn btn-outline-primary btn-lg mx-2">Atividade</button></a>
                     </nav>
                     <!-- End of Topbar -->
                     <!-- Begin Page Content -->
@@ -36,19 +36,19 @@ session_start();
                         ?>
 
                         <!-- Page Heading -->
-                        <h1 class="h3 mb-2 text-gray-800">Atividade Mitigadora</h1>
+                        <h1 class="h3 mb-2 text-gray-800">Atividade</h1>
                         <p class="mb-4">A atual página mostra a relação de atividades cadastradas. Permite ao gerente de projetos adicionar novas atividades ou realizar alterações.</p>
 
                         <!-- DataTales Example -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Atividade Mitigadora</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Atividade</h6>
                             </div>
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-auto mr-auto mb-2">
                                         <button type="button" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#ModalCadastrarAtividade">
-                                            <i class="fas fa-list"></i>&nbsp;Cadastrar Atividade Mitigadora
+                                            <i class="fas fa-list"></i>&nbsp;Cadastrar Atividade
                                         </button>
                                     </div>
                                 </div>
@@ -147,7 +147,7 @@ session_start();
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Cadastrar Atividade Mitigadora</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Cadastrar Atividade</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -156,7 +156,7 @@ session_start();
                         <form method="post" action="action/cadastrarAtividade.php">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <h5><i class="fa fa-list"></i> Informações da Atividade Mitigadora</h5>
+                                    <h5><i class="fa fa-list"></i> Informações da Atividade</h5>
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
@@ -210,7 +210,7 @@ session_start();
                     <div class="modal-body" id="printThis">
                         <div class="row">
                             <div class="col-lg-12">
-                                <h5 class="text-primary"><i class="fa fa-clipboard"></i> Informações do Atividade Mitigadora</h5>
+                                <h5 class="text-primary"><i class="fa fa-clipboard"></i> Informações do Atividade</h5>
                             </div>
                             <div class="col-lg-6">
                                 <div>
@@ -252,7 +252,7 @@ session_start();
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Editar Atividade Mitigadora</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Editar Atividade</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -261,7 +261,7 @@ session_start();
                         <form method="post" action="action/editarAtividade.php">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <h5><i class="fa fa-list"></i> Informações do Atividade Mitigadora</h5>
+                                    <h5><i class="fa fa-list"></i> Informações do Atividade</h5>
                                 </div>
                                 <input type="hidden" class="form-control" id="editar_atividadeidatividade" name="editar_atividadeidatividade" required>
                                 <div class="col-lg-12">
@@ -316,7 +316,7 @@ session_start();
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
-                modal.find('.modal-title').text('Detalhe da Atividade Mitigadora: ' + detalhe_atividadeobjetivo);
+                modal.find('.modal-title').text('Detalhe da Atividade: ' + detalhe_atividadeobjetivo);
                 modal.find('#detalhe_atividadedescricao').val(detalhe_atividadedescricao);
                 modal.find('#detalhe_atividadeobjetivo').val(detalhe_atividadeobjetivo);
                 modal.find('#detalhe_atividadedatainicio').val(detalhe_atividadedatainicio);
@@ -338,7 +338,7 @@ session_start();
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
-                modal.find('.modal-title').text('Editar Atividade Mitigadora: ' + editar_atividadeobjetivo);
+                modal.find('.modal-title').text('Editar Atividade: ' + editar_atividadeobjetivo);
                 modal.find('#editar_atividadeidatividade').val(editar_atividadeidatividade);
                 
                 modal.find('#editar_atividadedescricao').val(editar_atividadedescricao);
