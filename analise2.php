@@ -37,8 +37,7 @@ session_start();
 
                         <!-- Page Heading -->
                         <h1 class="h3 mb-2 text-gray-800">Análise do Analista</h1>
-                        <p class="mb-4">A atual página mostra a relação de análises cadastradas. 
-                            Permite ao Analista realizar a sua análise ou realizar alterações.
+                        <p class="mb-4">A atual página mostra a relação de análises cadastradas. Permite ao Analista realizar a sua análise ou realizar alterações.
                         </p>
                         <!-- DataTales Example -->
                         <div class="card shadow mb-4">
@@ -304,6 +303,7 @@ WHERE
                         </div>
                         <div class="row" id="infoanalise">
                             <div class="col-lg-12">
+                                <hr>
                                 <h5 class="text-primary"><i class="fa fa-clipboard"></i> Informações da Análise</h5>
                             </div>
                             <div class="col-lg-6">
@@ -452,13 +452,20 @@ WHERE
                                         <textarea class="form-control" rows="1" id="editar_analiseimpactojustificativa" name="editar_analiseimpactojustificativa" required></textarea>
                                     </div>
                                 </div>
-                                <div class="col-lg-12">
+                                <div class="col-lg-6">
                                     <div>
                                         <label class="col-form-label font-weight-bold">Medida do Risco</label>
                                         <p><output type="text" id="editar_analisemedidadorisco"></output></p>
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Orçamento (R$)</label>
+                                        <input type="text" class="form-control" id="editar_analiseorcamento" name="editar_analiseorcamento" placeholder="Ex: 500 = R$ 500,00" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-lg-12">
                                     <div>
                                         <label class="col-form-label font-weight-bold">Situação</label>
                                         <p><output type="text" id="editar_analisesituacao"></output></p>
@@ -474,12 +481,6 @@ WHERE
                                     <div>
                                         <label class="col-form-label font-weight-bold">Data Fim</label>
                                         <p><output type="text" id="editar_analisedatafim"></output></p>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div>
-                                        <label class="col-form-label font-weight-bold">Orçamento</label>
-                                        <p><output type="text" id="editar_analiseorcamento"></output></p>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -698,7 +699,7 @@ WHERE
                 modal.find('#editar_analisesituacao').val(editar_analisesituacao);
                 modal.find('#editar_analisedatainicio').val(editar_analisedatainicio);
                 modal.find('#editar_analisedatafim').val(editar_analisedatafim);
-                modal.find('#editar_analiseorcamento').val(editar_analiseorcamento.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'}));
+                modal.find('#editar_analiseorcamento').val(editar_analiseorcamento);
 
                 modal.find('#editar_analiseprobabilidade').val(editar_analiseprobabilidade);
                 modal.find('#editar_analiseprobabilidadejustificativa').val(editar_analiseprobabilidadejustificativa);

@@ -37,7 +37,7 @@ session_start();
 
                         <!-- Page Heading -->
                         <h1 class="h3 mb-2 text-gray-800">Resposta ao Risco</h1>
-                        <p >A atual página mostra a relação de respostas cadastrados. Permite ao gerente de projetos adicionar novas respostas ou realizar alterações.
+                        <p >A atual página mostra a relação das respostas de contigência cadastradas. Permite ao gerente de projetos adicionar novas respostas ou realizar alterações.
                             Além disso, a opção de adicionar novas atividades mitigadoras.
                         </p>
 
@@ -173,7 +173,7 @@ session_start();
                                                                 data-atividadedescricao="<?= $row['atividade_descricao']; ?>"
                                                                 data-atividadedatainicio="<?= $row['atividade_datainicio']; ?>"
                                                                 data-atividadedatafim="<?= $row['atividade_datafim']; ?>"
-                                                                
+
                                                                 data-risconome="<?= $row['risco_nome']; ?>"
                                                                 data-riscodescricao="<?= $row['risco_descricao']; ?>"
                                                                 >
@@ -237,7 +237,7 @@ session_start();
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Análises Realizadas</label>
+                                        <label for="recipient-name" class="col-form-label">Análise(s) Realizada(s) e Aberta(s)</label>
                                         <select class="form-control" name="resposta_idanalise" id="resposta_idanalise" required>
                                             <option value="">Selecione</option>
                                             <?php
@@ -258,20 +258,17 @@ session_start();
                                             foreach ($result_analise as $row_analise) {
                                                 require_once("templates/function.php");
                                                 $orcamento = dinheiro($row_analise['orcamento']);
-                                                
+
                                                 if ($row_analise['medidaDoRisco'] > 0.24) {
                                                     $medidadorisco_status = "Risco Alto";
-                                                    
                                                 } elseif ($row_analise['medidaDoRisco'] > 0.08) {
                                                     $medidadorisco_status = "Risco Médio";
-                                                   
                                                 } else {
                                                     $medidadorisco_status = "Risco Baixo";
-                                                    
                                                 }
                                                 ?>
 
-                                            <option value="<?= $row_analise['idanalise']; ?>">Nome do Risco: <?= $row_analise['nome_risco']; ?> - Medida do Risco: <?= $medidadorisco_status; ?> (<?= $row_analise['medidaDoRisco']; ?>)</option>
+                                                <option value="<?= $row_analise['idanalise']; ?>">Nome do Risco: <?= $row_analise['nome_risco']; ?> - Medida do Risco: <?= $medidadorisco_status; ?> (<?= $row_analise['medidaDoRisco']; ?>)</option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -291,7 +288,7 @@ session_start();
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Situação</label>
-                                        <select class="form-control" name="resposta_situacao" id="resposta_situacao" required>
+                                        <select class="form-control" name="resposta_situacao" id="resposta_situacao" onchange="check()" required>
                                             <option value="">Selecione</option>
                                         </select>
                                     </div>
@@ -301,18 +298,18 @@ session_start();
                                         <label for="recipient-name" class="col-form-label">Atividade**</label>
                                         <select class="form-control" name="resposta_idatividade" id="resposta_idatividade">
                                             <option value="">Selecione</option>
-                                            <?php
-                                            $query_atividade = "SELECT idatividade,objetivo,dataInicio,dataFim FROM tbatividade";
-                                            $result_atividade = mysqli_query($conn, $query_atividade);
-                                            foreach ($result_atividade as $row_atividade) {
-                                                ?>
+<?php
+$query_atividade = "SELECT idatividade,objetivo,dataInicio,dataFim FROM tbatividade";
+$result_atividade = mysqli_query($conn, $query_atividade);
+foreach ($result_atividade as $row_atividade) {
+    ?>
                                                 <option value="<?= $row_atividade['idatividade']; ?>"><?= $row_atividade['objetivo']; ?> (Validade de <?= $row_atividade['dataInicio']; ?> a <?= $row_atividade['dataFim']; ?>)</option>
                                             <?php } ?>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
-                                    <small class="help-block">**O campo atividade é obrigatório apenas para a(s) análise(s) com medida do risco superior a Risco Baixo.</small>
+                                    <small class="help-block">**O campo atividade não é obrigatório apenas para a(s) análise(s) com medida do risco inferior a Risco Médio com situação do tipo Aceito.</small>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -561,9 +558,15 @@ session_start();
                                 </div>
                                 <div class="col-lg-6" id="edt_situacao2">
                                     <div class="form-group">
-                                        <label for="message-text" class="col-form-label">Situação</label>
-                                        <input type="text" class="form-control" value="Aceito" disabled>
-                                        <input type="hidden" class="form-control" id="editar_respostasituacao2" name="editar_respostasituacao2">
+                                        <label for="message-text" class="col-form-label">Situação (Risco Baixo)</label>
+                                        <select class="form-control" name="editar_respostasituacao2" id="editar_respostasituacao2">
+                                            <option value="">Selecione</option>
+                                            <option value="Aceito">Aceito</option>
+                                            <option value="Transferido">Transferido</option>
+                                            <option value="Mitigado">Mitigado</option>
+                                            <option value="Escalado">Escalado</option>
+                                            <option value="Previnido">Previnido</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -577,11 +580,11 @@ session_start();
                                         <label for="recipient-name" class="col-form-label">Atividade</label>
                                         <select class="form-control" name="editar_respostaidatividade" id="editar_respostaidatividade">
                                             <option value="">Selecione</option>
-                                            <?php
-                                            $query_atividade_edt = "SELECT idatividade,objetivo,dataFim,dataInicio FROM tbatividade";
-                                            $result_atividade_edt = mysqli_query($conn, $query_atividade_edt);
-                                            foreach ($result_atividade_edt as $row_atividade_edt) {
-                                                ?>
+<?php
+$query_atividade_edt = "SELECT idatividade,objetivo,dataFim,dataInicio FROM tbatividade";
+$result_atividade_edt = mysqli_query($conn, $query_atividade_edt);
+foreach ($result_atividade_edt as $row_atividade_edt) {
+    ?>
                                                 <option value="<?= $row_atividade_edt['idatividade']; ?>"><?= $row_atividade_edt['objetivo']; ?> (Validade de <?= $row_atividade_edt['dataInicio']; ?> a <?= $row_atividade_edt['dataFim']; ?>)</option>
                                             <?php } ?>
                                         </select>
@@ -601,7 +604,7 @@ session_start();
             </div>
         </div>
         <!-- Fim Modal Editar -->
-        <?php include_once "templates/frameworks.php"; ?>
+<?php include_once "templates/frameworks.php"; ?>
 
         <!-- JS Medida do Risco + Status -->
         <script>
@@ -646,10 +649,10 @@ session_start();
                 var detalhe_atividadedescricao = button.data('atividadedescricao');
                 var detalhe_atividadedatainicio = button.data('atividadedatainicio');
                 var detalhe_atividadedatafim = button.data('atividadedatafim');
-                
+
                 var detalhe_risconome = button.data('risconome');
                 var detalhe_riscodescricao = button.data('riscodescricao');
-                
+
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
                 // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
                 var modal = $(this);
@@ -690,16 +693,16 @@ session_start();
 
 
                 modal.find('#detalhe_analiseidatividade').val(detalhe_analiseidatividade);
-                if(detalhe_analiseidatividade === ''){
+                if (detalhe_analiseidatividade === '') {
                     $('#atividade_detalhe').hide();
-                }else{
+                } else {
                     $('#atividade_detalhe').show();
                 }
                 modal.find('#detalhe_atividadeobjetivo').val(detalhe_atividadeobjetivo);
                 modal.find('#detalhe_atividadedescricao').val(detalhe_atividadedescricao);
                 modal.find('#detalhe_atividadedatainicio').val(detalhe_atividadedatainicio);
                 modal.find('#detalhe_atividadedatafim').val(detalhe_atividadedatafim);
-                
+
                 modal.find('#detalhe_risconome').val(detalhe_risconome);
                 modal.find('#detalhe_riscodescricao').val(detalhe_riscodescricao);
             });
@@ -723,14 +726,14 @@ session_start();
                 modal.find('#editar_respostaidresposta').val(editar_respostaidresposta);
                 modal.find('#editar_respostanome').val(editar_respostanome);
                 modal.find('#editar_respostadescricao').val(editar_respostadescricao);
-                
-                if(editar_respostasituacao === 'Aceito'){
+
+                if (editar_respostasituacao === 'Aceito') {
                     $('#edt_situacao2').show();
                     $('#edt_situacao').hide();
                     $('#editar_respostaidatividade').attr('required', false);
                     $('#editar_respostasituacao').attr('required', false);
                     modal.find('#editar_respostasituacao2').val(editar_respostasituacao);
-                }else{
+                } else {
                     $('#edt_situacao').show();
                     $('#edt_situacao2').hide();
                     $('#editar_respostaidatividade').attr('required', true);
@@ -806,8 +809,14 @@ session_start();
                             ajax: 'true'
                         }, function (j) {
                             if (j[0].riscobaixo === 1) {
-                                var options = '<option value="Aceito">Aceito</option>';
+                                var options = '<option value="">Selecione</option>';
+                                options += '<option value="Aceito">Aceito</option>';
+                                options += '<option value="Transferido">Transferido</option>';
+                                options += '<option value="Escalado">Escalado</option>';
+                                options += '<option value="Previnido">Previnido</option>';
+                                options += '<option value="Mitigado">Mitigado</option>';
                                 $('#resposta_situacao').html(options).show();
+
                                 $('#resposta_idatividade').attr('required', false);
                             } else {
                                 var options = '<option value="">Selecione</option>';
@@ -816,7 +825,7 @@ session_start();
                                 options += '<option value="Previnido">Previnido</option>';
                                 options += '<option value="Mitigado">Mitigado</option>';
                                 $('#resposta_situacao').html(options).show();
-                                //$('#resposta_idatividade').required = true;
+
                                 $('#resposta_idatividade').attr('required', true);
                             }
                         });
@@ -827,6 +836,16 @@ session_start();
             });
         </script>
         <!-- Fim JS Selecionar Resposta -->
+        <script>
+            function check() {
+                var val = document.getElementById('resposta_situacao').value;
+                if (val === 'Aceito') {
+                    $('#resposta_idatividade').attr('required', false);
+                } else {
+                    $('#resposta_idatividade').attr('required', true);
+                }
+            }
+        </script>
         <!-- JS Print Modal Detalhe-->
         <script>
             document.getElementById("btnPrint").onclick = function () {
@@ -851,5 +870,6 @@ session_start();
             ;
         </script>
         <!-- End JS Print Modal Detalhe-->
+
     </body>
 </html>

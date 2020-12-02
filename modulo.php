@@ -94,6 +94,7 @@ session_start();
                                             $query = "SELECT 
     tbmodulo.*,
     tbsistema.nome sistema_nome,
+    tbsistema.descricao sistema_descricao,
     tbsistema.dataInicio sistema_datainicio,
     tbsistema.dataFim sistema_datafinal
 FROM
@@ -129,6 +130,7 @@ FROM
                                                                 data-modulofkidmodulo="<?= $row['fk_idmodulo']; ?>"
                                                                 data-modulonivel="<?= $row['nivel']; ?>"
                                                                 data-sistemanome="<?= $row['sistema_nome']; ?>"
+                                                                data-sistemadescricao="<?= $row['sistema_descricao']; ?>"
                                                                 data-sistemadatainicio="<?= $row['sistema_datainicio']; ?>"
                                                                 data-sistemadatafinal="<?= $row['sistema_datafinal']; ?>"
                                                                 >
@@ -188,6 +190,25 @@ FROM
                         <form method="post" action="action/cadastrarModulo.php">
                             <div class="row">
                                 <div class="col-lg-12">
+                                    <h5><i class="fa fa-list"></i> Informações do Sistema*</h5>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="col-form-label">Nome do Sistema</label>
+                                        <select class="form-control" name="moduloidsistema" required>
+                                            <option value="">Selecione o sistema</option>
+                                            <?php
+                                            $query_sistema = "SELECT idsistema, nome FROM tbsistema";
+                                            $result_sistema = mysqli_query($conn, $query_sistema);
+                                            foreach ($result_sistema as $row_sistema) {
+                                                ?>
+                                                <option value="<?= $row_sistema['idsistema']; ?>"><?= $row_sistema['nome']; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <hr>
                                     <h5><i class="fa fa-list"></i> Informações do Módulo</h5>
                                 </div>
                                 <div class="col-lg-12">
@@ -219,25 +240,7 @@ FROM
                                         <input type="hidden" class="form-control" id="modulonivel" name="modulonivel" value="1" disabled>
                                     </div>
                                 </div>
-                                <div class="col-lg-12">
-                                    <hr>
-                                    <h5><i class="fa fa-list"></i> Informações do Sistema*</h5>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label for="recipient-name" class="col-form-label">Nome do Sistema</label>
-                                        <select class="form-control" name="moduloidsistema" required>
-                                            <option value="">Selecione</option>
-                                            <?php
-                                            $query_sistema = "SELECT idsistema, nome FROM tbsistema";
-                                            $result_sistema = mysqli_query($conn, $query_sistema);
-                                            foreach ($result_sistema as $row_sistema) {
-                                                ?>
-                                                <option value="<?= $row_sistema['idsistema']; ?>"><?= $row_sistema['nome']; ?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                </div>
+                                
                                 <div class="col-lg-12">
                                     <small class="help-block">*Campo(s) obrigatório(s).</small>
                                 </div>
@@ -345,10 +348,16 @@ FROM
                                     <div class="col-lg-12">
                                         <h5 class="text-dark"><i class="fa fa-archive"></i> Informações do Sistema</h5><!-- Título -->
                                     </div>
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-6">
                                         <div>
                                             <label class="col-form-label font-weight-bold">Nome do Sistema</label>
                                             <p><output type="text" id="detalhe_sistemanome"></output></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div>
+                                            <label class="col-form-label font-weight-bold">Descrição do Sistema</label>
+                                            <p><output type="text" id="detalhe_sistemadescricao"></output></p>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -550,6 +559,7 @@ FROM
                 var detalhe_modulonivel = button.data('modulonivel');
 
                 var detalhe_sistemanome = button.data('sistemanome');
+                var detalhe_sistemadescricao = button.data('sistemadescricao');
                 var detalhe_sistemadatainicio = button.data('sistemadatainicio');
                 var detalhe_sistemadatafinal = button.data('sistemadatafinal');
                 // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
@@ -566,6 +576,7 @@ FROM
                     $('#modulo_superior').hide();
                     $('#modulo_superior2').hide();
                     modal.find('#detalhe_sistemanome').val(detalhe_sistemanome);
+                    modal.find('#detalhe_sistemadescricao').val(detalhe_sistemadescricao);
                     modal.find('#detalhe_sistemadatainicio').val(detalhe_sistemadatainicio);
                     modal.find('#detalhe_sistemadatafinal').val(detalhe_sistemadatafinal);
                 } else {

@@ -16,7 +16,7 @@ if (isset($btnEmail)) {
         
         $analisedatainicio = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'analisedatainicio', FILTER_SANITIZE_STRING)); //obrigatorio
         $analisedatafim = mysqli_real_escape_string($conn, filter_input(INPUT_POST, 'analisedatafim', FILTER_SANITIZE_STRING)); //obrigatorio
-        $dt_atual = date("d/m/Y");
+        $dt_atual = date("Y-m-d");
         $assunto = 'Analista, uma nova Análise de Risco foi atribuída a você.';
         $mensagem = 'Prezado(a) ' . $nome_split[0] . ',<p><br>
 Estamos entrando em contato no dia ' . $dt_atual . ' para informar que a Análise do Risco "' . $risconome . '" foi atribuída a você!

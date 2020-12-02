@@ -92,7 +92,7 @@ session_start();
                                     <div class="card-body">
                                         <div class="row no-gutters align-items-center">
                                             <div class="col mr-2">
-                                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Medida de Risco Analisadas</div>
+                                                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Medida de Risco Analisadas pelo Analista</div>
                                                 <div id="dashboard_analise_medidadorisco">
                                                     <div class="h5 mb-0 font-weight-bold text-gray-800">Sistema não Selecionado</div>
                                                 </div>
@@ -112,7 +112,7 @@ session_start();
                                     <div class="card-body">
                                         <div class="row no-gutters align-items-center">
                                             <div class="col mr-2">
-                                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Orçamento (Total)</div>
+                                                <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Orçamento(Total)</div>
                                                 <div class="h5 mb-0 font-weight-bold text-gray-800 text-left" id="dashboard_analise_orcamento_total"></div>
                                             </div>
                                             <div class="col-auto">
@@ -163,6 +163,9 @@ session_start();
                                             ?>
                                         </div>
                                         <div class="mt-4 text-center small">
+                                            <span class="mr-2">
+                                                <i class="fas fa-circle text-info"></i><a href='analise.php?situacao=Em Análise'> Em Análise</a>
+                                            </span>
                                             <span class="mr-2">
                                                 <i class="fas fa-circle text-dark"></i><a href='analise.php?situacao=Bloqueada'> Bloqueada</a>
                                             </span>
@@ -301,7 +304,7 @@ session_start();
                                     $('#dashboard_analise_medidadorisco').html(resultado_porcentagem);
 
                                 } else {
-                                    $('#dashboard_analise_medidadorisco').html('<div class="h5 mb-0 font-weight-bold text-gray-800">Não cadastrada</div>');
+                                    $('#dashboard_analise_medidadorisco').html('<div class="h5 mb-0 font-weight-bold text-gray-800">Nenhum dado foi encontrado.</div>');
 $('#dashboard_analise_status_list').html('<h4 class="small font-weight-bold" >Nenhum dado foi encontrado.</h4>');
                                 }
                             } else {

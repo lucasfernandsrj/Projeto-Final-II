@@ -65,7 +65,7 @@ if (isset($btnCadastrar)) {
                     }
                 } catch (Exception $ex) {
                     $_SESSION['msg'] = "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
-                        <strong>Erro 002!</strong> Falha ao realizar a edição.
+                        <strong>Erro 002!</strong> Falha ao realizar o cadastro.
                         <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                             <span aria-hidden='true'>&times;</span>
                         </button>
@@ -109,7 +109,7 @@ if (isset($btnCadastrar)) {
                     }
                 } catch (Exception $ex) {
                     $_SESSION['msg'] = "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
-                        <strong>Erro 002!</strong> Falha ao realizar a edição.
+                        <strong>Erro 002!</strong> Falha ao realizar o cadastro.
                         <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                             <span aria-hidden='true'>&times;</span>
                         </button>
@@ -118,48 +118,58 @@ if (isset($btnCadastrar)) {
                 }
             }
         } else {
-            try {
-                $db->insert(
-                        'tbresposta', [
-                    'nome' => $resposta_nome,
-                    'descricao' => $resposta_descricao,
-                    'situacao' => $resposta_situacao,
-                    'idanalise' => $resposta_idanalise,
-                    'idatividade' => $resposta_idatividade
-                        ]
-                );
-                if ($db->affected()) {
-                    $db->update(
-                            'tbanalise',
-                            [
-                                'situacao' => 'Bloqueada'
-                            ],
-                            [
-                                'idanalise' => $resposta_idanalise
+            if ($resposta_idatividade == "") {
+                $_SESSION['msg'] = "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                        <strong>Erro 003!</strong> Falha ao realizar o cadastro. O campo atividade precisa ser escolhido.
+                        <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+                            <span aria-hidden='true'>&times;</span>
+                        </button>
+                    </div>";
+                    header('Location: ../resposta.php');
+            }else{
+                try {
+                    $db->insert(
+                            'tbresposta', [
+                        'nome' => $resposta_nome,
+                        'descricao' => $resposta_descricao,
+                        'situacao' => $resposta_situacao,
+                        'idanalise' => $resposta_idanalise,
+                        'idatividade' => $resposta_idatividade
                             ]
                     );
-                    $_SESSION['msg'] = "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+                    if ($db->affected()) {
+                        $db->update(
+                                'tbanalise',
+                                [
+                                    'situacao' => 'Bloqueada'
+                                ],
+                                [
+                                    'idanalise' => $resposta_idanalise
+                                ]
+                        );
+                        $_SESSION['msg'] = "<div class='alert alert-success alert-dismissible fade show' role='alert'>
                     <strong>Adicionado!</strong> O cadastro foi realizado com sucesso.
                     <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                         <span aria-hidden='true'>&times;</span>
                     </button>
                 </div>";
-                    header('Location: ../resposta.php');
-                } else {
-                    $_SESSION['msg'] = "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                        header('Location: ../resposta.php');
+                    } else {
+                        $_SESSION['msg'] = "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
                     <strong>Erro 003!</strong> Falha ao realizar o cadastro.
                     <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
                 </div>";
-                    header('Location: ../resposta.php');
-                }
-            } catch (Exception $ex) {
-                $_SESSION['msg'] = "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
-                        <strong>Erro 002!</strong> Falha ao realizar a edição.
+                        header('Location: ../resposta.php');
+                    }
+                } catch (Exception $ex) {
+                    $_SESSION['msg'] = "<div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                        <strong>Erro 002!</strong> Falha ao realizar o cadastro.
                         <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                             <span aria-hidden='true'>&times;</span>
                         </button>
                     </div>";
-                header('Location: ../resposta.php');
+                    header('Location: ../resposta.php');
+                }
             }
         }
     }

@@ -246,6 +246,8 @@ session_start();
                             <div class="col-lg-12">
                                 <h5 class="text-primary"><i class="fa fa-clipboard"></i> Informações do Sistema</h5>
                             </div>
+                            </div>
+                        <div class="row">
                             <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Nome</label>
@@ -258,6 +260,8 @@ session_start();
                                     <p><output type="text" id="detalhe_sistema_descricao"></output></p>
                                 </div>
                             </div>
+                            </div>
+                        <div class="row">
                             <div class="col-lg-6">
                                 <div>
                                     <label class="col-form-label font-weight-bold">Data Inicial</label>

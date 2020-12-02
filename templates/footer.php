@@ -1,3 +1,7 @@
+<a id="back-to-top" href="#" class="btn btn-light btn-lg back-to-top rounded" role="button">
+    <i class="fas fa-angle-up"></i>
+</a>
+
 <!-- Footer -->
 <footer class="sticky-footer bg-white">
     <div class="container my-auto">

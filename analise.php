@@ -49,8 +49,16 @@ session_start();
 
                         <!-- DataTales Example -->
                         <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Análise</h6>
+                            <div class="card-header py-3"> 
+                                <?php
+                                if (isset($_GET['situacao'])) {
+                                    $situacao_txt = $_GET['situacao'];
+                                    ?><h6 class="m-0 font-weight-bold text-primary">Análise (Filtro: Situação = <?php echo $situacao_txt ?>)</h6><?php
+                                } else {
+                                    ?><h6 class="m-0 font-weight-bold text-primary">Análise</h6><?php
+                                }
+                                ?>
+
                             </div>
                             <div class="card-body">
                                 <div class="row">
@@ -386,7 +394,7 @@ FROM
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Situação</label>
-                                        <div class="d-flex p-2">Em Análise</div>
+                                        <div class="d-flex p-2 text-info">Em Análise</div>
                                         <input type="hidden" class="form-control" name="analise_situacao" value="Em Análise">
                                     </div>
                                 </div>
@@ -405,7 +413,7 @@ FROM
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label for="recipient-name" class="col-form-label">Orçamento (R$)</label>
-                                        <input type="text" class="form-control" name="analise_orcamento" required>
+                                        <input type="text" class="form-control" name="analise_orcamento" placeholder="Ex: 500 = R$ 500,00" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -790,17 +798,17 @@ FROM
         <script>
             // Medida do Risco
             function medidadoriscoprint(medidadorisco) {
-                var analisemedidadorisco_print;
-                if (medidadorisco === "") {
-                    analisemedidadorisco_print = "";
-                } else if (medidadorisco > 0.24) {
-                    analisemedidadorisco_print = medidadorisco + ' - Risco Alto';
-                } else if (medidadorisco > 0.08) {
-                    analisemedidadorisco_print = medidadorisco + ' - Risco Médio';
-                } else {
-                    analisemedidadorisco_print = medidadorisco + ' - Risco Baixo';
-                }
-                return analisemedidadorisco_print;
+            var analisemedidadorisco_print;
+            if (medidadorisco === "") {
+            analisemedidadorisco_print = "";
+            } else if (medidadorisco > 0.24) {
+            analisemedidadorisco_print = medidadorisco + ' - Risco Alto';
+            } else if (medidadorisco > 0.08) {
+            analisemedidadorisco_print = medidadorisco + ' - Risco Médio';
+            } else {
+            analisemedidadorisco_print = medidadorisco + ' - Risco Baixo';
+            }
+            return analisemedidadorisco_print;
             }
         </script>
         <!-- Fim JS Medida do Risco + Status -->
@@ -808,140 +816,123 @@ FROM
         <!-- Modal Detalhe-->
         <script>
             $('#ModalDetalheAnalise').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget); // Button that triggered the modal
+            var button = $(event.relatedTarget); // Button that triggered the modal
 
-                var detalhe_analisemodulonome = button.data('analisemodulonome'); // Extract info from data-* attributes
-                var detalhe_analisemoduloambiente = button.data('analisemoduloambiente');
-                var detalhe_analisemoduloidsistema = button.data('analisemoduloidsistema');
+            var detalhe_analisemodulonome = button.data('analisemodulonome'); // Extract info from data-* attributes
+            var detalhe_analisemoduloambiente = button.data('analisemoduloambiente');
+            var detalhe_analisemoduloidsistema = button.data('analisemoduloidsistema');
+            var detalhe_analiserisconome = button.data('analiserisconome');
+            var detalhe_analiseriscodescricao = button.data('analiseriscodescricao');
+            var detalhe_analiseriscoidcategoria = button.data('analiseriscoidcategoria');
+            var detalhe_analiseidanalise = button.data('analiseidanalise');
+            var detalhe_analisedatainicio = button.data('analisedatainicio');
+            var detalhe_analisedatafim = button.data('analisedatafim');
+            var detalhe_analisesituacao = button.data('analisesituacao'); //
+            var detalhe_analiseorcamento = button.data('analiseorcamento');
+            var detalhe_analiseprobabilidade = button.data('analiseprobabilidade');
+            var detalhe_analiseprobabilidadejustificativa = button.data('analiseprobabilidadejustificativa');
+            var detalhe_analiseimpacto = button.data('analiseimpacto');
+            var detalhe_analiseimpactojustificativa = button.data('analiseimpactojustificativa');
+            var detalhe_analisemedidadorisco = button.data('analisemedidadorisco');
+            var detalhe_analiseanalistanome = button.data('analiseanalistanome');
+            var detalhe_analiseanalistaemail = button.data('analiseanalistaemail');
+            var detalhe_analisesistemanome = button.data('analisesistemanome');
+            var detalhe_analisesistemadatainicio = button.data('analisesistemadatainicio');
+            var detalhe_analisesistemadatafim = button.data('analisesistemadatafim');
+            var detalhe_analisecategorianome2 = button.data('analisecategorianome2');
+            var detalhe_analisecategorianivel2 = button.data('analisecategorianivel2');
+            var detalhe_analisecategorianome1 = button.data('analisecategorianome1');
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this);
+            modal.find('.modal-title').text('Detalhe da Análise ');
+            modal.find('#detalhe_analisemodulonome').val(detalhe_analisemodulonome);
+            modal.find('#detalhe_analisemoduloambiente').val(detalhe_analisemoduloambiente);
+            modal.find('#detalhe_analisemoduloidsistema').val(detalhe_analisemoduloidsistema);
+            modal.find('#detalhe_analiserisconome').val(detalhe_analiserisconome);
+            modal.find('#detalhe_analiseriscodescricao').val(detalhe_analiseriscodescricao);
+            modal.find('#detalhe_analiseriscoidcategoria').val(detalhe_analiseriscoidcategoria);
+            modal.find('#detalhe_analisedatainicio').val(detalhe_analisedatainicio);
+            modal.find('#detalhe_analisedatafim').val(detalhe_analisedatafim);
+            //modal.find('#detalhe_analisesituacao').val(detalhe_analisesituacao); //
+            var situacaocolor = "text-success";
+            if (detalhe_analisesituacao === 'Aprovada') {
+            situacaocolor = "text-success";
+            } else if (detalhe_analisesituacao === 'Reprovada') {
+            situacaocolor = "text-danger";
+            } else if (detalhe_analisesituacao === 'Bloqueada') {
+            situacaocolor = "text-dark";
+            } else {
+            situacaocolor = "text-info";
+            }
+            $('#detalhe_analisesituacao').html('<p><output type="text" class="' + situacaocolor + '" id="detalhe_analisesituacao">' + detalhe_analisesituacao + '</output></p>');
+            if (detalhe_analisesituacao === 'Em Análise') {
+            $('#detalhe_show_orcamento').hide();
+            $('#detalhe_show_probabilidade').hide();
+            $('#detalhe_show_justificativa_probabilidade').hide();
+            $('#detalhe_show_impacto').hide();
+            $('#detalhe_show_justificativa_impacto').hide();
+            $('#detalhe_show_medidadorisco').hide();
+            } else {
+            $('#detalhe_show_orcamento').show();
+            $('#detalhe_show_probabilidade').show();
+            $('#detalhe_show_justificativa_probabilidade').show();
+            $('#detalhe_show_impacto').show();
+            $('#detalhe_show_justificativa_impacto').show();
+            $('#detalhe_show_medidadorisco').show();
+            }
 
-                var detalhe_analiserisconome = button.data('analiserisconome');
-                var detalhe_analiseriscodescricao = button.data('analiseriscodescricao');
-                var detalhe_analiseriscoidcategoria = button.data('analiseriscoidcategoria');
-
-                var detalhe_analiseidanalise = button.data('analiseidanalise');
-                var detalhe_analisedatainicio = button.data('analisedatainicio');
-                var detalhe_analisedatafim = button.data('analisedatafim');
-                var detalhe_analisesituacao = button.data('analisesituacao');//
-                var detalhe_analiseorcamento = button.data('analiseorcamento');
-
-                var detalhe_analiseprobabilidade = button.data('analiseprobabilidade');
-                var detalhe_analiseprobabilidadejustificativa = button.data('analiseprobabilidadejustificativa');
-                var detalhe_analiseimpacto = button.data('analiseimpacto');
-                var detalhe_analiseimpactojustificativa = button.data('analiseimpactojustificativa');
-                var detalhe_analisemedidadorisco = button.data('analisemedidadorisco');
-
-                var detalhe_analiseanalistanome = button.data('analiseanalistanome');
-                var detalhe_analiseanalistaemail = button.data('analiseanalistaemail');
-
-                var detalhe_analisesistemanome = button.data('analisesistemanome');
-                var detalhe_analisesistemadatainicio = button.data('analisesistemadatainicio');
-                var detalhe_analisesistemadatafim = button.data('analisesistemadatafim');
-
-                var detalhe_analisecategorianome2 = button.data('analisecategorianome2');
-                var detalhe_analisecategorianivel2 = button.data('analisecategorianivel2');
-
-                var detalhe_analisecategorianome1 = button.data('analisecategorianome1');
-
-                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-                var modal = $(this);
-                modal.find('.modal-title').text('Detalhe da Análise ');
-
-                modal.find('#detalhe_analisemodulonome').val(detalhe_analisemodulonome);
-                modal.find('#detalhe_analisemoduloambiente').val(detalhe_analisemoduloambiente);
-                modal.find('#detalhe_analisemoduloidsistema').val(detalhe_analisemoduloidsistema);
-
-                modal.find('#detalhe_analiserisconome').val(detalhe_analiserisconome);
-                modal.find('#detalhe_analiseriscodescricao').val(detalhe_analiseriscodescricao);
-                modal.find('#detalhe_analiseriscoidcategoria').val(detalhe_analiseriscoidcategoria);
-
-                modal.find('#detalhe_analisedatainicio').val(detalhe_analisedatainicio);
-                modal.find('#detalhe_analisedatafim').val(detalhe_analisedatafim);
-                //modal.find('#detalhe_analisesituacao').val(detalhe_analisesituacao); //
-                var situacaocolor = "text-success";
-                if (detalhe_analisesituacao === 'Aprovada') {
-                    situacaocolor = "text-success";
-                } else if (detalhe_analisesituacao === 'Reprovada') {
-                    situacaocolor = "text-danger";
-                } else if (detalhe_analisesituacao === 'Bloqueada') {
-                    situacaocolor = "text-dark";
-                } else {
-                    situacaocolor = "text-info";
-                }
-                $('#detalhe_analisesituacao').html('<p><output type="text" class="' + situacaocolor + '" id="detalhe_analisesituacao">' + detalhe_analisesituacao + '</output></p>');
-
-                if (detalhe_analisesituacao === 'Em Análise') {
-                    $('#detalhe_show_orcamento').hide();
-                    $('#detalhe_show_probabilidade').hide();
-                    $('#detalhe_show_justificativa_probabilidade').hide();
-                    $('#detalhe_show_impacto').hide();
-                    $('#detalhe_show_justificativa_impacto').hide();
-                    $('#detalhe_show_medidadorisco').hide();
-                } else {
-                    $('#detalhe_show_orcamento').show();
-                    $('#detalhe_show_probabilidade').show();
-                    $('#detalhe_show_justificativa_probabilidade').show();
-                    $('#detalhe_show_impacto').show();
-                    $('#detalhe_show_justificativa_impacto').show();
-                    $('#detalhe_show_medidadorisco').show();
-                }
-
-                modal.find('#detalhe_analiseorcamento').val(detalhe_analiseorcamento);
-
-                modal.find('#detalhe_analiseprobabilidade').val(detalhe_analiseprobabilidade);
-                modal.find('#detalhe_analiseprobabilidadejustificativa').val(detalhe_analiseprobabilidadejustificativa);
-                modal.find('#detalhe_analiseimpacto').val(detalhe_analiseimpacto);
-                modal.find('#detalhe_analiseimpactojustificativa').val(detalhe_analiseimpactojustificativa);
-                //modal.find('#detalhe_analisemedidadorisco').val(medidadoriscoprint(detalhe_analisemedidadorisco)); //
-                var situacaocolor = "text-success";
-                if (detalhe_analisemedidadorisco > 0.24) {
-                    situacaocolor = 'text-danger';
-                } else if (detalhe_analisemedidadorisco > 0.08) {
-                    situacaocolor = "text-warning";
-                } else {
-                    situacaocolor = "text-success";
-                }
-                $('#detalhe_analisemedidadorisco').html('<p><output type="text" class="' + situacaocolor + '" id="detalhe_analisemedidadorisco">' + medidadoriscoprint(detalhe_analisemedidadorisco) + '</output></p>');
-
-                modal.find('#detalhe_analiseanalistanome').val(detalhe_analiseanalistanome);
-                modal.find('#detalhe_analiseanalistaemail').val(detalhe_analiseanalistaemail);
-
-                modal.find('#detalhe_analisesistemanome').val(detalhe_analisesistemanome);
-                modal.find('#detalhe_analisesistemadatainicio').val(detalhe_analisesistemadatainicio);
-                modal.find('#detalhe_analisesistemadatafim').val(detalhe_analisesistemadatafim);
-
-                modal.find('#detalhe_analisecategorianome2').val(detalhe_analisecategorianome2);
-                modal.find('#detalhe_analisecategorianivel2').val(detalhe_analisecategorianivel2);
-
-                modal.find('#detalhe_analisecategorianome1').val(detalhe_analisecategorianome1);
-
-                $.getJSON('action/selecionarRespostaPorId.php?search=', {
-                    idanalise: detalhe_analiseidanalise,
+            modal.find('#detalhe_analiseorcamento').val(detalhe_analiseorcamento);
+            modal.find('#detalhe_analiseprobabilidade').val(detalhe_analiseprobabilidade);
+            modal.find('#detalhe_analiseprobabilidadejustificativa').val(detalhe_analiseprobabilidadejustificativa);
+            modal.find('#detalhe_analiseimpacto').val(detalhe_analiseimpacto);
+            modal.find('#detalhe_analiseimpactojustificativa').val(detalhe_analiseimpactojustificativa);
+            //modal.find('#detalhe_analisemedidadorisco').val(medidadoriscoprint(detalhe_analisemedidadorisco)); //
+            var situacaocolor = "text-success";
+            if (detalhe_analisemedidadorisco > 0.24) {
+            situacaocolor = 'text-danger';
+            } else if (detalhe_analisemedidadorisco > 0.08) {
+            situacaocolor = "text-warning";
+            } else {
+            situacaocolor = "text-success";
+            }
+            $('#detalhe_analisemedidadorisco').html('<p><output type="text" class="' + situacaocolor + '" id="detalhe_analisemedidadorisco">' + medidadoriscoprint(detalhe_analisemedidadorisco) + '</output></p>');
+            modal.find('#detalhe_analiseanalistanome').val(detalhe_analiseanalistanome);
+            modal.find('#detalhe_analiseanalistaemail').val(detalhe_analiseanalistaemail);
+            modal.find('#detalhe_analisesistemanome').val(detalhe_analisesistemanome);
+            modal.find('#detalhe_analisesistemadatainicio').val(detalhe_analisesistemadatainicio);
+            modal.find('#detalhe_analisesistemadatafim').val(detalhe_analisesistemadatafim);
+            modal.find('#detalhe_analisecategorianome2').val(detalhe_analisecategorianome2);
+            modal.find('#detalhe_analisecategorianivel2').val(detalhe_analisecategorianivel2);
+            modal.find('#detalhe_analisecategorianome1').val(detalhe_analisecategorianome1);
+            $.getJSON('action/selecionarRespostaPorId.php?search=', {
+            idanalise: detalhe_analiseidanalise,
                     ajax: 'true'
-                }, function (j) {
-                            console.log(j.length);
-                    if (j.length > 0) {
-                        $("#mostra_resposta").show();
-                        var options = "";
-                        for (var i = 0; i < j.length; i++) {
-                            console.log(j[i]);
-                            
-                            options += "<div class='col-lg-12'><hr><h5 class='text-dark'><i class='fa fa-archive'></i> Informações da Resposta ao Risco</h5></div>\n\
-                <div class='col-lg-6'> <div> <label class='col-form-label font-weight-bold'>Nome</label><p><output type='text'>"+j[i].respostanome+"</output></p></div></div>\n\
-<div class='col-lg-6'><div><label class='col-form-label font-weight-bold'>Descrição</label><p><output type='text'>"+j[i].respostadescricao+"</output></p></div></div>\n\
-<div class='col-lg-6'> <div> <label class='col-form-label font-weight-bold'>Situação</label><p><output type='text'>"+j[i].respostasituacao+"</output></p></div></div>\n\
-<div class='col-lg-12'><h5 class='text-dark'><i class='fa fa-archive'></i> Informações da Atividade</h5></div>\n\
-<div class='col-lg-6'><div><label class='col-form-label font-weight-bold'>Objetivo</label><p><output type='text'>"+j[i].atividadeobjetivo+"</output></p></div></div>\n\
-<div class='col-lg-6'> <div> <label class='col-form-label font-weight-bold'>Descrição</label><p><output type='text'>"+j[i].atividadedescricao+"</output></p></div></div>\n\
-<div class='col-lg-6'> <div> <label class='col-form-label font-weight-bold'>Data de Início</label><p><output type='text'>"+j[i].atividadedatainicio+"</output></p></div></div>\n\
-<div class='col-lg-6'> <div> <label class='col-form-label font-weight-bold'>Data Final</label><p><output type='text'>"+j[i].atividadedatafim+"</output></p></div></div>";
-                        }
-                        $('#mostra_resposta').html(options).show();
-                    } else {
-                        $("#mostra_resposta").hide();
-                        //$('#analise_idmodulo').html('<option value="">*Não há opções para o atual sistema*</option>');
-                    }
-                });
+            }, function (j) {
+            //console.log(j.length);
+            if (j.length > 0) {
+            $("#mostra_resposta").show();
+            var options = "";
+            for (var i = 0; i < j.length; i++) {
+            console.log(j[i].atividadeobjetivo !== null);
+            options += "<div class='col-lg-12'><hr><h5 class='text-dark'><i class='fa fa-archive'></i> Informações da Resposta ao Risco</h5></div>\n\
+                <div class='col-lg-6'> <div> <label class='col-form-label font-weight-bold'>Nome</label><p><output type='text'>" + j[i].respostanome + "</output></p></div></div>\n\
+<div class='col-lg-6'><div><label class='col-form-label font-weight-bold'>Descrição</label><p><output type='text'>" + j[i].respostadescricao + "</output></p></div></div>\n\
+<div class='col-lg-6'> <div> <label class='col-form-label font-weight-bold'>Situação</label><p><output type='text'>" + j[i].respostasituacao + "</output></p></div></div>";
+            if(j[i].atividadeobjetivo !== null){
+    options += "<div class='col-lg-12'><h5 class='text-dark'><i class='fa fa-archive'></i> Informações da Atividade</h5></div>\n\
+<div class='col-lg-6'><div><label class='col-form-label font-weight-bold'>Objetivo</label><p><output type='text'>" + j[i].atividadeobjetivo + "</output></p></div></div>\n\
+<div class='col-lg-6'> <div> <label class='col-form-label font-weight-bold'>Descrição</label><p><output type='text'>" + j[i].atividadedescricao + "</output></p></div></div>\n\
+<div class='col-lg-6'> <div> <label class='col-form-label font-weight-bold'>Data de Início</label><p><output type='text'>" + j[i].atividadedatainicio + "</output></p></div></div>\n\
+<div class='col-lg-6'> <div> <label class='col-form-label font-weight-bold'>Data Final</label><p><output type='text'>" + j[i].atividadedatafim + "</output></p></div></div>";
+            }
+            }
+            $('#mostra_resposta').html(options).show();
+            } else {
+            $("#mostra_resposta").hide();
+            //$('#analise_idmodulo').html('<option value="">*Não há opções para o atual sistema*</option>');
+            }
+            });
             });
         </script>
         <!-- Fim Modal Detalhe-->
@@ -949,168 +940,158 @@ FROM
         <!-- Modal Editar-->
         <script>
             $('#ModalEditarAnalise').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget); // Button that triggered the modal
-                var editar_analiseidanalise = button.data('analiseidanalise');
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var editar_analiseidanalise = button.data('analiseidanalise');
+            var editar_analiseidanalista = button.data('analiseidanalista'); // Extract info from data-* attributes
+            var editar_analiseidmodulo = button.data('analiseidmodulo'); // Extract info from data-* attributes
+            var editar_analiseidrisco = button.data('analiseidrisco'); // Extract info from data-* attributes
 
-                var editar_analiseidanalista = button.data('analiseidanalista'); // Extract info from data-* attributes
-                var editar_analiseidmodulo = button.data('analiseidmodulo'); // Extract info from data-* attributes
-                var editar_analiseidrisco = button.data('analiseidrisco'); // Extract info from data-* attributes
+            var editar_analiseanalistanome = button.data('analiseanalistanome');
+            var editar_analisemodulonome = button.data('analisemodulonome');
+            var editar_analiserisconome = button.data('analiserisconome');
+            var editar_analisesituacao = button.data('analisesituacao');
+            var editar_analisedatainicio = button.data('analisedatainicio');
+            var editar_analisedatafim = button.data('analisedatafim');
+            var editar_analiseorcamento = button.data('analiseorcamento');
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this);
+            modal.find('.modal-title').text('Editar Análise ');
+            modal.find('#editar_analiseidanalise').val(editar_analiseidanalise);
+            modal.find('#editar_analiseidanalista').val(editar_analiseidanalista);
+            modal.find('#editar_analiseidmodulo').val(editar_analiseidmodulo);
+            if (editar_analiseidrisco !== "") {
+            $.getJSON('action/selecionarRisco.php?search=', {editar_analiseidrisco: editar_analiseidrisco, ajax: 'true'}, function (j) {
+            var options = '<option value="">Selecione</option>';
+            for (var i = 0; i < j.length; i++) {
+            options += '<option value="' + j[i].idrisco + '">' + j[i].nome + '</option>';
+            }
+            $('#editar_analiseidrisco').html(options).show();
+            $('#editar_analiseidrisco').val(editar_analiseidrisco);
+            });
+            }
 
-                var editar_analiseanalistanome = button.data('analiseanalistanome');
-                var editar_analisemodulonome = button.data('analisemodulonome');
-                var editar_analiserisconome = button.data('analiserisconome');
-
-                var editar_analisesituacao = button.data('analisesituacao');
-                var editar_analisedatainicio = button.data('analisedatainicio');
-                var editar_analisedatafim = button.data('analisedatafim');
-                var editar_analiseorcamento = button.data('analiseorcamento');
-                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-                var modal = $(this);
-                modal.find('.modal-title').text('Editar Análise ');
-                modal.find('#editar_analiseidanalise').val(editar_analiseidanalise);
-                modal.find('#editar_analiseidanalista').val(editar_analiseidanalista);
-                modal.find('#editar_analiseidmodulo').val(editar_analiseidmodulo);
-                if (editar_analiseidrisco !== "") {
-                    $.getJSON('action/selecionarRisco.php?search=', {editar_analiseidrisco: editar_analiseidrisco, ajax: 'true'}, function (j) {
-                        var options = '<option value="">Selecione</option>';
-                        for (var i = 0; i < j.length; i++) {
-                            options += '<option value="' + j[i].idrisco + '">' + j[i].nome + '</option>';
-                        }
-                        $('#editar_analiseidrisco').html(options).show();
-                        $('#editar_analiseidrisco').val(editar_analiseidrisco);
-                    });
-                }
-
-                modal.find('#editar_analiseanalistanome').val(editar_analiseanalistanome);
-                modal.find('#editar_analisemodulonome').val(editar_analisemodulonome);
-                modal.find('#editar_analiserisconome').val(editar_analiserisconome);
-
-                modal.find('#editar_analisesituacao').val(editar_analisesituacao);
-                modal.find('#editar_analisedatainicio').val(editar_analisedatainicio);
-                modal.find('#editar_analisedatafim').val(editar_analisedatafim);
-                modal.find('#editar_analiseorcamento').val(editar_analiseorcamento);
+            modal.find('#editar_analiseanalistanome').val(editar_analiseanalistanome);
+            modal.find('#editar_analisemodulonome').val(editar_analisemodulonome);
+            modal.find('#editar_analiserisconome').val(editar_analiserisconome);
+            modal.find('#editar_analisesituacao').val(editar_analisesituacao);
+            modal.find('#editar_analisedatainicio').val(editar_analisedatainicio);
+            modal.find('#editar_analisedatafim').val(editar_analisedatafim);
+            modal.find('#editar_analiseorcamento').val(editar_analiseorcamento);
             });
         </script>
         <!-- Fim Modal Editar-->
         <!-- Modal Email-->
         <script>
             $('#ModalEmailAnalise').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget); // Button that triggered the modal
-                var risconome = button.data('risconome');
-                var analistanome = button.data('analistanome');
-                var analistaemail = button.data('analistaemail');
-
-                var analisedatainicio = button.data('analisedatainicio');
-                var analisedatafim = button.data('analisedatafim');
-                var modal = $(this);
-                modal.find('.modal-title').text('Notificar por e-mail o(a) analista ' + analistanome);
-                modal.find('#email_mensagem').html('Deseja enviar a notificação padrão por e-mail o(a) para o analista <b>' + analistanome + ' (' + analistaemail + ')</b> sobre análise o risco <b>' + risconome + '</b>?');
-                modal.find('#risconome').val(risconome);
-                modal.find('#analistanome').val(analistanome);
-                modal.find('#analistaemail').val(analistaemail);
-
-                modal.find('#analisedatainicio').val(analisedatainicio);
-                modal.find('#analisedatafim').val(analisedatafim);
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var risconome = button.data('risconome');
+            var analistanome = button.data('analistanome');
+            var analistaemail = button.data('analistaemail');
+            var analisedatainicio = button.data('analisedatainicio');
+            var analisedatafim = button.data('analisedatafim');
+            var modal = $(this);
+            modal.find('.modal-title').text('Notificar por e-mail o(a) analista ' + analistanome);
+            modal.find('#email_mensagem').html('Deseja enviar a notificação padrão por e-mail o(a) para o analista <b>' + analistanome + ' (' + analistaemail + ')</b> sobre análise o risco <b>' + risconome + '</b>?');
+            modal.find('#risconome').val(risconome);
+            modal.find('#analistanome').val(analistanome);
+            modal.find('#analistaemail').val(analistaemail);
+            modal.find('#analisedatainicio').val(analisedatainicio);
+            modal.find('#analisedatafim').val(analisedatafim);
             });
         </script>
         <!-- Fim Modal Email-->
         <!-- Reseta Modal Cadastrar ao Fechar-->
         <script>
             $('#ModalCadastrarAnalise').on('hidden.bs.modal', function () {
-                $(this).find("input,textarea,select").val('').end();
-
+            $(this).find("input,textarea,select").val('').end();
             });
         </script>
         <script>
             $(document).ready(function () {
-                $('#DataTable').DataTable({
-                    buttons: [
-                        {
-                            extend: 'copy',
-                            text: '<i class="fas fa-print"></i> Copiar Tabela'
-                        }, {
-                            extend: 'excel',
-                            text: '<i class="fas fa-file-excel"></i> Gerar Relatório: Excel'
-                        }, {
-                            extend: 'pdf',
-                            text: '<i class="fas fa-file-pdf"></i> Gerar Relatório: PDF'
-                        }
-                    ], initComplete: function () {
-                        this.api().columns().every(function () {
-                            var column = this;
-                            column.data().unique().sort().each(function (x, z) {
-                                if (x.length < 100) {
-                                    var select = $('<select><option value="">Todos</option></select>')
-                                            .appendTo($(column.footer()).empty())
-                                            .on('change', function () {
-                                                var val = $.fn.dataTable.util.escapeRegex(
-                                                        $(this).val()
-                                                        );
-                                                column
-                                                        .search(val ? '^' + val + '$' : '', true, false)
-                                                        .draw();
-                                            });
-                                    column.data().unique().sort().each(function (d, j) {
-                                        if (d.length < 100) {
-                                            select.append('<option value="' + d + '">' + d + '</option>');
-                                        }
-                                    });
-                                }
-                            });
-
-                        });
-                    }
-                }).buttons().container().appendTo('.col-md-6:eq(0)');
+            $('#DataTable').DataTable({
+            buttons: [
+            {
+            extend: 'copy',
+                    text: '<i class="fas fa-print"></i> Copiar Tabela'
+            }, {
+            extend: 'excel',
+                    text: '<i class="fas fa-file-excel"></i> Gerar Relatório: Excel'
+            }, {
+            extend: 'pdf',
+                    text: '<i class="fas fa-file-pdf"></i> Gerar Relatório: PDF'
+            }
+            ], initComplete: function () {
+            this.api().columns().every(function () {
+            var column = this;
+            column.data().unique().sort().each(function (x, z) {
+            if (x.length < 100) {
+            var select = $('<select><option value="">Todos</option></select>')
+                    .appendTo($(column.footer()).empty())
+                    .on('change', function () {
+                    var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                            );
+                    column
+                            .search(val ? '^' + val + '$' : '', true, false)
+                            .draw();
+                    });
+            column.data().unique().sort().each(function (d, j) {
+            if (d.length < 100) {
+            select.append('<option value="' + d + '">' + d + '</option>');
+            }
+            });
+            }
+            });
+            });
+            }
+            }).buttons().container().appendTo('.col-md-6:eq(0)');
             });
         </script>
         <!-- Fim Reseta Modal Cadastrar ao Fechar-->
         <!-- JS Selecionar Modulo -->
         <script type="text/javascript">
             $(function () {
-                $('#analise_idsistema').change(function () {
-                    if ($(this).val()) {
-                        $.getJSON('action/selecionarModulo.php?search=', {
-                            idsistema: $(this).val(),
-                            ajax: 'true'
-                        }, function (j) {
-                            var options = '<option value="">Selecione</option>';
-                            if (j.length > 0) {
-                                for (var i = 0; i < j.length; i++) {
-                                    options += '<option value="' + j[i].idmodulo + '">' + j[i].nome + '</option>';
-                                }
-                                $('#analise_idmodulo').html(options).show();
-                            } else {
-                                $('#analise_idmodulo').html('<option value="">*Não há opções para o atual sistema*</option>');
-                            }
-                        });
-                    } else {
-                        $('#analise_idmodulo').html('<option value="">Selecione</option>');
-                    }
-                });
+            $('#analise_idsistema').change(function () {
+            if ($(this).val()) {
+            $.getJSON('action/selecionarModulo.php?search=', {
+            idsistema: $(this).val(),
+                    ajax: 'true'
+            }, function (j) {
+            var options = '<option value="">Selecione</option>';
+            if (j.length > 0) {
+            for (var i = 0; i < j.length; i++) {
+            options += '<option value="' + j[i].idmodulo + '">' + j[i].nome + '</option>';
+            }
+            $('#analise_idmodulo').html(options).show();
+            } else {
+            $('#analise_idmodulo').html('<option value="">*Não há opções para o atual sistema*</option>');
+            }
+            });
+            } else {
+            $('#analise_idmodulo').html('<option value="">Selecione</option>');
+            }
+            });
             });
         </script>
         <!-- Fim JS Selecionar Modulo -->
         <!-- JS Print Modal Detalhe-->
         <script>
             document.getElementById("btnPrint").onclick = function () {
-                printElement(document.getElementById("printThis"));
+            printElement(document.getElementById("printThis"));
             };
-
             function printElement(elem) {
-                var domClone = elem.cloneNode(true);
+            var domClone = elem.cloneNode(true);
+            var $printSection = document.getElementById("printSection");
+            if (!$printSection) {
+            var $printSection = document.createElement("div");
+            $printSection.id = "printSection";
+            document.body.appendChild($printSection);
+            }
 
-                var $printSection = document.getElementById("printSection");
-
-                if (!$printSection) {
-                    var $printSection = document.createElement("div");
-                    $printSection.id = "printSection";
-                    document.body.appendChild($printSection);
-                }
-
-                $printSection.innerHTML = "";
-                $printSection.appendChild(domClone);
-                window.print();
+            $printSection.innerHTML = "";
+            $printSection.appendChild(domClone);
+            window.print();
             }
             ;
         </script>

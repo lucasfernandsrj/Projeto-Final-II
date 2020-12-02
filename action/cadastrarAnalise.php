@@ -24,7 +24,7 @@ if (isset($btnCadastrar)) {
                         <span aria-hidden='true'>&times;</span>
                     </button>
                 </div>";
-        header('Location: ../sistema.php');
+        header('Location: ../analise.php');
     } else {
         try {
             $db->insert(
